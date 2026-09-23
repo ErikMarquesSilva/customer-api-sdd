@@ -86,7 +86,7 @@ All paths under `src/main/java/com/example/customerapi/customer/`.
 
 ---
 
-## ArchUnit rules (`src/test/java/com/example/customerapi/architecture/HexagonalArchitectureTest.java`)
+## ArchUnit rules (`src/test/java/com/example/customerapi/architecture/HexagonalRules.java`)
 
 | Rule | Requirement |
 | ---- | ----------- |
@@ -95,12 +95,15 @@ All paths under `src/main/java/com/example/customerapi/customer/`.
 | `..customer.application..` depends on no `..adapter..`, `jakarta.persistence..`, `org.hibernate..`, `org.springframework.data.jpa..`, `org.springframework.web..` | ARCH-04 |
 | Classes in `..application.port.in..` / `..application.port.out..` are interfaces (or exceptions / records) | ARCH-05, ARCH-06 |
 | `..application.service..` does not depend on Spring Data `Repository` types | ARCH-06 |
-| `..adapter.in..` and `..common.web..` depend on no `..adapter.out..` or `..application.port.out..` | ARCH-07 |
+| `..adapter.in..` and `..common.web..` depend on no `..adapter.out..`, `..application.port.out..` or `..application.service..` (controllers use `port.in` only) | ARCH-07 |
 | `..adapter.out..` depends on no `..adapter.in..` | ARCH-08 |
 | Implementations of `port.out` interfaces reside in `..adapter.out..` | ARCH-09 |
 | `@RestController` classes reside in `..adapter.in.web..`; Spring Data `Repository` subtypes in `..adapter.out.persistence..` | ARCH-10 |
+| `@Service` classes in `..application.service..` are `@Transactional` (the live CUST-24 guard, see Risks) | added after verification (M10) |
+| `CpfValidator` calls `domain.Cpf.isValid` | ARCH-03 (added after verification, M11b) |
+| Every class under `..customer..` resides in domain, application or adapter | layering completeness |
 
-Each rule also runs against a small set of **violation fixtures** in test sources, such as a domain class importing Spring or a controller injecting an output port. The test asserts that the rule fails for them. This proves the rules can fail.
+Each rule also runs against a **violation fixture** in the top-level `archfixtures` test package, which Spring never scans. `HexagonalRulesDiscriminationTest` asserts that each rule reports its fixture, which proves the rules can fail.
 
 ---
 

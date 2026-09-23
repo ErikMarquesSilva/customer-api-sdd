@@ -275,12 +275,14 @@ T6 → T7 → T8 → T9
 
 **Done when**:
 
-- [ ] Rule passes on production and reports a validator fixture that does not delegate
-- [ ] Mutant M11b (algorithm copied back into `CpfValidator`) fails the rule
-- [ ] Gate check passes: quick
+- [x] Rule passes on production and reports a validator fixture that does not delegate
+- [x] Mutant M11b (algorithm copied back into `CpfValidator`) fails the rule
+- [x] Gate check passes: quick
 
 **Tests**: unit
 **Gate**: quick
+
+**Status**: ✅ Complete. M11b passes the behavioural tests but fails the new rule.
 
 **Commit**: `test(architecture): require cpf validation to delegate to the domain`
 

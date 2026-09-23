@@ -49,6 +49,9 @@ class HexagonalArchitectureTest {
 	static final ArchRule useCaseServicesAreTransactional = HexagonalRules.USE_CASE_SERVICES_ARE_TRANSACTIONAL;
 
 	@ArchTest
+	static final ArchRule cpfValidationDelegatesToDomain = HexagonalRules.CPF_VALIDATION_DELEGATES_TO_DOMAIN;
+
+	@ArchTest
 	static final ArchRule featureClassesBelongToALayer = HexagonalRules.FEATURE_CLASSES_BELONG_TO_A_LAYER;
 
 }

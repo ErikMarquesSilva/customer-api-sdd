@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tngtech.archunit.lang.ArchRule;
 
+import com.example.customerapi.customer.domain.Cpf;
+
 import jakarta.persistence.Entity;
 
 /**
@@ -133,6 +135,13 @@ final class HexagonalRules {
 		.should()
 		.beAnnotatedWith(Transactional.class)
 		.as("use-case services are @Transactional");
+
+	/** ARCH-03: the Bean Validation adapter delegates to the one CPF rule in the domain. */
+	static final ArchRule CPF_VALIDATION_DELEGATES_TO_DOMAIN = classes().that()
+		.haveSimpleName("CpfValidator")
+		.should()
+		.callMethod(Cpf.class, "isValid", String.class)
+		.as("ARCH-03 the web CPF validator delegates to the domain rule");
 
 	/** Every feature class belongs to one hexagon layer. */
 	static final ArchRule FEATURE_CLASSES_BELONG_TO_A_LAYER = classes().that()
