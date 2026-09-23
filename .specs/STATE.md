@@ -44,16 +44,11 @@
 
 ## Handoff
 
-- **Feature**: hexagonal-architecture (`.specs/features/hexagonal-architecture/`). customer-management and customer-geo-grouping are done and verified (PR #2).
-- **Phase / Task**: Execute. T1-T15 are complete and committed on `refactor/hexagonal`; 300 tests pass on a clean build.
-- **Completed**: T1-T15; three verifier fix iterations (T6-T9, T10-T12, T13-T15).
+- **Feature**: hexagonal-architecture (`.specs/features/hexagonal-architecture/`)
+- **Phase / Task**: Execute. T1-T16 are complete. T16 was added after the user chose option (b) on 2026-09-23.
+- **Completed**: T1-T16; 302 tests pass on a clean build.
 - **In-progress** (file:line): none
-- **Blockers**: re-verification 3 is **FAIL**, and the 3-iteration fix bound is reached, so this is escalated to the user.
-  - 13/13 ACs are covered and every earlier survivor is killed.
-  - Open (Minor, plausible): moving the versioned write into its own `REQUIRES_NEW` transaction (mutants Y7/Y8) is not detected. Behaviour at HEAD is correct: CUST-24 is guarded by the adapter's explicit version check, and `CustomerPersistenceAdapterIntegrationTest` kills its removal (M1).
-- **Next step**: the user chooses one:
-  - (a) Accept the residual risk as documented. A 4th verifier then re-judges against that decision, then push and PR.
-  - (b) Add one more task: assert that each POST/PUT completes exactly one transaction (Hibernate statistics). A 4th verifier follows, then push and PR.
-  - Recommendation: (b).
+- **Next step**: the 4th independent verification. On PASS, push `refactor/hexagonal` and open a PR against `feat/customer-api`.
+- **Blockers**: none
 - **Uncommitted files**: none after this commit
 - **Branch**: `refactor/hexagonal` (local, not pushed)

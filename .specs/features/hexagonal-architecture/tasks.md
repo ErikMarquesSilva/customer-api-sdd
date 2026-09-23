@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/hexagonal-architecture/design.md`
-**Status**: Escalated: re-verification 3 FAIL after 3 fix iterations (see STATE.md Handoff)
+**Status**: Done (awaiting re-verification 4)
 **Branch**: `refactor/hexagonal` (stacked on `feat/customer-api`)
 
 ---
@@ -66,6 +66,14 @@ Re-verification 2 returned FAIL (`9796beb..f2d371c`). N3, N4b and N1b are killed
 
 ```
 T13 → T14 → T15
+```
+
+### Phase 5: User-approved follow-up
+
+Re-verification 3 was FAIL (Y7/Y8: the versioned write could move into its own `REQUIRES_NEW` transaction without any test failing). The fix bound was reached and the issue was escalated. The user chose option (b): one more task, then a 4th verification.
+
+```
+T16
 ```
 
 ---
@@ -501,6 +509,36 @@ T13 → T14 → T15
 
 ---
 
+### Phase 5: User-approved follow-up
+
+#### T16: Each write request completes exactly one transaction
+
+**What**: HTTP tests assert, using Hibernate statistics (already enabled for tests), that one POST and one PUT each complete exactly one transaction. Reading and versioned writing therefore cannot be split.
+**Where**: `src/test/java/com/example/customerapi/customer/TransactionBoundaryIntegrationTest.java`
+**Depends on**: T15
+**Reuses**: `TestcontainersConfiguration` statistics bean, T13 probe
+**Requirement**: ARCH-11 (CUST-24 guarantee)
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] POST and PUT each complete exactly 1 successful transaction
+- [x] Y8 (`REQUIRES_NEW` on `CustomerPersistenceAdapter.update`) and Y7 (`TransactionTemplate` REQUIRES_NEW write in `CustomerService.update`) fail the test
+- [x] Gate check passes: `./mvnw -B clean verify`
+
+**Tests**: integration
+**Gate**: build
+
+**Status**: ✅ Complete (302 tests, clean build). Checked empirically first: the counter reports 1 transaction per POST and PUT, and 2 under Y8. Y7 and Y8 fail `updateCompletesExactlyOneTransaction`.
+
+**Commit**: `test(customer): assert one transaction per write request`
+
+---
+
 ## Phase Execution Map
 
 ```
@@ -508,6 +546,7 @@ Phase 1:  T1 ------→ T2 ------→ T3 ------→ T4 ------→ T5
 Phase 2:  T6 ------→ T7 ------→ T8 ------→ T9
 Phase 3:  T10 ------→ T11 ------→ T12
 Phase 4:  T13 ------→ T14 ------→ T15
+Phase 5:  T16
 ```
 
 ## Requirement Coverage
