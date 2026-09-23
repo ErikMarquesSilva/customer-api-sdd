@@ -263,20 +263,20 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | CUST-26 | P1: Delete | Design | Pending |
 | CUST-27 | P1: Delete | Design | Pending |
 | CUST-28 | P1: Delete | Execute | Implementing |
-| CUST-29 | P1: List | Design | Pending |
-| CUST-30 | P1: List | Design | Pending |
-| CUST-31 | P1: List | Design | Pending |
+| CUST-29 | P1: List | Execute | Implementing |
+| CUST-30 | P1: List | Execute | Implementing |
+| CUST-31 | P1: List | Execute | Implementing |
 | CUST-32 | P1: List | Design | Pending |
-| CUST-33 | P1: List | Design | Pending |
-| CUST-34 | P1: List | Design | Pending |
+| CUST-33 | P1: List | Execute | Implementing |
+| CUST-34 | P1: List | Execute | Implementing |
 | CUST-35 | P1: Error contract | Design | Pending |
 | CUST-36 | P1: Error contract | Design | Pending |
 | CUST-37 | P1: Error contract | Design | Pending |
 | CUST-38 | P1: Error contract | Design | Pending |
 | CUST-39 | P1: Error contract | Design | Pending |
-| CUST-40 | P2: Search | Design | Pending |
-| CUST-41 | P2: Search | Design | Pending |
-| CUST-42 | P2: Search | Design | Pending |
+| CUST-40 | P2: Search | Execute | Implementing |
+| CUST-41 | P2: Search | Execute | Implementing |
+| CUST-42 | P2: Search | Execute | Implementing |
 | CUST-43 | P2: Operability | Design | Pending |
 | CUST-44 | P2: Operability | Execute | Implementing |
 | CUST-45 | P2: Operability | Execute | Implementing |

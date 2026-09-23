@@ -230,10 +230,12 @@ T7 → T8 → T9 → T10 → T11
 
 **Done when**:
 
-- [ ] Sort: default `name,asc`; accepts name/email/createdAt/updatedAt with asc/desc; any other property or direction throws `InvalidSortException`; `id` appended as tiebreaker
-- [ ] Filters on PostgreSQL: `name=ana` matches `Ana Souza` and `Mariana Lima`, not `Bruno Reis`; `name=a%` does not act as a wildcard; `email= ANA@X.COM ` matches `ana@x.com`; both filters AND
-- [ ] Gate check passes: `./mvnw -q -B test`
-- [ ] Test count: ≥ 10 tests pass
+- [x] Sort: default `name,asc`; accepts name/email/createdAt/updatedAt with asc/desc; any other property or direction throws `InvalidSortException`; `id` appended as tiebreaker
+- [x] Filters on PostgreSQL: `name=ana` matches `Ana Souza` and `Mariana Lima`, not `Bruno Reis`; `name=a%` does not act as a wildcard; `email= ANA@X.COM ` matches `ana@x.com`; both filters AND
+- [x] Gate check passes: `./mvnw -q -B test`
+- [x] Test count: ≥ 10 tests pass
+
+**Status**: ✅ Complete
 
 **Tests**: unit, integration
 **Gate**: full

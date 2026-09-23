@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +42,13 @@ public class CustomerService {
 	@Transactional(readOnly = true)
 	public CustomerResponse get(UUID id) {
 		return CustomerResponse.from(find(id));
+	}
+
+	@Transactional(readOnly = true)
+	public PageResponse<CustomerResponse> list(CustomerFilter filter, int page, int size, String sort) {
+		PageRequest pageRequest = PageRequest.of(page, size, CustomerSort.parse(sort));
+		return PageResponse.from(
+				repository.findAll(CustomerSpecifications.matching(filter), pageRequest).map(CustomerResponse::from));
 	}
 
 	public CustomerResponse update(UUID id, CustomerRequest request) {
