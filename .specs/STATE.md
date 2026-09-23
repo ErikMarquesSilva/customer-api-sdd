@@ -44,11 +44,11 @@
 
 ## Handoff
 
-- **Feature**: hexagonal-architecture (`.specs/features/hexagonal-architecture/`)
-- **Phase / Task**: Execute. T1-T17 are complete. T16 was added after the user chose option (b) on 2026-09-23. T17 applies round 4's suggestion under the user's delegated Staff authority.
-- **Completed**: T1-T17; 302 tests pass on a clean build.
+- **Feature**: hexagonal-architecture. Done: verification round 5 is PASS (13/13 ACs, no plausible surviving mutant), and `validate_state.py` passes for all three features.
+- **Phase / Task**: Execute complete. T1-T17.
+- **Completed**: customer-management (PR #2), customer-geo-grouping (PR #2), hexagonal-architecture (`refactor/hexagonal`)
 - **In-progress** (file:line): none
-- **Next step**: focused verification 5. On PASS, push `refactor/hexagonal` and open a PR against `feat/customer-api`. On any new plausible survivor, escalate to the user with no further fix round.
+- **Next step**: review the PR of `refactor/hexagonal` into `feat/customer-api`. The customer-management spec still has three `Confirmed? n` assumptions for the user: CUST-36 `errors` scope, CUST-06 email rule and CUST-44 actuator root.
 - **Blockers**: none
-- **Uncommitted files**: none after this commit
-- **Branch**: `refactor/hexagonal` (local, not pushed)
+- **Uncommitted files**: none
+- **Branch**: `refactor/hexagonal`

@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/hexagonal-architecture/design.md`
-**Status**: Done (awaiting focused verification 5)
+**Status**: Done (verified PASS in round 5)
 **Branch**: `refactor/hexagonal` (stacked on `feat/customer-api`)
 
 ---

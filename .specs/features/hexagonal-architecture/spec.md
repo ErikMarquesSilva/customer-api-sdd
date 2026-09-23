@@ -116,21 +116,21 @@ The Customer API mixes business rules with framework code: `Customer` is both th
 
 | Requirement ID | Story | Phase | Status |
 | -------------- | ----- | ----- | ------ |
-| ARCH-01 | P1: Framework-free domain | Design | Pending |
-| ARCH-02 | P1: Framework-free domain | Design | Pending |
-| ARCH-03 | P1: Framework-free domain | Design | Pending |
-| ARCH-04 | P1: Application core behind ports | Design | Pending |
-| ARCH-05 | P1: Application core behind ports | Design | Pending |
-| ARCH-06 | P1: Application core behind ports | Design | Pending |
-| ARCH-07 | P1: Adapters at the edges | Design | Pending |
-| ARCH-08 | P1: Adapters at the edges | Design | Pending |
-| ARCH-09 | P1: Adapters at the edges | Design | Pending |
-| ARCH-10 | P1: Adapters at the edges | Design | Pending |
-| ARCH-11 | P1: Behavior preserved | Design | Pending |
-| ARCH-12 | P1: Behavior preserved | Design | Pending |
-| ARCH-13 | P1: Behavior preserved | Design | Pending |
+| ARCH-01 | P1: Framework-free domain | Execute | Verified |
+| ARCH-02 | P1: Framework-free domain | Execute | Verified |
+| ARCH-03 | P1: Framework-free domain | Execute | Verified |
+| ARCH-04 | P1: Application core behind ports | Execute | Verified |
+| ARCH-05 | P1: Application core behind ports | Execute | Verified |
+| ARCH-06 | P1: Application core behind ports | Execute | Verified |
+| ARCH-07 | P1: Adapters at the edges | Execute | Verified |
+| ARCH-08 | P1: Adapters at the edges | Execute | Verified |
+| ARCH-09 | P1: Adapters at the edges | Execute | Verified |
+| ARCH-10 | P1: Adapters at the edges | Execute | Verified |
+| ARCH-11 | P1: Behavior preserved | Execute | Verified |
+| ARCH-12 | P1: Behavior preserved | Execute | Verified |
+| ARCH-13 | P1: Behavior preserved | Execute | Verified |
 
-**Coverage:** 13 total, 0 mapped to tasks, 13 unmapped ⚠️ (mapped during Tasks)
+**Coverage:** 13 total, 13 mapped to tasks, 0 unmapped
 
 ---
 

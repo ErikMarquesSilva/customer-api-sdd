@@ -152,6 +152,18 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: Z7c (tests/invariants)
 - last seen: 2026-09-23T09:53:53Z
 
+### L-024 - Pair a mechanism assertion (e.g. optimistic failure count) with an outcome assertion (409 and stored data); a retry in a new transaction keeps the count right but breaks the response.
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `tests/invariants` · harmful: 0
+- features: hexagonal-architecture
+- evidence: W1 (tests/invariants)
+- last seen: 2026-09-23T10:17:12Z
+
+### L-025 - Prove a statistics-based assertion fails loudly with statistics disabled; otherwise it may pass on zero.
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `tests/statistics` · harmful: 0
+- features: hexagonal-architecture
+- evidence: W7 (tests/statistics)
+- last seen: 2026-09-23T10:17:12Z
+
 ## Quarantined (failed when applied - ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.
