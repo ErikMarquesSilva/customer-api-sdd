@@ -475,12 +475,14 @@ T12 → T13 → T14
 
 **Done when**:
 
-- [ ] The clock bean is UTC and every instant it returns has zero sub-microsecond nanos
-- [ ] Gate check passes: `./mvnw -B verify`
-- [ ] Test count: ≥ previous + new tests pass
+- [x] The clock bean is UTC and every instant it returns has zero sub-microsecond nanos
+- [x] Gate check passes: `./mvnw -B verify`
+- [x] Test count: 211 tests pass (208 + 3)
 
 **Tests**: unit
 **Gate**: build
+
+**Status**: ✅ Complete
 
 **Commit**: `fix(customer): align clock precision with postgresql timestamps`
 
