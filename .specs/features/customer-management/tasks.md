@@ -67,6 +67,14 @@ Added after batch 2: the user's sort amendment (CUST-52, CUST-53) and two defect
 T12 → T13 → T14
 ```
 
+### Phase 5: Verifier fix iteration 1
+
+The verifier returned FAIL (range `1810ee5..e01ecd8`): one surviving mutant on CUST-44 plus weak evidence and spec-precision gaps.
+
+```
+T15 → T16 → T17 → T18
+```
+
 ---
 
 ## Task Breakdown
@@ -488,6 +496,113 @@ T12 → T13 → T14
 
 ---
 
+### Phase 5: Verifier fix iteration 1
+
+#### T15: Assert the full actuator exposure set
+
+**What**: Assert that the actuator discovery lists exactly `self`, `health` and `health-path`, killing the surviving mutant M19 (`include=health,info`).
+**Where**: `src/test/java/com/example/customerapi/OperabilityIntegrationTest.java`
+**Depends on**: T14
+**Reuses**: existing test classes and `HttpIntegrationTestSupport`
+**Requirement**: CUST-44
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] `GET /actuator` `_links` keys are exactly {self, health, health-path}
+- [x] Mutant `include=health,info` fails the test
+- [x] Gate check passes: `./mvnw -q -B test`
+
+**Tests**: integration
+**Gate**: full
+
+**Status**: ✅ Complete
+
+**Commit**: `test(customer): assert the full actuator exposure set`
+
+---
+
+#### T16: Cover the CPF remainder-10 branch directly
+
+**What**: Unit cases where each check digit comes from the remainder-10 → 0 rule.
+**Where**: `src/test/java/com/example/customerapi/customer/validation/CpfValidatorTest.java`
+**Depends on**: T15
+**Reuses**: existing test classes and `HttpIntegrationTestSupport`
+**Requirement**: CUST-07
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [ ] `10000000108` (first digit via remainder 10) and `10000002810` (second digit via remainder 10) are accepted
+- [ ] Mutating `remainder == 10 ? 0 : remainder` fails `CpfValidatorTest`
+- [ ] Gate check passes: quick
+
+**Tests**: unit
+**Gate**: quick
+
+**Commit**: `test(customer): cover cpf check-digit remainder-10 branch`
+
+---
+
+#### T17: Error contract and PII checks on the remaining error paths
+
+**What**: Share the RFC 9457 assertion helper and apply it to the list 400s and the optimistic-lock 409; assert no PII in logs on the 400 validation and malformed-JSON paths.
+**Where**: `src/test/java/com/example/customerapi/HttpIntegrationTestSupport.java` (+ `ErrorContractIntegrationTest.java`, `CustomerListIntegrationTest.java`, `CustomerUpdateIntegrationTest.java`, `OperabilityIntegrationTest.java`)
+**Depends on**: T16
+**Reuses**: existing test classes and `HttpIntegrationTestSupport`
+**Requirement**: CUST-35, CUST-46
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [ ] `page=-1`, `size=101`, `sort=cpf`, `sort=name,up` and the CUST-24 409 carry `type`, `title`, `status`, `detail`, `instance`
+- [ ] Invalid-body 400 and malformed-JSON 400 leave no email/cpf/phone of the request in the logs
+- [ ] Gate check passes: `./mvnw -q -B test`
+
+**Tests**: integration
+**Gate**: full
+
+**Commit**: `test(customer): check error contract and log pii on remaining error paths`
+
+---
+
+#### T18: Clarify CUST-06, CUST-36 and CUST-44 in the spec
+
+**What**: Record the verifier's spec-precision gaps as assumptions: `errors` array scope, email validity rule, actuator discovery root.
+**Where**: `.specs/features/customer-management/spec.md`
+**Depends on**: T17
+**Reuses**: existing test classes and `HttpIntegrationTestSupport`
+**Requirement**: CUST-06, CUST-36, CUST-44
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [ ] Assumptions table has one row per clarification, each with default and rationale
+- [ ] `validate_spec.py` passes
+
+**Tests**: none
+**Gate**: build
+
+**Commit**: `docs(spec): clarify email validity, errors array scope and actuator root`
+
+---
+
 ## Phase Execution Map
 
 ```
@@ -497,6 +612,7 @@ Phase 1:  T1 ------→ T2
 Phase 2:  T3 ------→ T4 ------→ T5 ------→ T6
 Phase 3:  T7 ------→ T8 ------→ T9 ------→ T10 ------→ T11
 Phase 4:  T12 ------→ T13 ------→ T14
+Phase 5:  T15 ------→ T16 ------→ T17 ------→ T18
 ```
 
 Execution is strictly sequential.

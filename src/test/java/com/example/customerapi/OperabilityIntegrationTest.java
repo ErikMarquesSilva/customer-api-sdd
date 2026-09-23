@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -43,6 +44,15 @@ class OperabilityIntegrationTest extends HttpIntegrationTestSupport {
 	@ValueSource(strings = { "/actuator/env", "/actuator/beans" })
 	void actuatorEndpointsOtherThanHealthAreNotExposed(String path) throws Exception {
 		mockMvc.perform(get(path)).andExpect(status().isNotFound());
+	}
+
+	@Test
+	void actuatorDiscoveryListsOnlyHealth() throws Exception {
+		String body = mockMvc.perform(get("/actuator")).andExpect(status().isOk())
+			.andReturn().getResponse().getContentAsString();
+
+		Map<String, Object> links = JsonPath.read(body, "$._links");
+		assertThat(links.keySet()).containsExactlyInAnyOrder("self", "health", "health-path");
 	}
 
 	// --- CUST-45, CUST-46
