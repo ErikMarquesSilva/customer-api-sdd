@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -189,6 +190,32 @@ class CustomerUpdateIntegrationTest extends HttpIntegrationTestSupport {
 	@Test
 	void putWithCpfOfAnotherCustomerReturns409AndLeavesCustomerUnchanged() throws Exception {
 		createCustomer(validCustomer("Bruno Reis", 1));
+
+		putCustomer(anaId, with(newData(), "cpf", cpf(1))).andExpect(status().isConflict())
+			.andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+			.andExpect(jsonPath("$.errors[*].field").value(contains("cpf")));
+
+		assertAnaUnchanged();
+	}
+
+	// --- CUST-12 on the update path: the database constraint catches what the pre-check missed
+
+	@Test
+	void putWithEmailOfAnotherCustomerPassingThePreCheckReturns409NotServerError() throws Exception {
+		createCustomer(validCustomer("Bruno Reis", 1));
+		doReturn(false).when(repository).existsByEmailAndIdNot(anyString(), eq(anaId));
+
+		putCustomer(anaId, with(newData(), "email", "customer1@example.com")).andExpect(status().isConflict())
+			.andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+			.andExpect(jsonPath("$.errors[*].field").value(contains("email")));
+
+		assertAnaUnchanged();
+	}
+
+	@Test
+	void putWithCpfOfAnotherCustomerPassingThePreCheckReturns409NotServerError() throws Exception {
+		createCustomer(validCustomer("Bruno Reis", 1));
+		doReturn(false).when(repository).existsByCpfAndIdNot(anyString(), eq(anaId));
 
 		putCustomer(anaId, with(newData(), "cpf", cpf(1))).andExpect(status().isConflict())
 			.andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))

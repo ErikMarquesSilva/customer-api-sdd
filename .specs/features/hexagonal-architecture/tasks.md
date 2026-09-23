@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/hexagonal-architecture/design.md`
-**Status**: Done
+**Status**: In fix iteration 1
 **Branch**: `refactor/hexagonal` (stacked on `feat/customer-api`)
 
 ---
@@ -42,6 +42,14 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 
 ```
 T1 → T2 → T3 → T4 → T5
+```
+
+### Phase 2: Verifier fix iteration 1
+
+The verifier returned FAIL (`9796beb..4cfd2ff`): 13/13 ACs, but surviving mutants M3b (CUST-12 race untested on PUT), M10 (`@Transactional` unenforced), M11b (ARCH-03 copy undetected).
+
+```
+T6 → T7 → T8 → T9
 ```
 
 ---
@@ -192,10 +200,120 @@ T1 → T2 → T3 → T4 → T5
 
 ---
 
+### Phase 2: Verifier fix iteration 1
+
+#### T6: Test the unique-constraint race on PUT
+
+**What**: HTTP test: a PUT whose uniqueness pre-check misses (spied repository) hits the database constraint and returns 409 with the field, for email and cpf.
+**Where**: `src/test/java/com/example/customerapi/customer/CustomerUpdateIntegrationTest.java`
+**Depends on**: T5
+**Reuses**: existing tests, `HexagonalRules`
+**Requirement**: CUST-12 (update path), ARCH-11
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] PUT with a taken email and `existsByEmailAndIdNot` stubbed false → 409, `errors[].field` = email, customer unchanged
+- [x] Same for cpf
+- [x] Mutant M3b (update skips `write()`) fails the new tests
+- [x] Gate check passes: `./mvnw -q -B test`
+
+**Tests**: integration
+**Gate**: full
+
+**Status**: ✅ Complete. M3b now fails both new tests (500 instead of 409).
+
+**Commit**: `test(customer): cover the unique-constraint race on update`
+
+---
+
+#### T7: Enforce transactional use cases and correct the concurrency note
+
+**What**: ArchUnit rule: every `@Service` in `application.service` is `@Transactional`. Correct design.md: in production CUST-24 is caught by Hibernate's versioned UPDATE; the explicit version check covers callers outside a transaction.
+**Where**: `src/test/java/com/example/customerapi/architecture/HexagonalRules.java` (+ test registration, fixture, design.md)
+**Depends on**: T6
+**Reuses**: existing tests, `HexagonalRules`
+**Requirement**: ARCH-11 (CUST-24 guarantee), design
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [ ] Rule passes on production and reports a non-transactional service fixture
+- [ ] Mutant M10 (drop `@Transactional`) fails the rule
+- [ ] design.md Risks/Tech Decisions state which defense is live
+- [ ] Gate check passes: quick
+
+**Tests**: unit
+**Gate**: quick
+
+**Commit**: `test(architecture): require transactional use cases`
+
+---
+
+#### T8: Enforce single CPF implementation
+
+**What**: ArchUnit rule: the web `CpfValidator` calls `domain.Cpf.isValid`, so a copied algorithm without delegation fails the build.
+**Where**: `src/test/java/com/example/customerapi/architecture/HexagonalRules.java` (+ test registration, fixture)
+**Depends on**: T7
+**Reuses**: existing tests, `HexagonalRules`
+**Requirement**: ARCH-03
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [ ] Rule passes on production and reports a validator fixture that does not delegate
+- [ ] Mutant M11b (algorithm copied back into `CpfValidator`) fails the rule
+- [ ] Gate check passes: quick
+
+**Tests**: unit
+**Gate**: quick
+
+**Commit**: `test(architecture): require cpf validation to delegate to the domain`
+
+---
+
+#### T9: Tidy moved files
+
+**What**: Remove leftover blank lines in `ApiExceptionHandler`, restore import grouping in moved files, wrap the long javadoc in `CustomerLocationController`.
+**Where**: `src/main/java/com/example/customerapi/common/web/ApiExceptionHandler.java` (+ moved files' imports)
+**Depends on**: T8
+**Reuses**: existing tests, `HexagonalRules`
+**Requirement**: ARCH-11 (no behaviour change)
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [ ] No line over 120 characters in `src/main`
+- [ ] Gate check passes: `./mvnw -B clean verify`
+
+**Tests**: none
+**Gate**: build
+
+**Commit**: `style: tidy imports and blank lines after the hexagonal move`
+
+---
+
 ## Phase Execution Map
 
 ```
 Phase 1:  T1 ------→ T2 ------→ T3 ------→ T4 ------→ T5
+Phase 2:  T6 ------→ T7 ------→ T8 ------→ T9
 ```
 
 ## Requirement Coverage
