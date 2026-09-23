@@ -80,6 +80,72 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: T5 (architecture/tests)
 - last seen: 2026-09-23T04:38:32Z
 
+### L-012 - When a refactor moves exception translation from a global handler to each call site, add a test for every call site; a behaviour that was structurally global becomes per-path and can regress silently.
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `refactoring/errors` · harmful: 0
+- features: hexagonal-architecture
+- evidence: M3b (refactoring/errors)
+- last seen: 2026-09-23T05:10:22Z
+
+### L-013 - When two defenses guard one requirement (explicit version check and transactional versioned UPDATE), mutate each alone and both together, and state in the design which defense is live in production.
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `concurrency` · harmful: 0
+- features: hexagonal-architecture
+- evidence: M10 (concurrency)
+- last seen: 2026-09-23T05:10:22Z
+
+### L-014 - Requirements like 'implemented once' or 'delegates to X' need a structural rule (ArchUnit call or dependency assertion); behavioural tests cannot tell a copy from delegation.
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `architecture/tests` · harmful: 0
+- features: hexagonal-architecture
+- evidence: M11b (architecture/tests)
+- last seen: 2026-09-23T05:10:22Z
+
+### L-015 - An ArchUnit rule that only checks an annotation's presence or a call's existence can be evaded (propagation=SUPPORTS, ignored result); constrain the attribute or 'only calls X', or pin it with a behaviour test.
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `architecture/tests` · harmful: 0
+- features: hexagonal-architecture
+- evidence: N3 (architecture/tests)
+- last seen: 2026-09-23T05:45:06Z
+
+### L-016 - When a race test disables a pre-check by stubbing a spy, assert the downstream effect (the write was attempted, after clearing arrangement invocations); verifying the stubbed call is not enough because the real pre-check may still answer.
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests/stubs` · harmful: 0
+- features: hexagonal-architecture
+- evidence: N1b (tests/stubs)
+- last seen: 2026-09-23T05:45:06Z
+
+### L-017 - Re-verification must attack the new guards themselves with evasion mutants, not only replay old survivors; replaying alone gives a false PASS.
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `process` · harmful: 0
+- features: hexagonal-architecture
+- evidence: N4b (process)
+- last seen: 2026-09-23T05:45:06Z
+
+### L-018 - A class-level annotation rule does not bound effective behaviour when Spring resolves method-level annotations first; guard effective attributes (transaction, security, cache) with a behavioural probe instead of one static rule per annotation level.
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `architecture/tests` · harmful: 0
+- features: hexagonal-architecture
+- evidence: X5 (architecture/tests)
+- last seen: 2026-09-23T06:24:56Z
+
+### L-019 - Use onlyCallCodeUnitsThat rather than onlyCallMethodsThat when a class must compute nothing itself; method-only rules leave constructor calls open.
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `architecture/tests` · harmful: 0
+- features: hexagonal-architecture
+- evidence: A1 (architecture/tests)
+- last seen: 2026-09-23T06:24:56Z
+
+### L-020 - Put multi-step test arrangements that guard against vacuity (stub + clearInvocations) in one helper; separate lines can each be forgotten.
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests/stubs` · harmful: 0
+- features: hexagonal-architecture
+- evidence: X14 (tests/stubs)
+- last seen: 2026-09-23T06:24:56Z
+
+### L-021 - A 'runs in a transaction' probe must prove the read and the write share the same transaction; a check at one call site misses REQUIRES_NEW splits, including on outbound adapters. Count completed transactions per request instead.
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `concurrency` · harmful: 0
+- features: hexagonal-architecture
+- evidence: Y8 (concurrency)
+- last seen: 2026-09-23T06:54:28Z
+
+### L-022 - Pair every mutation that is invisible over HTTP with the mutation that removes the other guard, and run that guard's removal alone as a control, to expose the real consequence (e.g. a lost update).
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `process` · harmful: 0
+- features: hexagonal-architecture
+- evidence: Y7 (process)
+- last seen: 2026-09-23T06:54:28Z
+
 ## Quarantined (failed when applied - ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.

@@ -100,10 +100,10 @@ All paths under `src/main/java/com/example/customerapi/customer/`.
 | Implementations of `port.out` interfaces reside in `..adapter.out..` | ARCH-09 |
 | `@RestController` classes reside in `..adapter.in.web..`; Spring Data `Repository` subtypes in `..adapter.out.persistence..` | ARCH-10 |
 | `@Service` classes in `..application.service..` carry class-level `@Transactional` with a transaction-starting propagation (the live CUST-24 guard, see Risks) | added after verification (M10, N3) |
-
-The transaction guarantee is proven behaviourally by `TransactionBoundaryIntegrationTest`: it observes an active read-write transaction inside POST and PUT, and catches method-level overrides (X5) that a class-level rule cannot see.
 | `CpfValidator` calls `domain.Cpf.isValid` and no method or constructor other than the domain rule, its own and `Object`'s | ARCH-03 (added after verification, M11b, N4b, A1) |
 | Every class under `..customer..` resides in domain, application or adapter | layering completeness |
+
+`TransactionBoundaryIntegrationTest` checks the transaction behaviourally. It observes an active read-write transaction at the pre-check of POST and PUT, and catches method-level overrides (X5) that a class-level rule cannot see. **Known limit (open, escalated):** it does not prove that the read and the versioned write share one transaction. Moving the write into `REQUIRES_NEW` (verifier mutants Y7/Y8) is not detected; CUST-24 then rests only on the adapter's explicit version check, which has its own test.
 
 Each rule also runs against a **violation fixture** in the top-level `archfixtures` test package, which Spring never scans. `HexagonalRulesDiscriminationTest` asserts that each rule reports its fixture, which proves the rules can fail.
 
