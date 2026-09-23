@@ -46,6 +46,9 @@ class HexagonalArchitectureTest {
 	static final ArchRule controllersLiveInWebAdapter = HexagonalRules.CONTROLLERS_LIVE_IN_WEB_ADAPTER;
 
 	@ArchTest
+	static final ArchRule useCaseServicesAreTransactional = HexagonalRules.USE_CASE_SERVICES_ARE_TRANSACTIONAL;
+
+	@ArchTest
 	static final ArchRule featureClassesBelongToALayer = HexagonalRules.FEATURE_CLASSES_BELONG_TO_A_LAYER;
 
 }

@@ -35,6 +35,7 @@ class HexagonalRulesDiscriminationTest {
 				Arguments.of(HexagonalRules.ENTITIES_LIVE_IN_PERSISTENCE_ADAPTER, "JpaEntityInDomain"),
 				Arguments.of(HexagonalRules.REPOSITORIES_LIVE_IN_PERSISTENCE_ADAPTER, "RepositoryInWebAdapter"),
 				Arguments.of(HexagonalRules.CONTROLLERS_LIVE_IN_WEB_ADAPTER, "RestControllerInService"),
+				Arguments.of(HexagonalRules.USE_CASE_SERVICES_ARE_TRANSACTIONAL, "NonTransactionalService"),
 				Arguments.of(HexagonalRules.FEATURE_CLASSES_BELONG_TO_A_LAYER, "StrayClass"));
 	}
 

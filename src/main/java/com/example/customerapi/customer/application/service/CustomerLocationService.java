@@ -21,6 +21,7 @@ import com.example.customerapi.customer.domain.StateLocation;
  * Builds the customer counts per state and city from one aggregate query; no customer is loaded.
  */
 @Service
+@Transactional(readOnly = true)
 public class CustomerLocationService implements GroupCustomersByLocationUseCase {
 
 	/** pt-BR order ignoring case and accents; plain string order breaks ties so the result is deterministic. */
@@ -39,7 +40,6 @@ public class CustomerLocationService implements GroupCustomersByLocationUseCase 
 	}
 
 	@Override
-	@Transactional(readOnly = true)
 	public List<StateLocation> groupByLocation() {
 		Map<String, List<CityLocation>> citiesByState = new TreeMap<>();
 		for (LocationCount row : locationCounts.countByLocation()) {

@@ -119,7 +119,7 @@ Each rule also runs against a small set of **violation fixtures** in test source
 
 | Concern | Location | Impact | Mitigation |
 | ------- | -------- | ------ | ---------- |
-| CUST-24 (optimistic lock) could silently turn into a lost update if the adapter reloads a fresh entity | `CustomerPersistenceAdapter.update` | Data loss | The domain carries `version`. The adapter compares it and relies on Hibernate's versioned UPDATE. The existing CUST-24 HTTP test must stay green, and a new adapter test covers a version mismatch |
+| CUST-24 (optimistic lock) could silently turn into a lost update if the adapter reloads a fresh entity | `CustomerPersistenceAdapter.update` | Data loss | Two defenses (corrected after verification). **In production** the use case runs in one transaction (enforced by an ArchUnit rule), the adapter gets back the entity the service already read, and Hibernate's versioned UPDATE plus the `ObjectOptimisticLockingFailureException` translation catch the conflict. The CUST-24 HTTP test covers this. The explicit version comparison only fires for callers outside a transaction (covered by the adapter test). With neither defense, a lost update occurs, which is why the transaction rule exists |
 | The switchover (T3) touches many files in one commit | T3 | Hard review | Moves keep class bodies. Renames are mechanical. HTTP assertions are unchanged, and ARCH-11 is checked by diffing the test assertions |
 | The log test asserts the abbreviated logger name `customer.CustomerService` | `OperabilityIntegrationTest.java:132` | Fails after the move | Update only the logger-name fragment to the new package. The CUST-45 assertions (one INFO line with operation and id) stay |
 | The web race tests spy on the Spring Data repository | `HttpIntegrationTestSupport` | Spy type changes | The spy moves to `SpringDataCustomerRepository`. Stubs and assertions are unchanged |
@@ -132,7 +132,7 @@ Each rule also runs against a small set of **violation fixtures** in test source
 | Decision | Choice | Rationale |
 | -------- | ------ | --------- |
 | Exception translation | In the persistence adapter | The web layer stops depending on Spring DAO and Hibernate constraint names. This is the adapter's job in ports and adapters |
-| Concurrency token | `version` in the domain `Customer` | Explicit and testable. It does not rely on first-level cache identity |
+| Concurrency token | `version` in the domain `Customer` | Makes the token explicit across the port. The live production guard is still Hibernate's versioned UPDATE inside the use-case transaction (see Risks). The explicit check protects non-transactional callers |
 | Port granularity | 6 input ports (one per use case) and 2 output ports (by capability) | Use cases are the public API, so one each keeps controllers precise. Output ports are grouped by storage capability to avoid interface spam |
 | One service implementing five use cases | Yes | Shared rules (uniqueness, not found). Splitting would duplicate them |
 | Paging types in the application layer | Spring Data Commons `Page`/`Pageable`/`Sort` | User decision (pragmatic core). Avoids re-implementing paging |

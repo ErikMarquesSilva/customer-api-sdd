@@ -5,6 +5,8 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
 import org.springframework.data.repository.Repository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tngtech.archunit.lang.ArchRule;
@@ -119,6 +121,18 @@ final class HexagonalRules {
 		.should()
 		.resideInAPackage(WEB_ADAPTER)
 		.as("ARCH-10 REST controllers live in adapter.in.web");
+
+	/**
+	 * Use cases run in one transaction. In production the CUST-24 conflict is detected by Hibernate's versioned
+	 * UPDATE against the version read in that same transaction.
+	 */
+	static final ArchRule USE_CASE_SERVICES_ARE_TRANSACTIONAL = classes().that()
+		.resideInAPackage(SERVICE)
+		.and()
+		.areAnnotatedWith(Service.class)
+		.should()
+		.beAnnotatedWith(Transactional.class)
+		.as("use-case services are @Transactional");
 
 	/** Every feature class belongs to one hexagon layer. */
 	static final ArchRule FEATURE_CLASSES_BELONG_TO_A_LAYER = classes().that()

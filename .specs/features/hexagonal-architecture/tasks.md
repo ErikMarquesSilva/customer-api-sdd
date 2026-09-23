@@ -246,13 +246,15 @@ T6 → T7 → T8 → T9
 
 **Done when**:
 
-- [ ] Rule passes on production and reports a non-transactional service fixture
-- [ ] Mutant M10 (drop `@Transactional`) fails the rule
-- [ ] design.md Risks/Tech Decisions state which defense is live
-- [ ] Gate check passes: quick
+- [x] Rule passes on production and reports a non-transactional service fixture
+- [x] Mutant M10 (drop `@Transactional`) fails the rule
+- [x] design.md Risks/Tech Decisions state which defense is live
+- [x] Gate check passes: quick
 
 **Tests**: unit
 **Gate**: quick
+
+**Status**: ✅ Complete. M10 fails the new rule. `CustomerLocationService` moved `@Transactional(readOnly = true)` from its only method to the class (equivalent).
 
 **Commit**: `test(architecture): require transactional use cases`
 
