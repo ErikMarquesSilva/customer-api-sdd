@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/customer-geo-grouping/design.md`
-**Status**: Approved
+**Status**: Done
 **Prerequisite**: customer-management tasks T1 to T11 complete.
 
 ---

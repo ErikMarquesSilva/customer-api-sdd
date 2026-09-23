@@ -117,25 +117,25 @@ The business needs to know where its customers are. Today the only way to answer
 
 | Requirement ID | Story | Phase | Status |
 | -------------- | ----- | ----- | ------ |
-| GEO-001 | P1: Counts by state and city | Execute | Implementing |
-| GEO-002 | P1: Counts by state and city | Execute | Implementing |
-| GEO-003 | P1: Counts by state and city | Execute | Implementing |
-| GEO-004 | P1: Counts by state and city | Execute | Implementing |
-| GEO-005 | P1: Counts by state and city | Execute | Implementing |
-| GEO-006 | P1: Counts by state and city | Execute | Implementing |
-| GEO-007 | P1: Counts by state and city | Execute | Implementing |
-| GEO-008 | P1: Counts by state and city | Execute | Implementing |
-| GEO-009 | P1: Counts by state and city | Execute | Implementing |
-| GEO-010 | P1: Counts by state and city | Execute | Implementing |
-| GEO-011 | P1: Counts by state and city | Execute | Implementing |
-| GEO-012 | P1: Counts by state and city | Execute | Implementing |
-| GEO-013 | P1: Counts reflect current data | Execute | Implementing |
-| GEO-014 | P1: Counts reflect current data | Execute | Implementing |
-| GEO-015 | P1: Counts reflect current data | Execute | Implementing |
-| GEO-016 | P1: Efficient aggregation | Execute | Implementing |
-| GEO-017 | P1: Efficient aggregation | Execute | Implementing |
-| GEO-018 | P1: Counts by state and city | Execute | Implementing |
-| GEO-019 | P1: Counts by state and city | Execute | Implementing |
+| GEO-001 | P1: Counts by state and city | Execute | Verified |
+| GEO-002 | P1: Counts by state and city | Execute | Verified |
+| GEO-003 | P1: Counts by state and city | Execute | Verified |
+| GEO-004 | P1: Counts by state and city | Execute | Verified |
+| GEO-005 | P1: Counts by state and city | Execute | Verified |
+| GEO-006 | P1: Counts by state and city | Execute | Verified |
+| GEO-007 | P1: Counts by state and city | Execute | Verified |
+| GEO-008 | P1: Counts by state and city | Execute | Verified |
+| GEO-009 | P1: Counts by state and city | Execute | Verified |
+| GEO-010 | P1: Counts by state and city | Execute | Verified |
+| GEO-011 | P1: Counts by state and city | Execute | Verified |
+| GEO-012 | P1: Counts by state and city | Execute | Verified |
+| GEO-013 | P1: Counts reflect current data | Execute | Verified |
+| GEO-014 | P1: Counts reflect current data | Execute | Verified |
+| GEO-015 | P1: Counts reflect current data | Execute | Verified |
+| GEO-016 | P1: Efficient aggregation | Execute | Verified |
+| GEO-017 | P1: Efficient aggregation | Execute | Verified |
+| GEO-018 | P1: Counts by state and city | Execute | Verified |
+| GEO-019 | P1: Counts by state and city | Execute | Verified |
 
 **Coverage:** 19 total, 19 mapped to tasks, 0 unmapped
 
