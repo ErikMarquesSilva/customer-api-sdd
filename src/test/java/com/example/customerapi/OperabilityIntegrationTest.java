@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -103,6 +104,24 @@ class OperabilityIntegrationTest extends HttpIntegrationTestSupport {
 		doReturn(false).when(repository).existsByCpf(anyString());
 
 		postCustomer(with(PII_CUSTOMER, "email", "other.pii@example.com")).andExpect(status().isConflict());
+
+		assertNoPii(output, PII_CUSTOMER);
+	}
+
+	@Test
+	void validationErrorLogsNoPii(CapturedOutput output) throws Exception {
+		postCustomer(without(PII_CUSTOMER, "name")).andExpect(status().isBadRequest());
+
+		assertNoPii(output, PII_CUSTOMER);
+	}
+
+	@Test
+	void malformedJsonLogsNoPii(CapturedOutput output) throws Exception {
+		String truncated = json(PII_CUSTOMER);
+		truncated = truncated.substring(0, truncated.length() - 1);
+
+		mockMvc.perform(post(CUSTOMERS).contentType(MediaType.APPLICATION_JSON).content(truncated))
+			.andExpect(status().isBadRequest());
 
 		assertNoPii(output, PII_CUSTOMER);
 	}

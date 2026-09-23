@@ -569,12 +569,14 @@ T15 → T16 → T17 → T18
 
 **Done when**:
 
-- [ ] `page=-1`, `size=101`, `sort=cpf`, `sort=name,up` and the CUST-24 409 carry `type`, `title`, `status`, `detail`, `instance`
-- [ ] Invalid-body 400 and malformed-JSON 400 leave no email/cpf/phone of the request in the logs
-- [ ] Gate check passes: `./mvnw -q -B test`
+- [x] `page=-1`, `size=101`, `sort=cpf`, `sort=name,up` and the CUST-24 409 carry `type`, `title`, `status`, `detail`, `instance`
+- [x] Invalid-body 400 and malformed-JSON 400 leave no email/cpf/phone of the request in the logs
+- [x] Gate check passes: `./mvnw -q -B test`
 
 **Tests**: integration
 **Gate**: full
+
+**Status**: ✅ Complete
 
 **Commit**: `test(customer): check error contract and log pii on remaining error paths`
 

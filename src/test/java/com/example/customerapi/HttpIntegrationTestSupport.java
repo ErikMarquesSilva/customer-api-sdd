@@ -1,6 +1,10 @@
 package com.example.customerapi;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.hamcrest.Matchers.emptyOrNullString;
+import static org.hamcrest.Matchers.not;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.LinkedHashMap;
@@ -33,6 +37,17 @@ import tools.jackson.databind.json.JsonMapper;
 public abstract class HttpIntegrationTestSupport {
 
 	protected static final String CUSTOMERS = "/api/v1/customers";
+
+	/** CUST-35: problem+json with type, title, status, detail and instance (the request path). */
+	protected static void assertProblem(ResultActions result, int status, String path) throws Exception {
+		result.andExpect(status().is(status))
+			.andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+			.andExpect(jsonPath("$.type").value(not(emptyOrNullString())))
+			.andExpect(jsonPath("$.title").value(not(emptyOrNullString())))
+			.andExpect(jsonPath("$.status").value(status))
+			.andExpect(jsonPath("$.detail").value(not(emptyOrNullString())))
+			.andExpect(jsonPath("$.instance").value(path));
+	}
 
 	@Autowired
 	protected MockMvc mockMvc;

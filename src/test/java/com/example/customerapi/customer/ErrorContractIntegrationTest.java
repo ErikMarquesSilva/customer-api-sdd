@@ -23,17 +23,6 @@ import com.example.customerapi.HttpIntegrationTestSupport;
 
 class ErrorContractIntegrationTest extends HttpIntegrationTestSupport {
 
-	/** CUST-35: problem+json with type, title, status, detail and instance (the request path). */
-	private static void assertProblem(ResultActions result, int status, String path) throws Exception {
-		result.andExpect(status().is(status))
-			.andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
-			.andExpect(jsonPath("$.type").value(not(emptyOrNullString())))
-			.andExpect(jsonPath("$.title").value(not(emptyOrNullString())))
-			.andExpect(jsonPath("$.status").value(status))
-			.andExpect(jsonPath("$.detail").value(not(emptyOrNullString())))
-			.andExpect(jsonPath("$.instance").value(path));
-	}
-
 	@Test
 	void validationErrorIsProblemWithAllContractFields() throws Exception {
 		assertProblem(postCustomer(without(validCustomer(), "name")), 400, CUSTOMERS);

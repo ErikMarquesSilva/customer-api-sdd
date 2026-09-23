@@ -237,9 +237,7 @@ class CustomerUpdateIntegrationTest extends HttpIntegrationTestSupport {
 			return false;
 		}).when(repository).existsByEmailAndIdNot(anyString(), eq(anaId));
 
-		putCustomer(anaId, newData()).andExpect(status().isConflict())
-			.andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
-			.andExpect(jsonPath("$.status").value(409));
+		assertProblem(putCustomer(anaId, newData()), 409, CUSTOMERS + "/" + anaId);
 
 		String stored = getCustomer(anaId);
 		assertThat((String) JsonPath.read(stored, "$.name")).isEqualTo("First Writer");

@@ -133,10 +133,10 @@ class CustomerListIntegrationTest extends HttpIntegrationTestSupport {
 	void outOfRangePagingOrNonWhitelistedSortReturns400(String param, String value) throws Exception {
 		createAnaMarianaAndBruno();
 
-		list(param, value).andExpect(status().isBadRequest())
-			.andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
-			.andExpect(jsonPath("$.status").value(400))
-			.andExpect(jsonPath("$.content").doesNotExist());
+		ResultActions result = list(param, value);
+
+		assertProblem(result, 400, CUSTOMERS);
+		result.andExpect(jsonPath("$.content").doesNotExist());
 	}
 
 	// --- CUST-34
