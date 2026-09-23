@@ -379,10 +379,12 @@ T7 → T8 → T9 → T10 → T11
 
 **Done when**:
 
-- [ ] `/actuator/health` → 200 `status` `UP`; `/actuator/env` and `/actuator/beans` → 404
-- [ ] Create, update and delete over HTTP each log one INFO line with the id; captured output contains no email, cpf or phone of that customer
-- [ ] Gate check passes: `./mvnw -B verify`
-- [ ] Test count: ≥ 4 tests pass
+- [x] `/actuator/health` → 200 `status` `UP`; `/actuator/env` and `/actuator/beans` → 404
+- [x] Create, update and delete over HTTP each log one INFO line with the id; captured output contains no email, cpf or phone of that customer
+- [x] Gate check passes: `./mvnw -B verify`
+- [x] Test count: ≥ 4 tests pass
+
+**Status**: ✅ Complete
 
 **Tests**: integration
 **Gate**: build

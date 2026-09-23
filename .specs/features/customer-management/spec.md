@@ -277,7 +277,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | CUST-40 | P2: Search | Execute | Implementing |
 | CUST-41 | P2: Search | Execute | Implementing |
 | CUST-42 | P2: Search | Execute | Implementing |
-| CUST-43 | P2: Operability | Design | Pending |
+| CUST-43 | P2: Operability | Execute | Implementing |
 | CUST-44 | P2: Operability | Execute | Implementing |
 | CUST-45 | P2: Operability | Execute | Implementing |
 | CUST-46 | P2: Operability | Execute | Implementing |
