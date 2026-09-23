@@ -20,7 +20,7 @@ Explicitly excluded. Documented to prevent scope creep.
 | Authentication / authorization | Assumed to be enforced by an API gateway in front of the service (see Assumptions). Separate feature. |
 | Soft delete, restore, audit history | Decided: hard delete. |
 | Partial update (PATCH) | Decided: PUT only. |
-| Address, multiple emails/phones | Decided: core fields + CPF only. |
+| Full address (street, number, zip code), multiple emails/phones | Decided: core fields + CPF, plus city and state only. |
 | Rate limiting | Gateway concern; separate feature. |
 | HTTP caching / ETag / If-Match | Not requested; concurrency handled by optimistic locking inside the service. |
 | Bulk create/update/delete, import/export | Not requested. |
@@ -36,26 +36,29 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | Assumption / decision | Chosen default | Rationale | Confirmed? |
 | --------------------- | -------------- | --------- | ---------- |
 | Customer fields | name, email, cpf (required); phone, birthDate (optional); id, createdAt, updatedAt (server-managed) | User decision | y |
+| Location fields (amendment for customer-geo-grouping) | `city` and `state` required on create and update | Every customer must be groupable by location; no legacy data exists, so no migration cost | y |
+| City format | Trimmed, internal whitespace runs collapsed to one space, 2 to 100 characters; case and accents kept as sent | Stable grouping key without altering how the name is written | y |
+| State format | One of the 27 Brazilian UFs (AC, AL, AP, AM, BA, CE, DF, ES, GO, MA, MT, MS, MG, PA, PB, PR, PE, PI, RJ, RN, RS, RO, RR, SC, SP, SE, TO), accepted in any case, stored uppercase | Two-letter UF as requested; rejects non-existent states | y |
 | Delete semantics | Hard delete; email and CPF become reusable | User decision | y |
 | Update operations | PUT full replacement only; omitted optional fields become null | User decision | y |
 | Listing | Paginated with sort, optional `name` (contains, case-insensitive) and `email` (exact, case-insensitive) filters | User decision | y |
-| Base path and versioning | `/api/v1/customers` | URI versioning is the simplest contract to evolve | n |
-| Identifier type | Server-generated UUID | Not enumerable; no coupling to DB sequences | n |
-| Authentication | None in the service; a gateway enforces it | Not requested; keeps the feature bounded | n |
-| Error format | RFC 9457 `application/problem+json`; validation and conflict errors add an `errors` array of `{field, message}` | Standard, supported natively by Spring | n |
-| Email normalization | Trimmed and lowercased before validation, storage and uniqueness checks | Emails are case-insensitive in practice; prevents duplicates by casing | n |
-| CPF input format | Accept `52998224725` or `529.982.247-25`; store and return 11 digits | Clients send both forms; one canonical stored form | n |
-| CPF mutability | CPF may be changed via PUT, still subject to validation and uniqueness | No requirement to lock it; simplest consistent rule | n |
-| Name rules | Trimmed; 2 to 120 characters | Rejects blanks and junk while allowing full names | n |
-| Phone format | Optional; when present must match `^\+?\d{10,13}$` (no spaces or punctuation) | Covers BR landline/mobile with or without country code; unambiguous | n |
-| birthDate rule | Optional ISO date; must be strictly before the current UTC date | A future or today birth date is a data error | n |
-| Page size bounds | Default 20; `size` 1-100; `page` >= 0; out of range returns 400 | Explicit errors over silent clamping | n |
-| Default and allowed sort | Default `name,asc`; allowed properties: name, email, createdAt, updatedAt | Stable, user-meaningful ordering; blocks sorting on arbitrary columns | n |
-| Concurrent updates | Optimistic locking; the losing concurrent write returns 409; no client-visible version field | Prevents silent lost updates without adding ETag scope | n |
-| Unknown JSON properties | Ignored; client-supplied id, createdAt, updatedAt are ignored | Tolerant reader; server owns identity and timestamps | n |
-| Timestamps | `createdAt`/`updatedAt` as ISO-8601 UTC instants | Unambiguous across time zones | n |
-| Observability | Actuator `health` only; INFO log per create/update/delete with id; no PII in logs | "Production-ready" without scope creep into metrics | n |
-| Schema management | Versioned migrations applied on startup; no Hibernate auto-DDL | Repeatable, reviewable schema changes | n |
+| Base path and versioning | `/api/v1/customers` | URI versioning is the simplest contract to evolve | y |
+| Identifier type | Server-generated UUID | Not enumerable; no coupling to DB sequences | y |
+| Authentication | None in the service; a gateway enforces it | Not requested; keeps the feature bounded | y |
+| Error format | RFC 9457 `application/problem+json`; validation and conflict errors add an `errors` array of `{field, message}` | Standard, supported natively by Spring | y |
+| Email normalization | Trimmed and lowercased before validation, storage and uniqueness checks | Emails are case-insensitive in practice; prevents duplicates by casing | y |
+| CPF input format | Accept `52998224725` or `529.982.247-25`; store and return 11 digits | Clients send both forms; one canonical stored form | y |
+| CPF mutability | CPF may be changed via PUT, still subject to validation and uniqueness | No requirement to lock it; simplest consistent rule | y |
+| Name rules | Trimmed; 2 to 120 characters | Rejects blanks and junk while allowing full names | y |
+| Phone format | Optional; when present must match `^\+?\d{10,13}$` (no spaces or punctuation) | Covers BR landline/mobile with or without country code; unambiguous | y |
+| birthDate rule | Optional ISO date; must be strictly before the current UTC date | A future or today birth date is a data error | y |
+| Page size bounds | Default 20; `size` 1-100; `page` >= 0; out of range returns 400 | Explicit errors over silent clamping | y |
+| Default and allowed sort | Default `name,asc`; allowed properties: name, email, createdAt, updatedAt | Stable, user-meaningful ordering; blocks sorting on arbitrary columns | y |
+| Concurrent updates | Optimistic locking; the losing concurrent write returns 409; no client-visible version field | Prevents silent lost updates without adding ETag scope | y |
+| Unknown JSON properties | Ignored; client-supplied id, createdAt, updatedAt are ignored | Tolerant reader; server owns identity and timestamps | y |
+| Timestamps | `createdAt`/`updatedAt` as ISO-8601 UTC instants | Unambiguous across time zones | y |
+| Observability | Actuator `health` only; INFO log per create/update/delete with id; no PII in logs | "Production-ready" without scope creep into metrics | y |
+| Schema management | Versioned migrations applied on startup; no Hibernate auto-DDL | Repeatable, reviewable schema changes | y |
 
 **Open questions:** none - all resolved or logged above (required before the spec is confirmed).
 
@@ -71,7 +74,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 
 **Acceptance Criteria** (each line is one EARS pattern):
 
-1. WHEN a client sends `POST /api/v1/customers` with a valid body THEN the system SHALL persist the customer and respond 201 with the customer (id as UUID, name, email, cpf, phone, birthDate, createdAt, updatedAt). `CUST-01`
+1. WHEN a client sends `POST /api/v1/customers` with a valid body THEN the system SHALL persist the customer and respond 201 with the customer (id as UUID, name, email, cpf, phone, birthDate, city, state, createdAt, updatedAt). `CUST-01`
 2. WHEN a customer is created THEN the system SHALL return a `Location` header equal to `/api/v1/customers/{id}`. `CUST-02`
 3. WHEN a customer is created with email ` Ana@Example.COM ` THEN the system SHALL store and return `ana@example.com`. `CUST-03`
 4. WHEN a customer is created with cpf `529.982.247-25` THEN the system SHALL store and return `52998224725`. `CUST-04`
@@ -84,6 +87,10 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 11. IF the normalized cpf already belongs to another customer THEN the system SHALL respond 409 with an `errors` entry for field `cpf` and SHALL NOT create a customer. `CUST-11`
 12. IF the database rejects a write because of the email or cpf unique constraint (concurrent requests) THEN the system SHALL respond 409 instead of 500. `CUST-12`
 13. The system SHALL ignore `id`, `createdAt` and `updatedAt` supplied in any request body. `CUST-13`
+14. IF `city` is missing, blank, or its normalized length is outside 2-100 THEN the system SHALL respond 400 with an `errors` entry for field `city`. `CUST-48`
+15. IF `state` is missing or is not one of the 27 Brazilian UFs (compared ignoring case) THEN the system SHALL respond 400 with an `errors` entry for field `state`. `CUST-49`
+16. WHEN a customer is created with state `sp` THEN the system SHALL store and return `SP`. `CUST-50`
+17. WHEN a customer is created with city `  São   Paulo ` THEN the system SHALL store and return `São Paulo`. `CUST-51`
 
 **Independent Test**: POST a valid customer, receive 201 with a UUID and Location header; POST the same email again, receive 409.
 
@@ -113,10 +120,10 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 
 **Acceptance Criteria**:
 
-1. WHEN a client sends `PUT /api/v1/customers/{id}` with a valid body for an existing customer THEN the system SHALL replace name, email, cpf, phone and birthDate and respond 200 with the updated customer. `CUST-17`
+1. WHEN a client sends `PUT /api/v1/customers/{id}` with a valid body for an existing customer THEN the system SHALL replace name, email, cpf, phone, birthDate, city and state and respond 200 with the updated customer. `CUST-17`
 2. WHEN the PUT body omits `phone` or `birthDate` THEN the system SHALL store that field as null. `CUST-18`
 3. WHEN a customer is updated THEN the system SHALL keep `id` and `createdAt` unchanged and SHALL set `updatedAt` to the update time. `CUST-19`
-4. IF the PUT body violates any rule in CUST-05 to CUST-09 THEN the system SHALL respond 400 with the matching `errors` entries and SHALL leave the customer unchanged. `CUST-20`
+4. IF the PUT body violates any rule in CUST-05 to CUST-09, CUST-48 or CUST-49 THEN the system SHALL respond 400 with the matching `errors` entries and SHALL leave the customer unchanged. `CUST-20`
 5. IF the new email or cpf belongs to a different customer THEN the system SHALL respond 409 with the matching `errors` entry and SHALL leave the customer unchanged. `CUST-21`
 6. WHEN the PUT body keeps the customer's own email and cpf THEN the system SHALL NOT report a conflict. `CUST-22`
 7. IF no customer exists with `{id}` THEN the system SHALL respond 404 and SHALL NOT create a customer. `CUST-23`
@@ -275,13 +282,17 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | CUST-45 | P2: Operability | Design | Pending |
 | CUST-46 | P2: Operability | Design | Pending |
 | CUST-47 | P2: Operability | Design | Pending |
+| CUST-48 | P1: Create | Design | Pending |
+| CUST-49 | P1: Create | Design | Pending |
+| CUST-50 | P1: Create | Design | Pending |
+| CUST-51 | P1: Create | Design | Pending |
 
-**Coverage:** 47 total, 0 mapped to tasks, 47 unmapped ⚠️ (mapped during Tasks)
+**Coverage:** 51 total, 0 mapped to tasks, 51 unmapped ⚠️ (mapped during Tasks)
 
 ---
 
 ## Success Criteria
 
-- [ ] All 47 acceptance criteria have at least one passing automated test that asserts the spec-defined outcome.
+- [ ] All 51 acceptance criteria have at least one passing automated test that asserts the spec-defined outcome.
 - [ ] The full test suite passes against a real PostgreSQL instance.
-- [ ] Zero 500 responses across the error scenarios in this spec (CUST-05 to CUST-12, CUST-15, CUST-16, CUST-20 to CUST-24, CUST-28, CUST-32, CUST-33, CUST-37, CUST-38).
+- [ ] Zero 500 responses across the error scenarios in this spec (CUST-05 to CUST-12, CUST-48, CUST-49, CUST-15, CUST-16, CUST-20 to CUST-24, CUST-28, CUST-32, CUST-33, CUST-37, CUST-38).
