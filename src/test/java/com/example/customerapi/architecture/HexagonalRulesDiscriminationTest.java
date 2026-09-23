@@ -36,6 +36,7 @@ class HexagonalRulesDiscriminationTest {
 				Arguments.of(HexagonalRules.REPOSITORIES_LIVE_IN_PERSISTENCE_ADAPTER, "RepositoryInWebAdapter"),
 				Arguments.of(HexagonalRules.CONTROLLERS_LIVE_IN_WEB_ADAPTER, "RestControllerInService"),
 				Arguments.of(HexagonalRules.USE_CASE_SERVICES_ARE_TRANSACTIONAL, "NonTransactionalService"),
+				Arguments.of(HexagonalRules.USE_CASE_SERVICES_ARE_TRANSACTIONAL, "SupportsOnlyService"),
 				Arguments.of(HexagonalRules.CPF_VALIDATION_DELEGATES_TO_DOMAIN,
 						"archfixtures.customer.adapter.in.web.validation.CpfValidator"),
 				Arguments.of(HexagonalRules.CPF_VALIDATION_DELEGATES_TO_DOMAIN,

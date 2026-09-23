@@ -99,8 +99,8 @@ All paths under `src/main/java/com/example/customerapi/customer/`.
 | `..adapter.out..` depends on no `..adapter.in..` | ARCH-08 |
 | Implementations of `port.out` interfaces reside in `..adapter.out..` | ARCH-09 |
 | `@RestController` classes reside in `..adapter.in.web..`; Spring Data `Repository` subtypes in `..adapter.out.persistence..` | ARCH-10 |
-| `@Service` classes in `..application.service..` are `@Transactional` (the live CUST-24 guard, see Risks) | added after verification (M10) |
-| `CpfValidator` calls `domain.Cpf.isValid` | ARCH-03 (added after verification, M11b) |
+| `@Service` classes in `..application.service..` carry class-level `@Transactional` with a transaction-starting propagation (the live CUST-24 guard, see Risks) | added after verification (M10, N3) |
+| `CpfValidator` calls `domain.Cpf.isValid` and no method other than the domain rule and its own | ARCH-03 (added after verification, M11b, N4b) |
 | Every class under `..customer..` resides in domain, application or adapter | layering completeness |
 
 Each rule also runs against a **violation fixture** in the top-level `archfixtures` test package, which Spring never scans. `HexagonalRulesDiscriminationTest` asserts that each rule reports its fixture, which proves the rules can fail.
@@ -122,7 +122,7 @@ Each rule also runs against a **violation fixture** in the top-level `archfixtur
 
 | Concern | Location | Impact | Mitigation |
 | ------- | -------- | ------ | ---------- |
-| CUST-24 (optimistic lock) could silently turn into a lost update if the adapter reloads a fresh entity | `CustomerPersistenceAdapter.update` | Data loss | Two defenses (corrected after verification). **In production** the use case runs in one transaction (enforced by an ArchUnit rule), the adapter gets back the entity the service already read, and Hibernate's versioned UPDATE plus the `ObjectOptimisticLockingFailureException` translation catch the conflict. The CUST-24 HTTP test covers this. The explicit version comparison only fires for callers outside a transaction (covered by the adapter test). With neither defense, a lost update occurs, which is why the transaction rule exists |
+| CUST-24 (optimistic lock) could silently turn into a lost update if the adapter reloads a fresh entity | `CustomerPersistenceAdapter.update` | Data loss | Two defenses (corrected after verification). **In production** the use case runs in one transaction (an ArchUnit rule requires class-level `@Transactional` with a propagation that starts a transaction: REQUIRED, REQUIRES_NEW or NESTED), the adapter gets back the entity the service already read, and Hibernate's versioned UPDATE plus the `ObjectOptimisticLockingFailureException` translation catch the conflict. The CUST-24 HTTP test covers this. The explicit version comparison only fires for callers outside a transaction (covered by the adapter test). With neither defense, a lost update occurs, which is why the transaction rule exists |
 | The switchover (T3) touches many files in one commit | T3 | Hard review | Moves keep class bodies. Renames are mechanical. HTTP assertions are unchanged, and ARCH-11 is checked by diffing the test assertions |
 | The log test asserts the abbreviated logger name `customer.CustomerService` | `OperabilityIntegrationTest.java:132` | Fails after the move | Update only the logger-name fragment to the new package. The CUST-45 assertions (one INFO line with operation and id) stay |
 | The web race tests spy on the Spring Data repository | `HttpIntegrationTestSupport` | Spy type changes | The spy moves to `SpringDataCustomerRepository`. Stubs and assertions are unchanged |

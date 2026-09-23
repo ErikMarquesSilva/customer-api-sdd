@@ -368,12 +368,14 @@ T10 → T11 → T12
 
 **Done when**:
 
-- [ ] Rule passes on production; reports the SUPPORTS fixture
-- [ ] N3 fails the rule
-- [ ] Gate check passes: quick
+- [x] Rule passes on production; reports the SUPPORTS fixture
+- [x] N3 fails the rule
+- [x] Gate check passes: quick
 
 **Tests**: unit
 **Gate**: quick
+
+**Status**: ✅ Complete. N3 (`propagation = SUPPORTS`) fails the rule.
 
 **Commit**: `test(architecture): require use-case transactions to start a transaction`
 

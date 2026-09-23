@@ -7,11 +7,16 @@ import static com.tngtech.archunit.lang.conditions.ArchPredicates.are;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
+import java.util.Set;
+
 import org.springframework.data.repository.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tngtech.archunit.base.DescribedPredicate;
+import com.tngtech.archunit.core.domain.JavaAnnotation;
+import com.tngtech.archunit.core.domain.JavaEnumConstant;
 import com.tngtech.archunit.lang.ArchRule;
 
 import jakarta.persistence.Entity;
@@ -48,6 +53,25 @@ final class HexagonalRules {
 	static final String PERSISTENCE_ADAPTER = "..customer.adapter.out.persistence..";
 
 	static final String COMMON_WEB = "..common.web..";
+
+	private static final Set<String> STARTS_A_TRANSACTION = Set.of("REQUIRED", "REQUIRES_NEW", "NESTED");
+
+	/** {@code @Transactional} whose propagation opens a transaction; SUPPORTS, NEVER etc. would not. */
+	private static final DescribedPredicate<JavaAnnotation<?>> TRANSACTIONAL_STARTING_A_TRANSACTION =
+			new DescribedPredicate<>("@Transactional starting a transaction") {
+
+		@Override
+		public boolean test(JavaAnnotation<?> annotation) {
+			if (!annotation.getRawType().isEquivalentTo(Transactional.class)) {
+				return false;
+			}
+			String propagation = annotation.get("propagation")
+				.map(value -> value instanceof JavaEnumConstant constant ? constant.name() : String.valueOf(value))
+				.orElse("REQUIRED");
+			return STARTS_A_TRANSACTION.contains(propagation);
+		}
+
+	};
 
 	/** ARCH-01 */
 	static final ArchRule DOMAIN_IS_FRAMEWORK_FREE = noClasses().that()
@@ -136,8 +160,8 @@ final class HexagonalRules {
 		.and()
 		.areAnnotatedWith(Service.class)
 		.should()
-		.beAnnotatedWith(Transactional.class)
-		.as("use-case services are @Transactional");
+		.beAnnotatedWith(TRANSACTIONAL_STARTING_A_TRANSACTION)
+		.as("use-case services are @Transactional with a propagation that starts a transaction");
 
 	/** ARCH-03: the Bean Validation adapter delegates to the one CPF rule in the domain. */
 	static final ArchRule CPF_VALIDATION_DELEGATES_TO_DOMAIN = classes().that()
