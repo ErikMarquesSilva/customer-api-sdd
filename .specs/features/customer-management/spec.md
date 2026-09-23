@@ -254,11 +254,11 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | CUST-17 | P1: Update | Execute | Implementing |
 | CUST-18 | P1: Update | Execute | Implementing |
 | CUST-19 | P1: Update | Execute | Implementing |
-| CUST-20 | P1: Update | Design | Pending |
+| CUST-20 | P1: Update | Execute | Implementing |
 | CUST-21 | P1: Update | Execute | Implementing |
 | CUST-22 | P1: Update | Execute | Implementing |
 | CUST-23 | P1: Update | Execute | Implementing |
-| CUST-24 | P1: Update | Design | Pending |
+| CUST-24 | P1: Update | Execute | Implementing |
 | CUST-25 | P1: Delete | Execute | Implementing |
 | CUST-26 | P1: Delete | Design | Pending |
 | CUST-27 | P1: Delete | Design | Pending |

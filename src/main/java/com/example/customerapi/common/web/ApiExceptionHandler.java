@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -77,6 +78,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 			return handleUnexpected(ex, request);
 		}
 		return handleDuplicate(new DuplicateFieldException(field), request);
+	}
+
+	/** Another transaction committed a change to the same customer first; its data is kept (CUST-24). */
+	@ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+	ResponseEntity<Object> handleOptimisticLock(ObjectOptimisticLockingFailureException ex, WebRequest request) {
+		return problem(ex, HttpStatus.CONFLICT, "The customer was changed by another request. Reload it and retry.",
+				null, request);
 	}
 
 	@ExceptionHandler(Exception.class)

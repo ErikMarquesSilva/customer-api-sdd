@@ -291,11 +291,13 @@ T7 → T8 → T9 → T10 → T11
 
 **Done when**:
 
-- [ ] PUT replaces all fields (200), omitted optionals become null, `createdAt` unchanged and `updatedAt` advanced
-- [ ] Invalid body → 400 and the stored customer unchanged; conflicting email/cpf → 409 and unchanged; own email/cpf → 200; unknown id → 404 and no row created
-- [ ] A concurrent committed update between read and write → 409 and the first commit's data kept (CUST-24)
-- [ ] Gate check passes: `./mvnw -q -B test`
-- [ ] Test count: ≥ 9 tests pass
+- [x] PUT replaces all fields (200), omitted optionals become null, `createdAt` unchanged and `updatedAt` advanced
+- [x] Invalid body → 400 and the stored customer unchanged; conflicting email/cpf → 409 and unchanged; own email/cpf → 200; unknown id → 404 and no row created
+- [x] A concurrent committed update between read and write → 409 and the first commit's data kept (CUST-24)
+- [x] Gate check passes: `./mvnw -q -B test`
+- [x] Test count: ≥ 9 tests pass
+
+**Status**: ✅ Complete
 
 **Tests**: integration
 **Gate**: full
