@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/hexagonal-architecture/design.md`
-**Status**: In fix iteration 3 (last before escalation)
+**Status**: Done (awaiting re-verification 3)
 **Branch**: `refactor/hexagonal` (stacked on `feat/customer-api`)
 
 ---
@@ -489,11 +489,13 @@ T13 → T14 → T15
 
 **Done when**:
 
-- [ ] The four race tests use the helper; no separate `clearInvocations` remains
-- [ ] Gate check passes: `./mvnw -B clean verify`
+- [x] The four race tests use the helper; no separate `clearInvocations` remains
+- [x] Gate check passes: `./mvnw -B clean verify`
 
 **Tests**: integration
 **Gate**: build
+
+**Status**: ✅ Complete (300 tests, clean build). N1b is still killed through the helper.
 
 **Commit**: `test(customer): arrange race tests through one helper`
 

@@ -3,6 +3,8 @@ package com.example.customerapi;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.not;
+import static org.mockito.Mockito.clearInvocations;
+import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -11,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
@@ -66,6 +69,16 @@ public abstract class HttpIntegrationTestSupport {
 	/** Reads stored state the way the application does, through the output port. */
 	@Autowired
 	protected CustomerPersistencePort persistence;
+
+	/**
+	 * Makes a uniqueness pre-check miss, as in a race with a concurrent request, then forgets the arrangement's
+	 * repository calls so {@link #assertWriteReachedTheDatabase()} sees only the request under test. Usage:
+	 * {@code preCheckMisses(r -> r.existsByEmail(anyString()))}.
+	 */
+	protected void preCheckMisses(Consumer<SpringDataCustomerRepository> preCheck) {
+		preCheck.accept(doReturn(false).when(repository));
+		clearInvocations(repository);
+	}
 
 	/**
 	 * Race tests stub a uniqueness pre-check to miss. This proves the request then really tried to write, so its 409

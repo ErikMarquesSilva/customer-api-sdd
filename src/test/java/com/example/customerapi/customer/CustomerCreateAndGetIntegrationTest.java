@@ -4,8 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.clearInvocations;
-import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -170,8 +168,7 @@ class CustomerCreateAndGetIntegrationTest extends HttpIntegrationTestSupport {
 	@Test
 	void emailUniqueConstraintViolationPassingThePreCheckReturns409NotServerError() throws Exception {
 		createCustomer(validCustomer());
-		doReturn(false).when(repository).existsByEmail(anyString());
-		clearInvocations(repository); // count only the request under test
+		preCheckMisses(r -> r.existsByEmail(anyString()));
 
 		postCustomer(with(validCustomer(), "cpf", "11144477735")).andExpect(status().isConflict())
 			.andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
@@ -183,8 +180,7 @@ class CustomerCreateAndGetIntegrationTest extends HttpIntegrationTestSupport {
 	@Test
 	void cpfUniqueConstraintViolationPassingThePreCheckReturns409NotServerError() throws Exception {
 		createCustomer(validCustomer());
-		doReturn(false).when(repository).existsByCpf(anyString());
-		clearInvocations(repository); // count only the request under test
+		preCheckMisses(r -> r.existsByCpf(anyString()));
 
 		postCustomer(with(validCustomer(), "email", "other@example.com")).andExpect(status().isConflict())
 			.andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
