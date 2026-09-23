@@ -32,6 +32,14 @@
 - **Trade-off**: Mapping code between entity and DTOs.
 - **Scope**: All features.
 - **Date**: 2026-09-22
+- **Status**: superseded by AD-005
+
+### AD-005
+- **Decision**: Each feature package is hexagonal: `domain` (no framework imports), `application.port.in` (use-case interfaces), `application.port.out` (persistence interfaces), `application.service` (use cases, which may use Spring stereotypes, `@Transactional` and Spring Data Commons `Page`/`Pageable`/`Sort`), `adapter.in.web` and `adapter.out.persistence`. ArchUnit tests enforce the dependency rules. Controllers still use DTO records only and hold no business rules (kept from AD-004).
+- **Reason**: The user asked for hexagonal architecture with a pragmatic core. It isolates business rules from JPA and the web layer, and ArchUnit makes violations fail the build instead of relying on review.
+- **Trade-off**: More types (ports, a separate JPA entity, mappers). The application layer stays coupled to Spring transactions and Spring Data Commons paging types.
+- **Scope**: All features, all packages under `com.example.customerapi`.
+- **Date**: 2026-09-22
 - **Status**: active
 
 ## Handoff
