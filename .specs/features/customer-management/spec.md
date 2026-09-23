@@ -237,13 +237,13 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | -------------- | ----- | ----- | ------ |
 | CUST-01 | P1: Create | Design | Pending |
 | CUST-02 | P1: Create | Design | Pending |
-| CUST-03 | P1: Create | Design | Pending |
-| CUST-04 | P1: Create | Design | Pending |
-| CUST-05 | P1: Create | Design | Pending |
-| CUST-06 | P1: Create | Design | Pending |
+| CUST-03 | P1: Create | Execute | Implementing |
+| CUST-04 | P1: Create | Execute | Implementing |
+| CUST-05 | P1: Create | Execute | Implementing |
+| CUST-06 | P1: Create | Execute | Implementing |
 | CUST-07 | P1: Create | Execute | Implementing |
-| CUST-08 | P1: Create | Design | Pending |
-| CUST-09 | P1: Create | Design | Pending |
+| CUST-08 | P1: Create | Execute | Implementing |
+| CUST-09 | P1: Create | Execute | Implementing |
 | CUST-10 | P1: Create | Execute | Implementing |
 | CUST-11 | P1: Create | Execute | Implementing |
 | CUST-12 | P1: Create | Design | Pending |
@@ -282,10 +282,10 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | CUST-45 | P2: Operability | Design | Pending |
 | CUST-46 | P2: Operability | Design | Pending |
 | CUST-47 | P2: Operability | Execute | Implementing |
-| CUST-48 | P1: Create | Design | Pending |
-| CUST-49 | P1: Create | Design | Pending |
-| CUST-50 | P1: Create | Design | Pending |
-| CUST-51 | P1: Create | Design | Pending |
+| CUST-48 | P1: Create | Execute | Implementing |
+| CUST-49 | P1: Create | Execute | Implementing |
+| CUST-50 | P1: Create | Execute | Implementing |
+| CUST-51 | P1: Create | Execute | Implementing |
 
 **Coverage:** 51 total, 0 mapped to tasks, 51 unmapped ⚠️ (mapped during Tasks)
 

@@ -170,10 +170,12 @@ T7 → T8 → T9 → T10 → T11
 
 **Done when**:
 
-- [ ] Normalization: ` Ana@Example.COM ` → `ana@example.com`; `529.982.247-25` → `52998224725`; `sp` → `SP`; `  São   Paulo ` → `São Paulo`
-- [ ] Each invalid field yields a violation on exactly that property; boundaries: name 2/120 ok, 1/121 fail; city 2/100 ok, 1/101 fail; email 254 ok, 255 fail; phone 10/13 digits ok, 9/14 fail; birthDate yesterday ok, today fail (fixed clock); state `XX` fail
-- [ ] Gate check passes: quick
-- [ ] Test count: ≥ 20 tests pass
+- [x] Normalization: ` Ana@Example.COM ` → `ana@example.com`; `529.982.247-25` → `52998224725`; `sp` → `SP`; `  São   Paulo ` → `São Paulo`
+- [x] Each invalid field yields a violation on exactly that property; boundaries: name 2/120 ok, 1/121 fail; city 2/100 ok, 1/101 fail; email 254 ok, 255 fail; phone 10/13 digits ok, 9/14 fail; birthDate yesterday ok, today fail (fixed clock); state `XX` fail
+- [x] Gate check passes: quick
+- [x] Test count: ≥ 20 tests pass
+
+**Status**: ✅ Complete
 
 **Tests**: unit
 **Gate**: quick
