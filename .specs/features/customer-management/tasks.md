@@ -142,9 +142,11 @@ T7 → T8 → T9 → T10 → T11
 
 **Done when**:
 
-- [ ] Accepts `52998224725`; rejects wrong check digits, 10 or 12 digits, letters, `11111111111`
-- [ ] Gate check passes: quick
-- [ ] Test count: ≥ 6 tests pass
+- [x] Accepts `52998224725`; rejects wrong check digits, 10 or 12 digits, letters, `11111111111`
+- [x] Gate check passes: quick
+- [x] Test count: ≥ 6 tests pass
+
+**Status**: ✅ Complete
 
 **Tests**: unit
 **Gate**: quick
