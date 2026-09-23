@@ -95,11 +95,13 @@ T1 → T2 → T3
 
 **Done when**:
 
-- [ ] Rows (SP Limeira 50, SP Campinas 100, MG Uberlândia 30) → MG(30: Uberlândia 30), SP(150: Campinas 100, Limeira 50)
-- [ ] Cities `campos do Jordão`, `Bauru`, `Águas de Lindóia` → `Águas de Lindóia`, `Bauru`, `campos do Jordão`
-- [ ] State total equals the sum of its cities; no rows → empty `states`
-- [ ] Gate check passes: quick
-- [ ] Test count: ≥ 5 tests pass
+- [x] Rows (SP Limeira 50, SP Campinas 100, MG Uberlândia 30) → MG(30: Uberlândia 30), SP(150: Campinas 100, Limeira 50)
+- [x] Cities `campos do Jordão`, `Bauru`, `Águas de Lindóia` → `Águas de Lindóia`, `Bauru`, `campos do Jordão`
+- [x] State total equals the sum of its cities; no rows → empty `states`
+- [x] Gate check passes: quick
+- [x] Test count: ≥ 5 tests pass
+
+**Status**: ✅ Complete
 
 **Tests**: unit
 **Gate**: quick
