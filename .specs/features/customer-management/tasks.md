@@ -541,12 +541,14 @@ T15 → T16 → T17 → T18
 
 **Done when**:
 
-- [ ] `10000000108` (first digit via remainder 10) and `10000002810` (second digit via remainder 10) are accepted
-- [ ] Mutating `remainder == 10 ? 0 : remainder` fails `CpfValidatorTest`
-- [ ] Gate check passes: quick
+- [x] `10000000108` (first digit via remainder 10) and `10000002810` (second digit via remainder 10) are accepted
+- [x] Mutating `remainder == 10 ? 0 : remainder` fails `CpfValidatorTest`
+- [x] Gate check passes: quick
 
 **Tests**: unit
 **Gate**: quick
+
+**Status**: ✅ Complete
 
 **Commit**: `test(customer): cover cpf check-digit remainder-10 branch`
 

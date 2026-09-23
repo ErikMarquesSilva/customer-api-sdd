@@ -14,6 +14,16 @@ class CpfValidatorTest {
 	}
 
 	@Test
+	void acceptsCpfWhoseFirstCheckDigitComesFromRemainder10() {
+		assertThat(validator.isValid("10000000108", null)).isTrue();
+	}
+
+	@Test
+	void acceptsCpfWhoseSecondCheckDigitComesFromRemainder10() {
+		assertThat(validator.isValid("10000002810", null)).isTrue();
+	}
+
+	@Test
 	void acceptsNullBecauseRequiredIsCheckedElsewhere() {
 		assertThat(validator.isValid(null, null)).isTrue();
 	}
