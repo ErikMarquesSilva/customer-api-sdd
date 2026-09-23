@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.example.customerapi.customer.CustomerNotFoundException;
-import com.example.customerapi.customer.DuplicateFieldException;
+import com.example.customerapi.customer.domain.CustomerNotFoundException;
+import com.example.customerapi.customer.domain.DuplicateFieldException;
 import com.example.customerapi.customer.InvalidSortException;
 
 /**

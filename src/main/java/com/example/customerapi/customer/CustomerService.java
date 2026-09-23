@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.example.customerapi.customer.domain.CustomerNotFoundException;
+import com.example.customerapi.customer.domain.DuplicateFieldException;
+import com.example.customerapi.customer.domain.CustomerFilter;
 
 /**
  * Customer business rules. Logs only the operation and the id, never email, cpf or phone.

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import com.example.customerapi.customer.domain.CustomerFilter;
 
 /**
  * HTTP binding only; rules live in {@link CustomerService}, errors in the shared exception handler.

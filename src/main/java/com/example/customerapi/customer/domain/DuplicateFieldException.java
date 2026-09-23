@@ -1,4 +1,4 @@
-package com.example.customerapi.customer;
+package com.example.customerapi.customer.domain;
 
 /**
  * A unique customer field is already used by another customer. The message never contains the value.

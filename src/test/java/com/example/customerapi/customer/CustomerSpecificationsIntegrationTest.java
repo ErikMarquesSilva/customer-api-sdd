@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 
 import com.example.customerapi.TestcontainersConfiguration;
+import com.example.customerapi.customer.domain.CustomerFilter;
 
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest

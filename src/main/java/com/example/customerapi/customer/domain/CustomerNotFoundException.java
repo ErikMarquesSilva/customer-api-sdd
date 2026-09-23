@@ -1,4 +1,4 @@
-package com.example.customerapi.customer;
+package com.example.customerapi.customer.domain;
 
 import java.util.UUID;
 

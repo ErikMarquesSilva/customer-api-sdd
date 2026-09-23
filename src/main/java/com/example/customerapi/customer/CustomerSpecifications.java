@@ -7,6 +7,7 @@ import java.util.Locale;
 import org.springframework.data.jpa.domain.Specification;
 
 import jakarta.persistence.criteria.Predicate;
+import com.example.customerapi.customer.domain.CustomerFilter;
 
 final class CustomerSpecifications {
 

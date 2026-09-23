@@ -92,13 +92,15 @@ T1 → T2 → T3 → T4 → T5
 
 **Done when**:
 
-- [ ] `Customer.register` assigns an id, sets both timestamps to the clock instant and sets version 0; `update` keeps `id`/`createdAt`, replaces the details and sets `updatedAt`
-- [ ] `Cpf.isValid` has the same cases as `CpfValidatorTest`, including both remainder-10 CPFs; `CpfValidator` delegates to it
-- [ ] Domain imports no framework (ARCH-01 rule green)
-- [ ] Gate check passes: `./mvnw -q -B test`
+- [x] `Customer.register` assigns an id, sets both timestamps to the clock instant and sets version 0; `update` keeps `id`/`createdAt`, replaces the details and sets `updatedAt`
+- [x] `Cpf.isValid` has the same cases as `CpfValidatorTest`, including both remainder-10 CPFs; `CpfValidator` delegates to it
+- [x] Domain imports no framework (ARCH-01 rule green)
+- [x] Gate check passes: `./mvnw -q -B test`
 
 **Tests**: unit
 **Gate**: full
+
+**Status**: ✅ Complete (262 tests)
 
 **Commit**: `refactor(customer): extract framework-free domain model`
 
