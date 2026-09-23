@@ -462,11 +462,13 @@ T13 → T14 → T15
 
 **Done when**:
 
-- [ ] Rule passes on production; reports the constructor-hiding fixture (A1)
-- [ ] Gate check passes: quick
+- [x] Rule passes on production; reports the constructor-hiding fixture (A1)
+- [x] Gate check passes: quick
 
 **Tests**: unit
 **Gate**: quick
+
+**Status**: ✅ Complete (30 architecture tests).
 
 **Commit**: `test(architecture): stop the cpf validator calling foreign constructors`
 

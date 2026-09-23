@@ -41,6 +41,8 @@ class HexagonalRulesDiscriminationTest {
 						"archfixtures.customer.adapter.in.web.validation.CpfValidator"),
 				Arguments.of(HexagonalRules.CPF_VALIDATION_DELEGATES_TO_DOMAIN,
 						"archfixtures.customer.adapter.in.web.ignoring.CpfValidator"),
+				Arguments.of(HexagonalRules.CPF_VALIDATION_DELEGATES_TO_DOMAIN,
+						"archfixtures.customer.adapter.in.web.constructor.CpfValidator"),
 				Arguments.of(HexagonalRules.FEATURE_CLASSES_BELONG_TO_A_LAYER, "StrayClass"));
 	}
 

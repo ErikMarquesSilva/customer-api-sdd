@@ -169,8 +169,10 @@ final class HexagonalRules {
 		.should()
 		.callMethod(Cpf.class, "isValid", String.class)
 		.andShould()
-		// Its own methods are allowed: javac adds a bridge isValid(Object, ...) for the generic ConstraintValidator.
-		.onlyCallMethodsThat(are(declaredIn(Cpf.class)).or(declaredIn(simpleName("CpfValidator"))))
+		// Methods and constructors alike: its own code units (javac adds a bridge isValid(Object, ...) for the generic
+		// ConstraintValidator) and Object's constructor for super() are allowed.
+		.onlyCallCodeUnitsThat(are(declaredIn(Cpf.class)).or(declaredIn(simpleName("CpfValidator")))
+			.or(declaredIn(Object.class)))
 		.as("ARCH-03 the web CPF validator delegates to the domain rule and computes nothing itself");
 
 	/** Every feature class belongs to one hexagon layer. */
