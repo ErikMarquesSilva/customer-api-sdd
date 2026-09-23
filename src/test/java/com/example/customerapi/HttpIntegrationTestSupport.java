@@ -1,8 +1,9 @@
 package com.example.customerapi;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.not;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -12,6 +13,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
@@ -64,6 +66,16 @@ public abstract class HttpIntegrationTestSupport {
 	/** Reads stored state the way the application does, through the output port. */
 	@Autowired
 	protected CustomerPersistencePort persistence;
+
+	/**
+	 * Race tests stub a uniqueness pre-check to miss. This proves the request then really tried to write, so its 409
+	 * came from the database constraint and not from a pre-check the stub failed to disable.
+	 */
+	protected void assertWriteReachedTheDatabase() {
+		assertThat(Mockito.mockingDetails(repository).getInvocations())
+			.extracting(invocation -> invocation.getMethod().getName())
+			.contains("saveAndFlush");
+	}
 
 	protected Customer stored(UUID id) {
 		return persistence.findById(id).orElseThrow();

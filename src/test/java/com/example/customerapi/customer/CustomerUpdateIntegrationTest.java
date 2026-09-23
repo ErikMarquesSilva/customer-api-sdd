@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -204,11 +205,13 @@ class CustomerUpdateIntegrationTest extends HttpIntegrationTestSupport {
 	void putWithEmailOfAnotherCustomerPassingThePreCheckReturns409NotServerError() throws Exception {
 		createCustomer(validCustomer("Bruno Reis", 1));
 		doReturn(false).when(repository).existsByEmailAndIdNot(anyString(), eq(anaId));
+		clearInvocations(repository); // count only the request under test
 
 		putCustomer(anaId, with(newData(), "email", "customer1@example.com")).andExpect(status().isConflict())
 			.andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
 			.andExpect(jsonPath("$.errors[*].field").value(contains("email")));
 
+		assertWriteReachedTheDatabase();
 		assertAnaUnchanged();
 	}
 
@@ -216,11 +219,13 @@ class CustomerUpdateIntegrationTest extends HttpIntegrationTestSupport {
 	void putWithCpfOfAnotherCustomerPassingThePreCheckReturns409NotServerError() throws Exception {
 		createCustomer(validCustomer("Bruno Reis", 1));
 		doReturn(false).when(repository).existsByCpfAndIdNot(anyString(), eq(anaId));
+		clearInvocations(repository); // count only the request under test
 
 		putCustomer(anaId, with(newData(), "cpf", cpf(1))).andExpect(status().isConflict())
 			.andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
 			.andExpect(jsonPath("$.errors[*].field").value(contains("cpf")));
 
+		assertWriteReachedTheDatabase();
 		assertAnaUnchanged();
 	}
 

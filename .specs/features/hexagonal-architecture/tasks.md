@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/hexagonal-architecture/design.md`
-**Status**: In fix iteration 2
+**Status**: Done (awaiting re-verification 2)
 **Branch**: `refactor/hexagonal` (stacked on `feat/customer-api`)
 
 ---
@@ -383,7 +383,7 @@ T10 → T11 → T12
 
 #### T12: Race tests verify their stub was used
 
-**What**: Each race test that disables a pre-check by stubbing the spied repository also verifies that the stubbed method was called.
+**What**: Each race test that disables a pre-check by stubbing the spied repository also proves the request reached the database write (`assertWriteReachedTheDatabase`, after clearing the arrangement's invocations). Verifying that the stubbed method was called is not enough: with a stub on the wrong method, the real pre-check still runs and answers 409.
 **Where**: `src/test/java/com/example/customerapi/customer/CustomerUpdateIntegrationTest.java` (+ `CustomerCreateAndGetIntegrationTest.java`)
 **Depends on**: T11
 **Reuses**: `HexagonalRules`, existing race tests
@@ -396,12 +396,14 @@ T10 → T11 → T12
 
 **Done when**:
 
-- [ ] The 4 race tests (create and update, email and cpf) verify their stubbed method
-- [ ] A stub on the wrong method (N1b) fails the test that owns it
-- [ ] Gate check passes: `./mvnw -B clean verify`
+- [x] The 4 race tests (create and update, email and cpf) verify their stubbed method
+- [x] A stub on the wrong method (N1b) fails the test that owns it
+- [x] Gate check passes: `./mvnw -B clean verify`
 
 **Tests**: integration
 **Gate**: build
+
+**Status**: ✅ Complete (297 tests, clean build). N1b (stub on the wrong method) fails in both the create and the update race tests.
 
 **Commit**: `test(customer): verify race-test stubs are exercised`
 
