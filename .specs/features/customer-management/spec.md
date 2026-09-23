@@ -236,7 +236,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | Requirement ID | Story | Phase | Status |
 | -------------- | ----- | ----- | ------ |
 | CUST-01 | P1: Create | Execute | Implementing |
-| CUST-02 | P1: Create | Design | Pending |
+| CUST-02 | P1: Create | Execute | Implementing |
 | CUST-03 | P1: Create | Execute | Implementing |
 | CUST-04 | P1: Create | Execute | Implementing |
 | CUST-05 | P1: Create | Execute | Implementing |
@@ -246,11 +246,11 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | CUST-09 | P1: Create | Execute | Implementing |
 | CUST-10 | P1: Create | Execute | Implementing |
 | CUST-11 | P1: Create | Execute | Implementing |
-| CUST-12 | P1: Create | Design | Pending |
-| CUST-13 | P1: Create | Design | Pending |
+| CUST-12 | P1: Create | Execute | Implementing |
+| CUST-13 | P1: Create | Execute | Implementing |
 | CUST-14 | P1: Retrieve | Execute | Implementing |
 | CUST-15 | P1: Retrieve | Execute | Implementing |
-| CUST-16 | P1: Retrieve | Design | Pending |
+| CUST-16 | P1: Retrieve | Execute | Implementing |
 | CUST-17 | P1: Update | Execute | Implementing |
 | CUST-18 | P1: Update | Execute | Implementing |
 | CUST-19 | P1: Update | Execute | Implementing |
@@ -269,11 +269,11 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | CUST-32 | P1: List | Design | Pending |
 | CUST-33 | P1: List | Execute | Implementing |
 | CUST-34 | P1: List | Execute | Implementing |
-| CUST-35 | P1: Error contract | Design | Pending |
-| CUST-36 | P1: Error contract | Design | Pending |
-| CUST-37 | P1: Error contract | Design | Pending |
-| CUST-38 | P1: Error contract | Design | Pending |
-| CUST-39 | P1: Error contract | Design | Pending |
+| CUST-35 | P1: Error contract | Execute | Implementing |
+| CUST-36 | P1: Error contract | Execute | Implementing |
+| CUST-37 | P1: Error contract | Execute | Implementing |
+| CUST-38 | P1: Error contract | Execute | Implementing |
+| CUST-39 | P1: Error contract | Execute | Implementing |
 | CUST-40 | P2: Search | Execute | Implementing |
 | CUST-41 | P2: Search | Execute | Implementing |
 | CUST-42 | P2: Search | Execute | Implementing |

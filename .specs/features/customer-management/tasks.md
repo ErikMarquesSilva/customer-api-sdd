@@ -261,11 +261,13 @@ T7 → T8 → T9 → T10 → T11
 
 **Done when**:
 
-- [ ] POST returns 201, body and `Location`; every invalid field → 400 with the right `errors` entry; duplicates → 409 with field; DB-constraint race (repository pre-check spied to false) → 409 (CUST-12); body `id`/`createdAt` ignored
-- [ ] GET returns 200 / 404 / 400 for existing, unknown and non-UUID ids
-- [ ] All errors are `application/problem+json` with `type`, `title`, `status`, `detail`, `instance`; malformed JSON 400; `text/plain` 415; forced exception → 500 with fixed detail and no exception message
-- [ ] Gate check passes: `./mvnw -q -B test`
-- [ ] Test count: ≥ 25 tests pass
+- [x] POST returns 201, body and `Location`; every invalid field → 400 with the right `errors` entry; duplicates → 409 with field; DB-constraint race (repository pre-check spied to false) → 409 (CUST-12); body `id`/`createdAt` ignored
+- [x] GET returns 200 / 404 / 400 for existing, unknown and non-UUID ids
+- [x] All errors are `application/problem+json` with `type`, `title`, `status`, `detail`, `instance`; malformed JSON 400; `text/plain` 415; forced exception → 500 with fixed detail and no exception message
+- [x] Gate check passes: `./mvnw -q -B test`
+- [x] Test count: ≥ 25 tests pass
+
+**Status**: ✅ Complete
 
 **Tests**: integration
 **Gate**: full
