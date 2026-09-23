@@ -129,7 +129,7 @@ class OperabilityIntegrationTest extends HttpIntegrationTestSupport {
 	private static void assertSingleInfoLine(CapturedOutput output, String message) {
 		List<String> lines = output.getOut().lines().filter(line -> line.contains(message)).toList();
 		assertThat(lines).hasSize(1);
-		assertThat(lines.getFirst()).contains(" INFO ").contains("customer.CustomerService");
+		assertThat(lines.getFirst()).contains(" INFO ").contains("service.CustomerService");
 	}
 
 	private static void assertNoPii(CapturedOutput output, Map<String, Object> customer) {

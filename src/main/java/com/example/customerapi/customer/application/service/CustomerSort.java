@@ -1,8 +1,10 @@
-package com.example.customerapi.customer;
+package com.example.customerapi.customer.application.service;
 
 import java.util.Set;
 
 import org.springframework.data.domain.Sort;
+
+import com.example.customerapi.customer.application.port.in.InvalidSortException;
 
 /**
  * Parses {@code sort=<property>[,<asc|desc>]} against a whitelist. A missing direction means ascending. Default

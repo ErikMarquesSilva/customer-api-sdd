@@ -1,4 +1,4 @@
-package com.example.customerapi.customer.location;
+package com.example.customerapi.customer.application.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -11,19 +11,22 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.example.customerapi.customer.CustomerRepository;
+import com.example.customerapi.customer.application.port.out.LocationCountPort;
+import com.example.customerapi.customer.domain.CityLocation;
+import com.example.customerapi.customer.domain.LocationCount;
+import com.example.customerapi.customer.domain.StateLocation;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerLocationServiceTest {
 
 	@Mock
-	private CustomerRepository repository;
+	private LocationCountPort locationCounts;
 
 	private CustomerLocationService service;
 
 	@BeforeEach
 	void setUp() {
-		service = new CustomerLocationService(repository);
+		service = new CustomerLocationService(locationCounts);
 	}
 
 	// --- GEO-002, GEO-003, GEO-004, GEO-005
@@ -32,9 +35,10 @@ class CustomerLocationServiceTest {
 	void rowsBecomeStatesSortedByUfWithCitiesAndSummedTotals() {
 		rows(row("SP", "Limeira", 50), row("SP", "Campinas", 100), row("MG", "Uberlândia", 30));
 
-		assertThat(service.groupByLocation()).isEqualTo(new LocationGroupingResponse(List.of(
-				new StateGroup("MG", 30, List.of(new CityGroup("Uberlândia", 30))),
-				new StateGroup("SP", 150, List.of(new CityGroup("Campinas", 100), new CityGroup("Limeira", 50))))));
+		assertThat(service.groupByLocation()).isEqualTo(List.of(
+				new StateLocation("MG", 30, List.of(new CityLocation("Uberlândia", 30))),
+				new StateLocation("SP", 150,
+						List.of(new CityLocation("Campinas", 100), new CityLocation("Limeira", 50)))));
 	}
 
 	// --- GEO-005
@@ -44,7 +48,7 @@ class CustomerLocationServiceTest {
 		rows(row("SP", "Campinas", 1), row("RJ", "Niterói", 1), row("AC", "Rio Branco", 1), row("MG", "Uberaba", 1),
 				row("BA", "Salvador", 1));
 
-		assertThat(service.groupByLocation().states()).extracting(StateGroup::state)
+		assertThat(service.groupByLocation()).extracting(StateLocation::state)
 			.containsExactly("AC", "BA", "MG", "RJ", "SP");
 	}
 
@@ -54,8 +58,8 @@ class CustomerLocationServiceTest {
 	void citiesAreSortedByPtBrCollationIgnoringCaseAndAccents() {
 		rows(row("SP", "campos do Jordão", 1), row("SP", "Bauru", 2), row("SP", "Águas de Lindóia", 3));
 
-		assertThat(service.groupByLocation().states()).singleElement()
-			.satisfies(sp -> assertThat(sp.cities()).extracting(CityGroup::city)
+		assertThat(service.groupByLocation()).singleElement()
+			.satisfies(sp -> assertThat(sp.cities()).extracting(CityLocation::city)
 				.containsExactly("Águas de Lindóia", "Bauru", "campos do Jordão"));
 	}
 
@@ -64,12 +68,12 @@ class CustomerLocationServiceTest {
 	@Test
 	void citiesEqualIgnoringAccentsKeepTheSameOrderWhateverTheRowOrder() {
 		rows(row("MG", "Uberlândia", 1), row("MG", "Uberlandia", 2));
-		List<CityGroup> first = service.groupByLocation().states().getFirst().cities();
+		List<CityLocation> first = service.groupByLocation().getFirst().cities();
 
 		rows(row("MG", "Uberlandia", 2), row("MG", "Uberlândia", 1));
-		List<CityGroup> second = service.groupByLocation().states().getFirst().cities();
+		List<CityLocation> second = service.groupByLocation().getFirst().cities();
 
-		assertThat(first).containsExactly(new CityGroup("Uberlandia", 2), new CityGroup("Uberlândia", 1));
+		assertThat(first).containsExactly(new CityLocation("Uberlandia", 2), new CityLocation("Uberlândia", 1));
 		assertThat(second).isEqualTo(first);
 	}
 
@@ -79,7 +83,7 @@ class CustomerLocationServiceTest {
 	void noRowsGiveEmptyStates() {
 		rows();
 
-		assertThat(service.groupByLocation()).isEqualTo(new LocationGroupingResponse(List.of()));
+		assertThat(service.groupByLocation()).isEqualTo(List.of());
 	}
 
 	// --- Edge case: exactly one customer (GEO-002, GEO-003)
@@ -88,8 +92,7 @@ class CustomerLocationServiceTest {
 	void oneCustomerGivesOneStateWithOneCityBothWithTotalOne() {
 		rows(row("PR", "Curitiba", 1));
 
-		assertThat(service.groupByLocation()).isEqualTo(new LocationGroupingResponse(
-				List.of(new StateGroup("PR", 1, List.of(new CityGroup("Curitiba", 1))))));
+		assertThat(service.groupByLocation()).isEqualTo(List.of(new StateLocation("PR", 1, List.of(new CityLocation("Curitiba", 1)))));
 	}
 
 	// --- Edge case: all customers in one city (GEO-004)
@@ -98,19 +101,15 @@ class CustomerLocationServiceTest {
 	void allCustomersInOneCityGiveStateTotalEqualToCityTotal() {
 		rows(row("RJ", "Niterói", 7));
 
-		assertThat(service.groupByLocation()).isEqualTo(new LocationGroupingResponse(
-				List.of(new StateGroup("RJ", 7, List.of(new CityGroup("Niterói", 7))))));
+		assertThat(service.groupByLocation()).isEqualTo(List.of(new StateLocation("RJ", 7, List.of(new CityLocation("Niterói", 7)))));
 	}
 
 	private void rows(LocationCount... rows) {
-		when(repository.countByLocation()).thenReturn(List.of(rows));
+		when(locationCounts.countByLocation()).thenReturn(List.of(rows));
 	}
 
 	private static LocationCount row(String state, String city, long total) {
-		return new Row(state, city, total);
-	}
-
-	private record Row(String getState, String getCity, long getTotal) implements LocationCount {
+		return new LocationCount(state, city, total);
 	}
 
 }

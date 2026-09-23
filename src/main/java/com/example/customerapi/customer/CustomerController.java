@@ -20,10 +20,16 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import com.example.customerapi.customer.application.port.in.CreateCustomerUseCase;
+import com.example.customerapi.customer.application.port.in.DeleteCustomerUseCase;
+import com.example.customerapi.customer.application.port.in.GetCustomerUseCase;
+import com.example.customerapi.customer.application.port.in.ListCustomersUseCase;
+import com.example.customerapi.customer.application.port.in.UpdateCustomerUseCase;
 import com.example.customerapi.customer.domain.CustomerFilter;
 
 /**
- * HTTP binding only; rules live in {@link CustomerService}, errors in the shared exception handler.
+ * HTTP binding only: validates input, calls a use case and maps the domain result to a response. Errors are mapped
+ * by the shared exception handler.
  */
 @RestController
 @RequestMapping(CustomerController.BASE_PATH)
@@ -31,15 +37,29 @@ public class CustomerController {
 
 	static final String BASE_PATH = "/api/v1/customers";
 
-	private final CustomerService service;
+	private final CreateCustomerUseCase createCustomer;
 
-	public CustomerController(CustomerService service) {
-		this.service = service;
+	private final GetCustomerUseCase getCustomer;
+
+	private final UpdateCustomerUseCase updateCustomer;
+
+	private final DeleteCustomerUseCase deleteCustomer;
+
+	private final ListCustomersUseCase listCustomers;
+
+	public CustomerController(CreateCustomerUseCase createCustomer, GetCustomerUseCase getCustomer,
+			UpdateCustomerUseCase updateCustomer, DeleteCustomerUseCase deleteCustomer,
+			ListCustomersUseCase listCustomers) {
+		this.createCustomer = createCustomer;
+		this.getCustomer = getCustomer;
+		this.updateCustomer = updateCustomer;
+		this.deleteCustomer = deleteCustomer;
+		this.listCustomers = listCustomers;
 	}
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<CustomerResponse> create(@Valid @RequestBody CustomerRequest request) {
-		CustomerResponse created = service.create(request);
+		CustomerResponse created = CustomerResponse.from(createCustomer.create(request.toDetails()));
 		return ResponseEntity.created(URI.create(BASE_PATH + "/" + created.id())).body(created);
 	}
 
@@ -49,23 +69,24 @@ public class CustomerController {
 			@RequestParam(defaultValue = "20") @Min(1) @Max(100) int size,
 			@RequestParam(required = false) String sort, @RequestParam(required = false) String name,
 			@RequestParam(required = false) String email) {
-		return service.list(new CustomerFilter(name, email), page, size, sort);
+		return PageResponse.from(listCustomers.list(new CustomerFilter(name, email), page, size, sort)
+			.map(CustomerResponse::from));
 	}
 
 	@GetMapping("/{id}")
 	public CustomerResponse get(@PathVariable UUID id) {
-		return service.get(id);
+		return CustomerResponse.from(getCustomer.get(id));
 	}
 
 	@PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public CustomerResponse update(@PathVariable UUID id, @Valid @RequestBody CustomerRequest request) {
-		return service.update(id, request);
+		return CustomerResponse.from(updateCustomer.update(id, request.toDetails()));
 	}
 
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable UUID id) {
-		service.delete(id);
+		deleteCustomer.delete(id);
 	}
 
 }

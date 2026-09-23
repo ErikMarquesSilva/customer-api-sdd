@@ -21,7 +21,9 @@ import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import com.example.customerapi.customer.CustomerRepository;
+import com.example.customerapi.customer.adapter.out.persistence.SpringDataCustomerRepository;
+import com.example.customerapi.customer.application.port.out.CustomerPersistencePort;
+import com.example.customerapi.customer.domain.Customer;
 import com.jayway.jsonpath.JsonPath;
 
 import tools.jackson.databind.json.JsonMapper;
@@ -55,8 +57,17 @@ public abstract class HttpIntegrationTestSupport {
 	@Autowired
 	protected JsonMapper jsonMapper;
 
+	/** Spied so race tests can make a uniqueness pre-check miss (CUST-12, CUST-24). */
 	@MockitoSpyBean
-	protected CustomerRepository repository;
+	protected SpringDataCustomerRepository repository;
+
+	/** Reads stored state the way the application does, through the output port. */
+	@Autowired
+	protected CustomerPersistencePort persistence;
+
+	protected Customer stored(UUID id) {
+		return persistence.findById(id).orElseThrow();
+	}
 
 	@BeforeEach
 	void cleanDatabase() {

@@ -1,4 +1,6 @@
-package com.example.customerapi.customer;
+package com.example.customerapi.customer.application.service;
+
+import com.example.customerapi.customer.application.port.in.InvalidSortException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

@@ -121,14 +121,16 @@ T1 → T2 → T3 → T4 → T5
 
 **Done when**:
 
-- [ ] Service unit tests cover the old scenarios, on `CustomerPersistencePort` / `LocationCountPort` mocks
-- [ ] Adapter integration tests: queries, specifications, native query, mapping round trip, `DataIntegrityViolationException` → `DuplicateFieldException(email|cpf)`, version mismatch → `ConcurrentCustomerUpdateException`
-- [ ] Every HTTP integration test passes with assertions unchanged (only arrangement code and the spy type change)
-- [ ] `ApiExceptionHandler` no longer references `DataIntegrityViolationException` or `ObjectOptimisticLockingFailureException`
-- [ ] Gate check passes: `./mvnw -q -B test`
+- [x] Service unit tests cover the old scenarios, on `CustomerPersistencePort` / `LocationCountPort` mocks
+- [x] Adapter integration tests: queries, specifications, native query, mapping round trip, `DataIntegrityViolationException` → `DuplicateFieldException(email|cpf)`, version mismatch → `ConcurrentCustomerUpdateException`
+- [x] Every HTTP integration test passes with assertions unchanged (only arrangement code and the spy type change)
+- [x] `ApiExceptionHandler` no longer references `DataIntegrityViolationException` or `ObjectOptimisticLockingFailureException`
+- [x] Gate check passes: `./mvnw -q -B test`
 
 **Tests**: unit, integration
 **Gate**: full
+
+**Status**: ✅ Complete (272 tests). HTTP assertions unchanged: only the stored-state accessors (`Customer::getName` to `CustomerDetails::name`, same values) and the logger-name fragment (`customer.CustomerService` to `service.CustomerService`) changed. `SpringDataCustomerRepository` is public so HTTP race tests can spy it.
 
 **Commit**: `refactor(customer): route use cases through ports and a persistence adapter`
 

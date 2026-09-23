@@ -1,4 +1,4 @@
-package com.example.customerapi.customer;
+package com.example.customerapi.customer.adapter.out.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -16,15 +16,17 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.example.customerapi.TestcontainersConfiguration;
+import com.example.customerapi.customer.domain.Customer;
+import com.example.customerapi.customer.domain.CustomerDetails;
 
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest
-class CustomerRepositoryIntegrationTest {
+class SpringDataCustomerRepositoryIntegrationTest {
 
 	private static final Instant NOW = Instant.parse("2026-01-15T10:00:00Z");
 
 	@Autowired
-	private CustomerRepository repository;
+	private SpringDataCustomerRepository repository;
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -48,8 +50,8 @@ class CustomerRepositoryIntegrationTest {
 
 	@Test
 	void duplicateEmailViolatesEmailUniqueConstraint() {
-		repository.saveAndFlush(new Customer(data("ana@example.com", "52998224725"), NOW));
-		Customer duplicate = new Customer(data("ana@example.com", "11144477735"), NOW);
+		repository.saveAndFlush(newEntity(data("ana@example.com", "52998224725"), NOW));
+		CustomerJpaEntity duplicate = newEntity(data("ana@example.com", "11144477735"), NOW);
 
 		assertThatThrownBy(() -> repository.saveAndFlush(duplicate))
 			.isInstanceOf(DataIntegrityViolationException.class)
@@ -61,8 +63,8 @@ class CustomerRepositoryIntegrationTest {
 
 	@Test
 	void duplicateCpfViolatesCpfUniqueConstraint() {
-		repository.saveAndFlush(new Customer(data("ana@example.com", "52998224725"), NOW));
-		Customer duplicate = new Customer(data("bruno@example.com", "52998224725"), NOW);
+		repository.saveAndFlush(newEntity(data("ana@example.com", "52998224725"), NOW));
+		CustomerJpaEntity duplicate = newEntity(data("bruno@example.com", "52998224725"), NOW);
 
 		assertThatThrownBy(() -> repository.saveAndFlush(duplicate))
 			.isInstanceOf(DataIntegrityViolationException.class)
@@ -74,7 +76,7 @@ class CustomerRepositoryIntegrationTest {
 
 	@Test
 	void existsByEmailAndCpfFindStoredValuesOnly() {
-		repository.saveAndFlush(new Customer(data("ana@example.com", "52998224725"), NOW));
+		repository.saveAndFlush(newEntity(data("ana@example.com", "52998224725"), NOW));
 
 		assertThat(repository.existsByEmail("ana@example.com")).isTrue();
 		assertThat(repository.existsByEmail("bruno@example.com")).isFalse();
@@ -84,8 +86,8 @@ class CustomerRepositoryIntegrationTest {
 
 	@Test
 	void existsByEmailAndIdNotIgnoresTheCustomerItself() {
-		Customer ana = repository.saveAndFlush(new Customer(data("ana@example.com", "52998224725"), NOW));
-		Customer bruno = repository.saveAndFlush(new Customer(data("bruno@example.com", "11144477735"), NOW));
+		CustomerJpaEntity ana = repository.saveAndFlush(newEntity(data("ana@example.com", "52998224725"), NOW));
+		CustomerJpaEntity bruno = repository.saveAndFlush(newEntity(data("bruno@example.com", "11144477735"), NOW));
 
 		assertThat(repository.existsByEmailAndIdNot("ana@example.com", ana.getId())).isFalse();
 		assertThat(repository.existsByEmailAndIdNot("ana@example.com", bruno.getId())).isTrue();
@@ -93,20 +95,20 @@ class CustomerRepositoryIntegrationTest {
 
 	@Test
 	void existsByCpfAndIdNotIgnoresTheCustomerItself() {
-		Customer ana = repository.saveAndFlush(new Customer(data("ana@example.com", "52998224725"), NOW));
-		Customer bruno = repository.saveAndFlush(new Customer(data("bruno@example.com", "11144477735"), NOW));
+		CustomerJpaEntity ana = repository.saveAndFlush(newEntity(data("ana@example.com", "52998224725"), NOW));
+		CustomerJpaEntity bruno = repository.saveAndFlush(newEntity(data("bruno@example.com", "11144477735"), NOW));
 
 		assertThat(repository.existsByCpfAndIdNot("52998224725", ana.getId())).isFalse();
 		assertThat(repository.existsByCpfAndIdNot("52998224725", bruno.getId())).isTrue();
 	}
 
-	private static CustomerData data(String email, String cpf) {
-		return new TestCustomerData("Customer", email, cpf, "11987654321", LocalDate.of(1990, 5, 20), "São Paulo",
+	private static CustomerDetails data(String email, String cpf) {
+		return new CustomerDetails("Customer", email, cpf, "11987654321", LocalDate.of(1990, 5, 20), "São Paulo",
 				"SP");
 	}
 
-	private record TestCustomerData(String name, String email, String cpf, String phone, LocalDate birthDate,
-			String city, String state) implements CustomerData {
+	private static CustomerJpaEntity newEntity(CustomerDetails details, Instant createdAt) {
+		return CustomerJpaEntity.from(Customer.register(details, createdAt));
 	}
 
 }

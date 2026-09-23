@@ -1,4 +1,4 @@
-package com.example.customerapi.customer;
+package com.example.customerapi.customer.adapter.out.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,6 +13,10 @@ import org.springframework.context.annotation.Import;
 
 import com.example.customerapi.TestcontainersConfiguration;
 import com.example.customerapi.customer.domain.CustomerFilter;
+import com.example.customerapi.customer.domain.Customer;
+import com.example.customerapi.customer.domain.CustomerDetails;
+import com.example.customerapi.customer.application.port.in.ListCustomersUseCase;
+import org.springframework.data.domain.Page;
 
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest
@@ -21,10 +25,10 @@ class CustomerSpecificationsIntegrationTest {
 	private static final Instant NOW = Instant.parse("2026-01-15T10:00:00Z");
 
 	@Autowired
-	private CustomerRepository repository;
+	private SpringDataCustomerRepository repository;
 
 	@Autowired
-	private CustomerService service;
+	private ListCustomersUseCase listCustomers;
 
 	@BeforeEach
 	void seed() {
@@ -47,10 +51,10 @@ class CustomerSpecificationsIntegrationTest {
 
 	@Test
 	void underscoreInNameFilterIsLiteralNotWildcard() {
-		PageResponse<CustomerResponse> result = service.list(new CustomerFilter("n_", null), 0, 20, null);
+		Page<Customer> result = listCustomers.list(new CustomerFilter("n_", null), 0, 20, null);
 
-		assertThat(result.content()).isEmpty();
-		assertThat(result.page().totalElements()).isZero();
+		assertThat(result.getContent()).isEmpty();
+		assertThat(result.getTotalElements()).isZero();
 	}
 
 	@Test
@@ -66,30 +70,36 @@ class CustomerSpecificationsIntegrationTest {
 
 	@Test
 	void defaultListIsSortedByNameAndPagedWithMetadata() {
-		PageResponse<CustomerResponse> first = service.list(new CustomerFilter(null, null), 0, 3, null);
-		PageResponse<CustomerResponse> second = service.list(new CustomerFilter(null, null), 1, 3, null);
+		Page<Customer> first = listCustomers.list(new CustomerFilter(null, null), 0, 3, null);
+		Page<Customer> second = listCustomers.list(new CustomerFilter(null, null), 1, 3, null);
 
-		assertThat(first.content()).extracting(CustomerResponse::name)
+		assertThat(first.getContent()).extracting(customer -> customer.getDetails().name())
 			.containsExactly("Ana Souza", "Bruno Reis", "Mariana Lima");
-		assertThat(first.page()).isEqualTo(new PageResponse.PageMetadata(0, 3, 4, 2));
-		assertThat(second.content()).extracting(CustomerResponse::name).containsExactly("Promo a%b");
-		assertThat(second.page()).isEqualTo(new PageResponse.PageMetadata(1, 3, 4, 2));
+		assertThat(List.of(first.getNumber(), first.getSize(), first.getTotalElements(), first.getTotalPages()))
+			.containsExactly(0, 3, 4L, 2);
+		assertThat(second.getContent()).extracting(customer -> customer.getDetails().name()).containsExactly("Promo a%b");
+		assertThat(List.of(second.getNumber(), second.getSize(), second.getTotalElements(), second.getTotalPages()))
+			.containsExactly(1, 3, 4L, 2);
 	}
 
 	@Test
 	void sortByEmailDescendingOrdersResults() {
-		PageResponse<CustomerResponse> result = service.list(new CustomerFilter(null, null), 0, 20, "email,desc");
+		Page<Customer> result = listCustomers.list(new CustomerFilter(null, null), 0, 20, "email,desc");
 
-		assertThat(result.content()).extracting(CustomerResponse::email)
+		assertThat(result.getContent()).extracting(customer -> customer.getDetails().email())
 			.containsExactly("promo@x.com", "mariana@x.com", "bruno@x.com", "ana@x.com");
 	}
 
 	private List<String> names(CustomerFilter filter) {
-		return service.list(filter, 0, 20, null).content().stream().map(CustomerResponse::name).toList();
+		return listCustomers.list(filter, 0, 20, null).getContent().stream().map(customer -> customer.getDetails().name()).toList();
 	}
 
 	private void save(String name, String email, String cpf) {
-		repository.saveAndFlush(new Customer(new CustomerRequest(name, email, cpf, null, null, "São Paulo", "SP"), NOW));
+		repository.saveAndFlush(newEntity(new CustomerDetails(name, email, cpf, null, null, "São Paulo", "SP"), NOW));
+	}
+
+	private static CustomerJpaEntity newEntity(CustomerDetails details, Instant createdAt) {
+		return CustomerJpaEntity.from(Customer.register(details, createdAt));
 	}
 
 }

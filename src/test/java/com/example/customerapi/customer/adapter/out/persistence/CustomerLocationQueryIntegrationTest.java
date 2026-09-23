@@ -1,4 +1,4 @@
-package com.example.customerapi.customer.location;
+package com.example.customerapi.customer.adapter.out.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
@@ -16,9 +16,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.example.customerapi.TestcontainersConfiguration;
-import com.example.customerapi.customer.Customer;
-import com.example.customerapi.customer.CustomerData;
-import com.example.customerapi.customer.CustomerRepository;
+import com.example.customerapi.customer.domain.Customer;
+import com.example.customerapi.customer.domain.CustomerDetails;
 
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest
@@ -31,7 +30,7 @@ class CustomerLocationQueryIntegrationTest {
 	private static final Instant T3 = Instant.parse("2026-01-15T12:00:00Z");
 
 	@Autowired
-	private CustomerRepository repository;
+	private SpringDataCustomerRepository repository;
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -55,7 +54,7 @@ class CustomerLocationQueryIntegrationTest {
 		save("BELO HORIZONTE", "MG", T2);
 
 		assertThat(repository.countByLocation())
-			.extracting(LocationCount::getState, LocationCount::getCity, LocationCount::getTotal)
+			.extracting(LocationCountRow::getState, LocationCountRow::getCity, LocationCountRow::getTotal)
 			.containsExactlyInAnyOrder(tuple("SP", "campinas", 2L), tuple("MG", "Belo Horizonte", 3L));
 	}
 
@@ -69,7 +68,7 @@ class CustomerLocationQueryIntegrationTest {
 		insert("00000000-0000-0000-0000-000000000003", "Belo Horizonte", "MG", T1);
 
 		assertThat(repository.countByLocation())
-			.extracting(LocationCount::getState, LocationCount::getCity, LocationCount::getTotal)
+			.extracting(LocationCountRow::getState, LocationCountRow::getCity, LocationCountRow::getTotal)
 			.containsExactlyInAnyOrder(tuple("SP", "campinas", 2L), tuple("MG", "Belo Horizonte", 2L));
 	}
 
@@ -82,7 +81,7 @@ class CustomerLocationQueryIntegrationTest {
 		save("Uberlândia", "MG", T3);
 
 		assertThat(repository.countByLocation())
-			.extracting(LocationCount::getState, LocationCount::getCity, LocationCount::getTotal)
+			.extracting(LocationCountRow::getState, LocationCountRow::getCity, LocationCountRow::getTotal)
 			.containsExactlyInAnyOrder(tuple("MG", "Uberlândia", 2L), tuple("MG", "Uberlandia", 1L));
 	}
 
@@ -94,7 +93,7 @@ class CustomerLocationQueryIntegrationTest {
 		save("São Carlos", "SP", T1);
 
 		assertThat(repository.countByLocation())
-			.extracting(LocationCount::getState, LocationCount::getCity, LocationCount::getTotal)
+			.extracting(LocationCountRow::getState, LocationCountRow::getCity, LocationCountRow::getTotal)
 			.containsExactly(tuple("SP", "São Carlos", 2L));
 	}
 
@@ -107,7 +106,7 @@ class CustomerLocationQueryIntegrationTest {
 		save("Santa Rita", "MG", T3);
 
 		assertThat(repository.countByLocation())
-			.extracting(LocationCount::getState, LocationCount::getCity, LocationCount::getTotal)
+			.extracting(LocationCountRow::getState, LocationCountRow::getCity, LocationCountRow::getTotal)
 			.containsExactlyInAnyOrder(tuple("SP", "Santa Rita", 1L), tuple("MG", "Santa Rita", 2L));
 	}
 
@@ -120,7 +119,7 @@ class CustomerLocationQueryIntegrationTest {
 
 	private void save(String city, String state, Instant createdAt) {
 		seed++;
-		repository.saveAndFlush(new Customer(new TestCustomerData("Customer " + seed, "customer" + seed + "@example.com",
+		repository.saveAndFlush(newEntity(new CustomerDetails("Customer " + seed, "customer" + seed + "@example.com",
 				String.format("%011d", seed), null, LocalDate.of(1990, 5, 20), city, state), createdAt));
 	}
 
@@ -133,8 +132,8 @@ class CustomerLocationQueryIntegrationTest {
 				String.format("%011d", seed), city, state, Timestamp.from(createdAt), Timestamp.from(createdAt));
 	}
 
-	private record TestCustomerData(String name, String email, String cpf, String phone, LocalDate birthDate,
-			String city, String state) implements CustomerData {
+	private static CustomerJpaEntity newEntity(CustomerDetails details, Instant createdAt) {
+		return CustomerJpaEntity.from(Customer.register(details, createdAt));
 	}
 
 }

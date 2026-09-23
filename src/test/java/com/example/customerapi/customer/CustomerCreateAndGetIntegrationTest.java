@@ -26,6 +26,8 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import com.example.customerapi.HttpIntegrationTestSupport;
 import com.jayway.jsonpath.JsonPath;
+import com.example.customerapi.customer.domain.Customer;
+import com.example.customerapi.customer.domain.CustomerDetails;
 
 class CustomerCreateAndGetIntegrationTest extends HttpIntegrationTestSupport {
 
@@ -50,9 +52,9 @@ class CustomerCreateAndGetIntegrationTest extends HttpIntegrationTestSupport {
 		assertThat(result.getResponse().getHeader("Location")).isEqualTo("/api/v1/customers/" + id);
 		assertThat(updatedAt).isEqualTo(createdAt);
 
-		Customer stored = repository.findById(id).orElseThrow();
-		assertThat(stored).extracting(Customer::getName, Customer::getEmail, Customer::getCpf, Customer::getPhone,
-				Customer::getBirthDate, Customer::getCity, Customer::getState)
+		CustomerDetails stored = stored(id).getDetails();
+		assertThat(stored).extracting(CustomerDetails::name, CustomerDetails::email, CustomerDetails::cpf,
+				CustomerDetails::phone, CustomerDetails::birthDate, CustomerDetails::city, CustomerDetails::state)
 			.containsExactly("Ana Souza", "ana@example.com", "52998224725", "11987654321", LocalDate.of(1990, 5, 20),
 					"São Paulo", "SP");
 	}
@@ -80,8 +82,9 @@ class CustomerCreateAndGetIntegrationTest extends HttpIntegrationTestSupport {
 			.getResponse()
 			.getContentAsString();
 
-		Customer stored = repository.findById(UUID.fromString(JsonPath.read(response, "$.id"))).orElseThrow();
-		assertThat(stored).extracting(Customer::getEmail, Customer::getCpf, Customer::getState, Customer::getCity)
+		CustomerDetails stored = stored(UUID.fromString(JsonPath.read(response, "$.id"))).getDetails();
+		assertThat(stored)
+			.extracting(CustomerDetails::email, CustomerDetails::cpf, CustomerDetails::state, CustomerDetails::city)
 			.containsExactly("ana@example.com", "52998224725", "SP", "São Paulo");
 	}
 
@@ -203,7 +206,7 @@ class CustomerCreateAndGetIntegrationTest extends HttpIntegrationTestSupport {
 			.getContentAsString();
 
 		assertThat(repository.existsById(clientId)).isFalse();
-		Customer stored = repository.findById(UUID.fromString(JsonPath.read(response, "$.id"))).orElseThrow();
+		Customer stored = stored(UUID.fromString(JsonPath.read(response, "$.id")));
 		assertThat(stored.getCreatedAt()).isAfter(Instant.parse(clientInstant));
 	}
 

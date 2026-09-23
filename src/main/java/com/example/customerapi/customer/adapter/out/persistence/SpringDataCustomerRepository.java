@@ -1,4 +1,4 @@
-package com.example.customerapi.customer;
+package com.example.customerapi.customer.adapter.out.persistence;
 
 import java.util.List;
 import java.util.UUID;
@@ -7,9 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
-import com.example.customerapi.customer.location.LocationCount;
-
-public interface CustomerRepository extends JpaRepository<Customer, UUID>, JpaSpecificationExecutor<Customer> {
+public interface SpringDataCustomerRepository
+		extends JpaRepository<CustomerJpaEntity, UUID>, JpaSpecificationExecutor<CustomerJpaEntity> {
 
 	boolean existsByEmail(String email);
 
@@ -30,6 +29,6 @@ public interface CustomerRepository extends JpaRepository<Customer, UUID>, JpaSp
 			FROM customer c
 			GROUP BY c.state, lower(c.city)
 			""")
-	List<LocationCount> countByLocation();
+	List<LocationCountRow> countByLocation();
 
 }

@@ -32,6 +32,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import com.example.customerapi.HttpIntegrationTestSupport;
 import com.jayway.jsonpath.JsonPath;
+import com.example.customerapi.customer.domain.Customer;
+import com.example.customerapi.customer.domain.CustomerDetails;
 
 class CustomerUpdateIntegrationTest extends HttpIntegrationTestSupport {
 
@@ -120,9 +122,9 @@ class CustomerUpdateIntegrationTest extends HttpIntegrationTestSupport {
 			.andExpect(jsonPath("$.phone").doesNotExist())
 			.andExpect(jsonPath("$.birthDate").doesNotExist());
 
-		Customer stored = repository.findById(anaId).orElseThrow();
-		assertThat(stored.getPhone()).isNull();
-		assertThat(stored.getBirthDate()).isNull();
+		CustomerDetails stored = stored(anaId).getDetails();
+		assertThat(stored.phone()).isNull();
+		assertThat(stored.birthDate()).isNull();
 	}
 
 	// --- CUST-13 applied to PUT
@@ -227,10 +229,9 @@ class CustomerUpdateIntegrationTest extends HttpIntegrationTestSupport {
 			TransactionTemplate concurrent = new TransactionTemplate(transactionManager);
 			concurrent.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
 			concurrent.executeWithoutResult(status -> {
-				Customer ana = repository.findById(anaId).orElseThrow();
-				ana.replaceWith(new CustomerRequest("First Writer", "ana@example.com", "52998224725", null, null,
-						"Curitiba", "PR"), Instant.now());
-				repository.saveAndFlush(ana);
+				Customer ana = persistence.findById(anaId).orElseThrow();
+				persistence.update(ana.update(new CustomerDetails("First Writer", "ana@example.com", "52998224725",
+						null, null, "Curitiba", "PR"), Instant.now()));
 			});
 			// Real answer for this data: nobody else uses the new email. The spy wraps a JDK proxy, so it
 			// cannot call through.

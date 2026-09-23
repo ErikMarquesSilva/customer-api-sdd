@@ -1,4 +1,4 @@
-package com.example.customerapi.customer;
+package com.example.customerapi.customer.adapter.out.persistence;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ final class CustomerSpecifications {
 	 * Name contains the value ignoring case (LIKE wildcards in the value are literal), email equals the trimmed value
 	 * ignoring case, both combined with AND.
 	 */
-	static Specification<Customer> matching(CustomerFilter filter) {
+	static Specification<CustomerJpaEntity> matching(CustomerFilter filter) {
 		return (root, query, cb) -> {
 			List<Predicate> predicates = new ArrayList<>();
 			if (hasText(filter.name())) {

@@ -1,4 +1,4 @@
-package com.example.customerapi.customer;
+package com.example.customerapi.customer.application.port.in;
 
 public class InvalidSortException extends RuntimeException {
 
