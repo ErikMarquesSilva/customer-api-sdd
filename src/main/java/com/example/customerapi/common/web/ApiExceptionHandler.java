@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.example.customerapi.customer.CustomerNotFoundException;
 import com.example.customerapi.customer.DuplicateFieldException;
+import com.example.customerapi.customer.InvalidSortException;
 
 /**
  * The single error contract (AD-003): every error is an RFC 9457 problem; validation and uniqueness failures add an
@@ -85,6 +86,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	ResponseEntity<Object> handleOptimisticLock(ObjectOptimisticLockingFailureException ex, WebRequest request) {
 		return problem(ex, HttpStatus.CONFLICT, "The customer was changed by another request. Reload it and retry.",
 				null, request);
+	}
+
+	@ExceptionHandler(InvalidSortException.class)
+	ResponseEntity<Object> handleInvalidSort(InvalidSortException ex, WebRequest request) {
+		return problem(ex, HttpStatus.BAD_REQUEST, ex.getMessage(), null, request);
 	}
 
 	@ExceptionHandler(Exception.class)

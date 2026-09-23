@@ -349,11 +349,13 @@ T7 → T8 → T9 → T10 → T11
 
 **Done when**:
 
-- [ ] 25 customers: default returns 20 sorted by name with `page` metadata (totalElements 25, totalPages 2); `page=1` returns 5; `size=100` accepted
-- [ ] `sort=email,desc` orders by email descending; `page=-1`, `size=0`, `size=101`, `sort=cpf,asc` → 400; no match → empty content, totalElements 0
-- [ ] `name` / `email` / both filters return the expected customers over HTTP
-- [ ] Gate check passes: `./mvnw -q -B test`
-- [ ] Test count: ≥ 10 tests pass
+- [x] 25 customers: default returns 20 sorted by name with `page` metadata (totalElements 25, totalPages 2); `page=1` returns 5; `size=100` accepted
+- [x] `sort=email,desc` orders by email descending; `page=-1`, `size=0`, `size=101`, `sort=cpf,asc` → 400; no match → empty content, totalElements 0
+- [x] `name` / `email` / both filters return the expected customers over HTTP
+- [x] Gate check passes: `./mvnw -q -B test`
+- [x] Test count: ≥ 10 tests pass
+
+**Status**: ✅ Complete
 
 **Tests**: integration
 **Gate**: full

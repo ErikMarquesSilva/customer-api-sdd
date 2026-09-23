@@ -266,7 +266,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | CUST-29 | P1: List | Execute | Implementing |
 | CUST-30 | P1: List | Execute | Implementing |
 | CUST-31 | P1: List | Execute | Implementing |
-| CUST-32 | P1: List | Design | Pending |
+| CUST-32 | P1: List | Execute | Implementing |
 | CUST-33 | P1: List | Execute | Implementing |
 | CUST-34 | P1: List | Execute | Implementing |
 | CUST-35 | P1: Error contract | Execute | Implementing |
