@@ -110,11 +110,13 @@ T7 → T8 → T9 → T10 → T11
 
 **Done when**:
 
-- [ ] Application starts on an empty PostgreSQL and Flyway creates `customer`; Hibernate `validate` passes (CUST-47)
-- [ ] Saving a second row with the same email or cpf fails with `DataIntegrityViolationException` naming `uk_customer_email` / `uk_customer_cpf`
-- [ ] `existsByEmailAndIdNot` / `existsByCpfAndIdNot` return false for the row itself and true for another row
-- [ ] Gate check passes: `./mvnw -q -B test`
-- [ ] Test count: ≥ 5 tests pass (no silent deletions)
+- [x] Application starts on an empty PostgreSQL and Flyway creates `customer`; Hibernate `validate` passes (CUST-47)
+- [x] Saving a second row with the same email or cpf fails with `DataIntegrityViolationException` naming `uk_customer_email` / `uk_customer_cpf`
+- [x] `existsByEmailAndIdNot` / `existsByCpfAndIdNot` return false for the row itself and true for another row
+- [x] Gate check passes: `./mvnw -q -B test`
+- [x] Test count: ≥ 5 tests pass (no silent deletions)
+
+**Status**: ✅ Complete
 
 **Tests**: integration
 **Gate**: full

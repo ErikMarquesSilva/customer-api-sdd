@@ -244,8 +244,8 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | CUST-07 | P1: Create | Design | Pending |
 | CUST-08 | P1: Create | Design | Pending |
 | CUST-09 | P1: Create | Design | Pending |
-| CUST-10 | P1: Create | Design | Pending |
-| CUST-11 | P1: Create | Design | Pending |
+| CUST-10 | P1: Create | Execute | Implementing |
+| CUST-11 | P1: Create | Execute | Implementing |
 | CUST-12 | P1: Create | Design | Pending |
 | CUST-13 | P1: Create | Design | Pending |
 | CUST-14 | P1: Retrieve | Design | Pending |
