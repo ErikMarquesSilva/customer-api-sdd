@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/hexagonal-architecture/design.md`
-**Status**: Done (awaiting re-verification)
+**Status**: In fix iteration 2
 **Branch**: `refactor/hexagonal` (stacked on `feat/customer-api`)
 
 ---
@@ -50,6 +50,14 @@ The verifier returned FAIL (`9796beb..4cfd2ff`): 13/13 ACs, but surviving mutant
 
 ```
 T6 → T7 → T8 → T9
+```
+
+### Phase 3: Verifier fix iteration 2
+
+Re-verification returned FAIL (`9796beb..87626bf`): M3b, M10, M11b are killed, but the new guards could be evaded: N3 (`propagation = SUPPORTS`), N4b (delegate call ignored), and N1b (a race-test stub is never verified).
+
+```
+T10 → T11 → T12
 ```
 
 ---
@@ -315,11 +323,94 @@ T6 → T7 → T8 → T9
 
 ---
 
+### Phase 3: Verifier fix iteration 2
+
+#### T10: CPF validator may call only the domain rule
+
+**What**: Strengthen the ARCH-03 rule: `CpfValidator` must call `domain.Cpf.isValid` and no other method. Add a fixture that calls the domain rule and also computes its own result.
+**Where**: `src/test/java/com/example/customerapi/architecture/HexagonalRules.java` (+ fixture, discrimination case)
+**Depends on**: T9
+**Reuses**: `HexagonalRules`, existing race tests
+**Requirement**: ARCH-03
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] Rule passes on production; reports both the non-delegating and the delegate-but-ignore fixtures
+- [x] N4b and M11b fail the rule
+- [x] Gate check passes: quick
+
+**Tests**: unit
+**Gate**: quick
+
+**Status**: ✅ Complete. N4b (7 violations) and M11b (5) fail the rule. Calls to the validator's own methods are allowed because javac adds a bridge `isValid(Object, ...)`; a copied algorithm in private helpers still calls `String` methods and fails.
+
+**Commit**: `test(architecture): allow the cpf validator to call only the domain rule`
+
+---
+
+#### T11: Transactional rule checks propagation
+
+**What**: The use-case rule requires `@Transactional` with a propagation that starts a transaction (REQUIRED, REQUIRES_NEW, NESTED). Add a SUPPORTS fixture and make design.md state what the rule checks.
+**Where**: `src/test/java/com/example/customerapi/architecture/HexagonalRules.java` (+ fixture, discrimination case, design.md)
+**Depends on**: T10
+**Reuses**: `HexagonalRules`, existing race tests
+**Requirement**: ARCH-11 (CUST-24 guarantee)
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [ ] Rule passes on production; reports the SUPPORTS fixture
+- [ ] N3 fails the rule
+- [ ] Gate check passes: quick
+
+**Tests**: unit
+**Gate**: quick
+
+**Commit**: `test(architecture): require use-case transactions to start a transaction`
+
+---
+
+#### T12: Race tests verify their stub was used
+
+**What**: Each race test that disables a pre-check by stubbing the spied repository also verifies that the stubbed method was called.
+**Where**: `src/test/java/com/example/customerapi/customer/CustomerUpdateIntegrationTest.java` (+ `CustomerCreateAndGetIntegrationTest.java`)
+**Depends on**: T11
+**Reuses**: `HexagonalRules`, existing race tests
+**Requirement**: CUST-12
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [ ] The 4 race tests (create and update, email and cpf) verify their stubbed method
+- [ ] A stub on the wrong method (N1b) fails the test that owns it
+- [ ] Gate check passes: `./mvnw -B clean verify`
+
+**Tests**: integration
+**Gate**: build
+
+**Commit**: `test(customer): verify race-test stubs are exercised`
+
+---
+
 ## Phase Execution Map
 
 ```
 Phase 1:  T1 ------→ T2 ------→ T3 ------→ T4 ------→ T5
 Phase 2:  T6 ------→ T7 ------→ T8 ------→ T9
+Phase 3:  T10 ------→ T11 ------→ T12
 ```
 
 ## Requirement Coverage

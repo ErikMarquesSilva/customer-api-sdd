@@ -1,6 +1,9 @@
 package com.example.customerapi.architecture;
 
 import static com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAPackage;
+import static com.tngtech.archunit.core.domain.JavaClass.Predicates.simpleName;
+import static com.tngtech.archunit.core.domain.JavaMember.Predicates.declaredIn;
+import static com.tngtech.archunit.lang.conditions.ArchPredicates.are;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
@@ -141,7 +144,10 @@ final class HexagonalRules {
 		.haveSimpleName("CpfValidator")
 		.should()
 		.callMethod(Cpf.class, "isValid", String.class)
-		.as("ARCH-03 the web CPF validator delegates to the domain rule");
+		.andShould()
+		// Its own methods are allowed: javac adds a bridge isValid(Object, ...) for the generic ConstraintValidator.
+		.onlyCallMethodsThat(are(declaredIn(Cpf.class)).or(declaredIn(simpleName("CpfValidator"))))
+		.as("ARCH-03 the web CPF validator delegates to the domain rule and computes nothing itself");
 
 	/** Every feature class belongs to one hexagon layer. */
 	static final ArchRule FEATURE_CLASSES_BELONG_TO_A_LAYER = classes().that()
