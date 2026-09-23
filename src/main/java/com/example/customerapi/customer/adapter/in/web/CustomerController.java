@@ -1,4 +1,4 @@
-package com.example.customerapi.customer;
+package com.example.customerapi.customer.adapter.in.web;
 
 import java.net.URI;
 import java.util.UUID;

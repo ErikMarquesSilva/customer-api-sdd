@@ -151,12 +151,14 @@ T1 → T2 → T3 → T4 → T5
 
 **Done when**:
 
-- [ ] No class remains directly in `com.example.customerapi.customer` or `customer.location`
-- [ ] HTTP tests pass with assertions unchanged
-- [ ] Gate check passes: `./mvnw -q -B test`
+- [x] No class remains directly in `com.example.customerapi.customer` or `customer.location`
+- [x] HTTP tests pass with assertions unchanged
+- [x] Gate check passes: `./mvnw -q -B test`
 
 **Tests**: integration
 **Gate**: full
+
+**Status**: ✅ Complete (272 tests). Black-box HTTP tests stay in their packages; only web-layer unit tests moved.
 
 **Commit**: `refactor(customer): move web adapter into adapter.in.web`
 

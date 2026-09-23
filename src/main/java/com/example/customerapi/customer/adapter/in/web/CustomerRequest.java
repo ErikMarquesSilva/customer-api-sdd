@@ -1,4 +1,4 @@
-package com.example.customerapi.customer;
+package com.example.customerapi.customer.adapter.in.web;
 
 import java.time.LocalDate;
 import java.util.Locale;
@@ -10,7 +10,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 import com.example.customerapi.customer.domain.CustomerDetails;
-import com.example.customerapi.customer.validation.Cpf;
+import com.example.customerapi.customer.adapter.in.web.validation.Cpf;
 
 /**
  * Body of POST and PUT. Values are normalized in the compact constructor so Bean Validation checks the

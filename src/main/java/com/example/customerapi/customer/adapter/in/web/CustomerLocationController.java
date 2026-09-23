@@ -1,4 +1,4 @@
-package com.example.customerapi.customer.location;
+package com.example.customerapi.customer.adapter.in.web;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

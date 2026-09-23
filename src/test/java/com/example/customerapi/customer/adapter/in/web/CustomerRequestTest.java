@@ -1,4 +1,4 @@
-package com.example.customerapi.customer;
+package com.example.customerapi.customer.adapter.in.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
