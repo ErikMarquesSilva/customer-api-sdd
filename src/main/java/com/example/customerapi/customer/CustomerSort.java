@@ -5,8 +5,8 @@ import java.util.Set;
 import org.springframework.data.domain.Sort;
 
 /**
- * Parses {@code sort=<property>,<asc|desc>} against a whitelist. Default {@code name,asc}; {@code id} is always
- * appended as a tiebreaker so pages are stable.
+ * Parses {@code sort=<property>[,<asc|desc>]} against a whitelist. A missing direction means ascending. Default
+ * {@code name,asc}; {@code id} is always appended as a tiebreaker so pages are stable.
  */
 final class CustomerSort {
 
@@ -22,15 +22,16 @@ final class CustomerSort {
 			return Sort.by(Sort.Direction.ASC, "name").and(TIEBREAKER);
 		}
 		String[] parts = sort.split(",", -1);
-		if (parts.length != 2 || !ALLOWED.contains(parts[0])) {
+		if (parts.length > 2 || !ALLOWED.contains(parts[0])) {
 			throw new InvalidSortException(sort);
 		}
-		Sort.Direction direction = switch (parts[1]) {
+		String direction = parts.length == 2 ? parts[1] : "asc";
+		Sort.Direction sortDirection = switch (direction) {
 			case "asc" -> Sort.Direction.ASC;
 			case "desc" -> Sort.Direction.DESC;
 			default -> throw new InvalidSortException(sort);
 		};
-		return Sort.by(direction, parts[0]).and(TIEBREAKER);
+		return Sort.by(sortDirection, parts[0]).and(TIEBREAKER);
 	}
 
 }

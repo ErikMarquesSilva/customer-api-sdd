@@ -28,7 +28,14 @@ class CustomerSortTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = { "cpf,asc", "id,desc", "phone,asc", "version,asc" })
+	@ValueSource(strings = { "name", "email", "createdAt", "updatedAt" })
+	void allowedPropertyWithoutDirectionIsAscendingWithIdTiebreaker(String property) {
+		assertThat(CustomerSort.parse(property))
+			.isEqualTo(Sort.by(Direction.ASC, property).and(Sort.by(Direction.ASC, "id")));
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { "cpf,asc", "id,desc", "phone,asc", "version,asc", "cpf", "id" })
 	void propertyOutsideWhitelistIsRejected(String sort) {
 		assertThatThrownBy(() -> CustomerSort.parse(sort)).isInstanceOf(InvalidSortException.class);
 	}

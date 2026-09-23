@@ -59,6 +59,14 @@ T3 → T4 → T5 → T6
 T7 → T8 → T9 → T10 → T11
 ```
 
+### Phase 4: Fixes and amendments
+
+Added after batch 2: the user's sort amendment (CUST-52, CUST-53) and two defects the batch 2 worker found.
+
+```
+T12 → T13 → T14
+```
+
 ---
 
 ## Task Breakdown
@@ -393,14 +401,98 @@ T7 → T8 → T9 → T10 → T11
 
 ---
 
+### Phase 4: Fixes and amendments
+
+#### T12: Sort direction defaults to ascending
+
+**What**: Accept `sort=<property>` without a direction as ascending; keep 400 for unknown properties and directions.
+**Where**: `src/main/java/com/example/customerapi/customer/CustomerSort.java` (+ `CustomerSortTest.java`, `CustomerListIntegrationTest.java`)
+**Depends on**: T11
+**Reuses**: `CustomerSort` (T6), list endpoint (T10)
+**Requirement**: CUST-52, CUST-53
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] `sort=name` → `name` ascending with `id` tiebreaker (unit) and ascending order over HTTP
+- [x] `sort=name,up` → 400 over HTTP; `sort=cpf` → 400
+- [x] Gate check passes: `./mvnw -q -B test`
+- [x] Test count: 206 tests pass (197 + 9)
+
+**Tests**: unit, integration
+**Gate**: full
+
+**Status**: ✅ Complete
+
+**Commit**: `feat(customer): default sort direction to ascending`
+
+---
+
+#### T13: Keep PostgreSQL error detail out of logs
+
+**What**: Stop the PostgreSQL JDBC driver from putting server error detail (the duplicated key value) into exception messages that Hibernate logs, and test the race path logs.
+**Where**: `src/main/resources/application.properties` (+ `OperabilityIntegrationTest.java`)
+**Depends on**: T12
+**Reuses**: `OperabilityIntegrationTest` (T11), race-path stubbing from T7
+**Requirement**: CUST-46
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [ ] A create that passes the pre-check and hits `uk_customer_email` / `uk_customer_cpf` returns 409 and the captured output contains neither the email nor the cpf
+- [ ] Gate check passes: `./mvnw -q -B test`
+- [ ] Test count: ≥ previous + new tests pass
+
+**Tests**: integration
+**Gate**: full
+
+**Commit**: `fix(customer): keep database error detail out of logs`
+
+---
+
+#### T14: Microsecond clock precision
+
+**What**: Make the UTC clock tick in microseconds so timestamps returned at create/update equal what PostgreSQL stores (`timestamptz` has microsecond precision) on every OS.
+**Where**: `src/main/java/com/example/customerapi/common/config/ClockConfig.java` (+ `ClockConfigTest.java`)
+**Depends on**: T13
+**Reuses**: `ClockConfig` (T4)
+**Requirement**: CUST-01, CUST-14, CUST-19
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [ ] The clock bean is UTC and every instant it returns has zero sub-microsecond nanos
+- [ ] Gate check passes: `./mvnw -B verify`
+- [ ] Test count: ≥ previous + new tests pass
+
+**Tests**: unit
+**Gate**: build
+
+**Commit**: `fix(customer): align clock precision with postgresql timestamps`
+
+---
+
 ## Phase Execution Map
 
 ```
-Phase 1 → Phase 2 → Phase 3
+Phase 1 → Phase 2 → Phase 3 → Phase 4
 
 Phase 1:  T1 ------→ T2
 Phase 2:  T3 ------→ T4 ------→ T5 ------→ T6
 Phase 3:  T7 ------→ T8 ------→ T9 ------→ T10 ------→ T11
+Phase 4:  T12 ------→ T13 ------→ T14
 ```
 
 Execution is strictly sequential.
@@ -422,5 +514,6 @@ Execution is strictly sequential.
 | CUST-40 to CUST-42 | T6, T10 |
 | CUST-43 to CUST-46 | T1, T5, T11 |
 | CUST-47 | T1, T2 |
+| CUST-52 to CUST-53 | T12 |
 
-All 51 requirements are mapped.
+All 53 requirements are mapped. CUST-46 is reinforced by T13; CUST-01, CUST-14, CUST-19 by T14.

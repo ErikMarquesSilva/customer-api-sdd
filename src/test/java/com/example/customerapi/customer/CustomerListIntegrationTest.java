@@ -115,10 +115,21 @@ class CustomerListIntegrationTest extends HttpIntegrationTestSupport {
 				.value(contains(email(25), email(24), email(23), email(22), email(21))));
 	}
 
-	// --- CUST-32, CUST-33
+	// --- CUST-52
+
+	@Test
+	void sortWithoutDirectionOrdersAscendingByThatProperty() throws Exception {
+		create25Customers();
+
+		list("sort", "email", "size", "5").andExpect(status().isOk())
+			.andExpect(jsonPath("$.content[*].email")
+				.value(contains(email(1), email(2), email(3), email(4), email(5))));
+	}
+
+	// --- CUST-32, CUST-33, CUST-53
 
 	@ParameterizedTest(name = "{0}={1}")
-	@CsvSource({ "page, -1", "size, 0", "size, 101", "sort, 'cpf,asc'" })
+	@CsvSource({ "page, -1", "size, 0", "size, 101", "sort, 'cpf,asc'", "sort, cpf", "sort, 'name,up'" })
 	void outOfRangePagingOrNonWhitelistedSortReturns400(String param, String value) throws Exception {
 		createAnaMarianaAndBruno();
 

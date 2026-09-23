@@ -54,6 +54,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | birthDate rule | Optional ISO date; must be strictly before the current UTC date | A future or today birth date is a data error | y |
 | Page size bounds | Default 20; `size` 1-100; `page` >= 0; out of range returns 400 | Explicit errors over silent clamping | y |
 | Default and allowed sort | Default `name,asc`; allowed properties: name, email, createdAt, updatedAt | Stable, user-meaningful ordering; blocks sorting on arbitrary columns | y |
+| Sort without direction | `sort=<property>` defaults to ascending; only `asc` and `desc` are valid directions | User decision on 2026-09-22 (amendment) | y |
 | Concurrent updates | Optimistic locking; the losing concurrent write returns 409; no client-visible version field | Prevents silent lost updates without adding ETag scope | y |
 | Unknown JSON properties | Ignored; client-supplied id, createdAt, updatedAt are ignored | Tolerant reader; server owns identity and timestamps | y |
 | Timestamps | `createdAt`/`updatedAt` as ISO-8601 UTC instants | Unambiguous across time zones | y |
@@ -164,6 +165,8 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 4. IF `page` is below 0 or `size` is below 1 or above 100 THEN the system SHALL respond 400. `CUST-32`
 5. IF `sort` names any property other than name, email, createdAt or updatedAt THEN the system SHALL respond 400. `CUST-33`
 6. WHEN no customers match THEN the system SHALL respond 200 with empty `content` and `totalElements` 0. `CUST-34`
+7. WHEN `sort=<property>` names an allowed property without a direction THEN the system SHALL order results by that property ascending. `CUST-52`
+8. IF the `sort` direction is present and is neither `asc` nor `desc` THEN the system SHALL respond 400. `CUST-53`
 
 **Independent Test**: Create 25 customers; default GET returns 20 sorted by name with totalElements 25; `page=1` returns 5.
 
@@ -286,13 +289,15 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | CUST-49 | P1: Create | Execute | Implementing |
 | CUST-50 | P1: Create | Execute | Implementing |
 | CUST-51 | P1: Create | Execute | Implementing |
+| CUST-52 | P1: List | Execute | Implementing |
+| CUST-53 | P1: List | Execute | Implementing |
 
-**Coverage:** 51 total, 0 mapped to tasks, 51 unmapped ⚠️ (mapped during Tasks)
+**Coverage:** 53 total, 53 mapped to tasks, 0 unmapped
 
 ---
 
 ## Success Criteria
 
-- [ ] All 51 acceptance criteria have at least one passing automated test that asserts the spec-defined outcome.
+- [ ] All 53 acceptance criteria have at least one passing automated test that asserts the spec-defined outcome.
 - [ ] The full test suite passes against a real PostgreSQL instance.
-- [ ] Zero 500 responses across the error scenarios in this spec (CUST-05 to CUST-12, CUST-48, CUST-49, CUST-15, CUST-16, CUST-20 to CUST-24, CUST-28, CUST-32, CUST-33, CUST-37, CUST-38).
+- [ ] Zero 500 responses across the error scenarios in this spec (CUST-05 to CUST-12, CUST-48, CUST-49, CUST-15, CUST-16, CUST-20 to CUST-24, CUST-28, CUST-32, CUST-33, CUST-53, CUST-37, CUST-38).
