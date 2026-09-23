@@ -1,7 +1,5 @@
 package com.example.customerapi.customer.application.service;
 
-import com.example.customerapi.customer.application.port.in.InvalidSortException;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -12,6 +10,8 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+
+import com.example.customerapi.customer.application.port.in.InvalidSortException;
 
 class CustomerSortTest {
 

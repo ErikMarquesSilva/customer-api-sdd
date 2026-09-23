@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tngtech.archunit.lang.ArchRule;
 
-import com.example.customerapi.customer.domain.Cpf;
-
 import jakarta.persistence.Entity;
+
+import com.example.customerapi.customer.domain.Cpf;
 
 /**
  * Hexagonal dependency and placement rules (AD-005). Adapters depend inward on the application and the domain; the

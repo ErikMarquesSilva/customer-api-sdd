@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.customerapi.customer.application.port.in.GroupCustomersByLocationUseCase;
 
 /**
- * HTTP binding only; the grouping rules live behind {@link GroupCustomersByLocationUseCase}. The literal path is more specific
- * than {@code /api/v1/customers/{id}}, so it is matched before any UUID conversion.
+ * HTTP binding only; the grouping rules live behind {@link GroupCustomersByLocationUseCase}. The literal path is more
+ * specific than {@code /api/v1/customers/{id}}, so it is matched before any UUID conversion.
  */
 @RestController
 public class CustomerLocationController {

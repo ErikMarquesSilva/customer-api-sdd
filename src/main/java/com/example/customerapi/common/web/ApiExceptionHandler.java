@@ -37,7 +37,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
 	private static final Logger log = LoggerFactory.getLogger(ApiExceptionHandler.class);
 
-
 	public record FieldErrorEntry(String field, String message) {
 	}
 
@@ -102,6 +101,5 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		}
 		return handleExceptionInternal(ex, body, new HttpHeaders(), status, request);
 	}
-
 
 }

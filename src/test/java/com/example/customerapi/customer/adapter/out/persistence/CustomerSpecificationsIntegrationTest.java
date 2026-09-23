@@ -10,13 +10,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
 
 import com.example.customerapi.TestcontainersConfiguration;
-import com.example.customerapi.customer.domain.CustomerFilter;
+import com.example.customerapi.customer.application.port.in.ListCustomersUseCase;
 import com.example.customerapi.customer.domain.Customer;
 import com.example.customerapi.customer.domain.CustomerDetails;
-import com.example.customerapi.customer.application.port.in.ListCustomersUseCase;
-import org.springframework.data.domain.Page;
+import com.example.customerapi.customer.domain.CustomerFilter;
 
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest
@@ -91,7 +91,11 @@ class CustomerSpecificationsIntegrationTest {
 	}
 
 	private List<String> names(CustomerFilter filter) {
-		return listCustomers.list(filter, 0, 20, null).getContent().stream().map(customer -> customer.getDetails().name()).toList();
+		return listCustomers.list(filter, 0, 20, null)
+			.getContent()
+			.stream()
+			.map(customer -> customer.getDetails().name())
+			.toList();
 	}
 
 	private void save(String name, String email, String cpf) {

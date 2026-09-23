@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/hexagonal-architecture/design.md`
-**Status**: In fix iteration 1
+**Status**: Done (awaiting re-verification)
 **Branch**: `refactor/hexagonal` (stacked on `feat/customer-api`)
 
 ---
@@ -303,11 +303,13 @@ T6 → T7 → T8 → T9
 
 **Done when**:
 
-- [ ] No line over 120 characters in `src/main`
-- [ ] Gate check passes: `./mvnw -B clean verify`
+- [x] No line over 120 characters in `src/main`
+- [x] Gate check passes: `./mvnw -B clean verify`
 
 **Tests**: none
 **Gate**: build
+
+**Status**: ✅ Complete (295 tests, clean build).
 
 **Commit**: `style: tidy imports and blank lines after the hexagonal move`
 

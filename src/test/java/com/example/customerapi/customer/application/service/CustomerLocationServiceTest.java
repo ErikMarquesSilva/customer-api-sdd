@@ -92,7 +92,8 @@ class CustomerLocationServiceTest {
 	void oneCustomerGivesOneStateWithOneCityBothWithTotalOne() {
 		rows(row("PR", "Curitiba", 1));
 
-		assertThat(service.groupByLocation()).isEqualTo(List.of(new StateLocation("PR", 1, List.of(new CityLocation("Curitiba", 1)))));
+		assertThat(service.groupByLocation())
+			.isEqualTo(List.of(new StateLocation("PR", 1, List.of(new CityLocation("Curitiba", 1)))));
 	}
 
 	// --- Edge case: all customers in one city (GEO-004)
@@ -101,7 +102,8 @@ class CustomerLocationServiceTest {
 	void allCustomersInOneCityGiveStateTotalEqualToCityTotal() {
 		rows(row("RJ", "Niterói", 7));
 
-		assertThat(service.groupByLocation()).isEqualTo(List.of(new StateLocation("RJ", 7, List.of(new CityLocation("Niterói", 7)))));
+		assertThat(service.groupByLocation())
+			.isEqualTo(List.of(new StateLocation("RJ", 7, List.of(new CityLocation("Niterói", 7)))));
 	}
 
 	private void rows(LocationCount... rows) {
