@@ -597,11 +597,13 @@ T15 → T16 → T17 → T18
 
 **Done when**:
 
-- [ ] Assumptions table has one row per clarification, each with default and rationale
-- [ ] `validate_spec.py` passes
+- [x] Assumptions table has one row per clarification, each with default and rationale
+- [x] `validate_spec.py` passes
 
 **Tests**: none
 **Gate**: build
+
+**Status**: ✅ Complete
 
 **Commit**: `docs(spec): clarify email validity, errors array scope and actuator root`
 

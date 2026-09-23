@@ -54,6 +54,9 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | birthDate rule | Optional ISO date; must be strictly before the current UTC date | A future or today birth date is a data error | y |
 | Page size bounds | Default 20; `size` 1-100; `page` >= 0; out of range returns 400 | Explicit errors over silent clamping | y |
 | Default and allowed sort | Default `name,asc`; allowed properties: name, email, createdAt, updatedAt | Stable, user-meaningful ordering; blocks sorting on arbitrary columns | y |
+| `errors` array scope (CUST-36) | Only request-body field constraint violations (CUST-05 to CUST-09, CUST-48, CUST-49) carry `errors`; invalid query parameters (`page`, `size`, `sort`) and unparseable input (malformed JSON, a date in the wrong format, a non-UUID id) return 400 problem+json without `errors` | Field-level entries only make sense for body fields; the `detail` names the problem otherwise. Clarified after verification on 2026-09-22 | n |
+| Valid email (CUST-06) | Hibernate Validator `@Email` rules; a top-level domain is not required (`user@host` is accepted) | Standard validator; stricter rules reject valid intranet addresses. Clarified after verification on 2026-09-22 | n |
+| Actuator discovery root (CUST-44) | `GET /actuator` stays available and lists only `self`, `health` and `health-path` | It is the discovery index, not an endpoint; it reveals nothing beyond health. Clarified after verification on 2026-09-22 | n |
 | Sort without direction | `sort=<property>` defaults to ascending; only `asc` and `desc` are valid directions | User decision on 2026-09-22 (amendment) | y |
 | Concurrent updates | Optimistic locking; the losing concurrent write returns 409; no client-visible version field | Prevents silent lost updates without adding ETag scope | y |
 | Unknown JSON properties | Ignored; client-supplied id, createdAt, updatedAt are ignored | Tolerant reader; server owns identity and timestamps | y |
@@ -181,7 +184,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 **Acceptance Criteria**:
 
 1. The system SHALL return every 4xx and 5xx response with content type `application/problem+json` and the fields `type`, `title`, `status`, `detail` and `instance`. `CUST-35`
-2. WHEN request validation fails THEN the system SHALL include an `errors` array with one `{field, message}` entry per invalid field. `CUST-36`
+2. WHEN request body validation fails (CUST-05 to CUST-09, CUST-48, CUST-49) THEN the system SHALL include an `errors` array with one `{field, message}` entry per invalid field. `CUST-36`
 3. IF the request body is not well-formed JSON THEN the system SHALL respond 400. `CUST-37`
 4. IF a POST or PUT request has a content type other than `application/json` THEN the system SHALL respond 415. `CUST-38`
 5. IF an unexpected exception occurs THEN the system SHALL respond 500 with `detail` equal to `An unexpected error occurred.` and SHALL NOT include the exception message or stack trace. `CUST-39`
