@@ -56,6 +56,24 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: CUST-36 (api/errors)
 - last seen: 2026-09-23T01:47:13Z
 
+### L-008 - When the author narrows an AC to match current behaviour after verification, log it as an unconfirmed assumption for the user, never as settled spec.
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `process` · harmful: 0
+- features: customer-management
+- evidence: CUST-36 (process)
+- last seen: 2026-09-23T02:03:40Z
+
+### L-009 - Never put test-only settings in a production config location (config/application.properties); it shadows production config in every test. Use a test bean or profile, and run mvn clean after deleting resources.
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `test-config` · harmful: 0
+- features: customer-management
+- evidence: P1 (test-config)
+- last seen: 2026-09-23T02:03:40Z
+
+### L-010 - Assert every contract field of error responses (type, title, detail, instance), not only status and content type; mutants that drop a field survive status-only checks.
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `api/errors` · harmful: 0
+- features: customer-management
+- evidence: CUST-35 (api/errors)
+- last seen: 2026-09-23T02:03:40Z
+
 ## Quarantined (failed when applied - ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.

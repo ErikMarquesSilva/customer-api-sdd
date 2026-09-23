@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 8,
+  "next_id": 11,
   "lessons": [
     {
       "id": "L-001",
@@ -130,6 +130,60 @@
       ],
       "created": "2026-09-23T01:47:13Z",
       "last_seen": "2026-09-23T01:47:13Z"
+    },
+    {
+      "id": "L-008",
+      "key": "spec_precision_gap::when the author narrows an ac to match current behaviour after verification log it as an unconfirmed assumption for the user never as settled spec",
+      "text": "When the author narrows an AC to match current behaviour after verification, log it as an unconfirmed assumption for the user, never as settled spec.",
+      "signal": "spec_precision_gap",
+      "scope": "process",
+      "status": "candidate",
+      "features": [
+        "customer-management"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "CUST-36 (process)"
+      ],
+      "created": "2026-09-23T02:03:40Z",
+      "last_seen": "2026-09-23T02:03:40Z"
+    },
+    {
+      "id": "L-009",
+      "key": "surviving_mutant::never put test only settings in a production config location config application properties it shadows production config in every test use a test bean or profile and run mvn clean after deleting resources",
+      "text": "Never put test-only settings in a production config location (config/application.properties); it shadows production config in every test. Use a test bean or profile, and run mvn clean after deleting resources.",
+      "signal": "surviving_mutant",
+      "scope": "test-config",
+      "status": "candidate",
+      "features": [
+        "customer-management"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "P1 (test-config)"
+      ],
+      "created": "2026-09-23T02:03:40Z",
+      "last_seen": "2026-09-23T02:03:40Z"
+    },
+    {
+      "id": "L-010",
+      "key": "surviving_mutant::assert every contract field of error responses type title detail instance not only status and content type mutants that drop a field survive status only checks",
+      "text": "Assert every contract field of error responses (type, title, detail, instance), not only status and content type; mutants that drop a field survive status-only checks.",
+      "signal": "surviving_mutant",
+      "scope": "api/errors",
+      "status": "candidate",
+      "features": [
+        "customer-management"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "CUST-35 (api/errors)"
+      ],
+      "created": "2026-09-23T02:03:40Z",
+      "last_seen": "2026-09-23T02:03:40Z"
     }
   ]
 }

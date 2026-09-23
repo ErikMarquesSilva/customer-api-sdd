@@ -241,59 +241,59 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 
 | Requirement ID | Story | Phase | Status |
 | -------------- | ----- | ----- | ------ |
-| CUST-01 | P1: Create | Execute | Implementing |
-| CUST-02 | P1: Create | Execute | Implementing |
-| CUST-03 | P1: Create | Execute | Implementing |
-| CUST-04 | P1: Create | Execute | Implementing |
-| CUST-05 | P1: Create | Execute | Implementing |
-| CUST-06 | P1: Create | Execute | Implementing |
-| CUST-07 | P1: Create | Execute | Implementing |
-| CUST-08 | P1: Create | Execute | Implementing |
-| CUST-09 | P1: Create | Execute | Implementing |
-| CUST-10 | P1: Create | Execute | Implementing |
-| CUST-11 | P1: Create | Execute | Implementing |
-| CUST-12 | P1: Create | Execute | Implementing |
-| CUST-13 | P1: Create | Execute | Implementing |
-| CUST-14 | P1: Retrieve | Execute | Implementing |
-| CUST-15 | P1: Retrieve | Execute | Implementing |
-| CUST-16 | P1: Retrieve | Execute | Implementing |
-| CUST-17 | P1: Update | Execute | Implementing |
-| CUST-18 | P1: Update | Execute | Implementing |
-| CUST-19 | P1: Update | Execute | Implementing |
-| CUST-20 | P1: Update | Execute | Implementing |
-| CUST-21 | P1: Update | Execute | Implementing |
-| CUST-22 | P1: Update | Execute | Implementing |
-| CUST-23 | P1: Update | Execute | Implementing |
-| CUST-24 | P1: Update | Execute | Implementing |
-| CUST-25 | P1: Delete | Execute | Implementing |
-| CUST-26 | P1: Delete | Execute | Implementing |
-| CUST-27 | P1: Delete | Execute | Implementing |
-| CUST-28 | P1: Delete | Execute | Implementing |
-| CUST-29 | P1: List | Execute | Implementing |
-| CUST-30 | P1: List | Execute | Implementing |
-| CUST-31 | P1: List | Execute | Implementing |
-| CUST-32 | P1: List | Execute | Implementing |
-| CUST-33 | P1: List | Execute | Implementing |
-| CUST-34 | P1: List | Execute | Implementing |
-| CUST-35 | P1: Error contract | Execute | Implementing |
-| CUST-36 | P1: Error contract | Execute | Implementing |
-| CUST-37 | P1: Error contract | Execute | Implementing |
-| CUST-38 | P1: Error contract | Execute | Implementing |
-| CUST-39 | P1: Error contract | Execute | Implementing |
-| CUST-40 | P2: Search | Execute | Implementing |
-| CUST-41 | P2: Search | Execute | Implementing |
-| CUST-42 | P2: Search | Execute | Implementing |
-| CUST-43 | P2: Operability | Execute | Implementing |
-| CUST-44 | P2: Operability | Execute | Implementing |
-| CUST-45 | P2: Operability | Execute | Implementing |
-| CUST-46 | P2: Operability | Execute | Implementing |
-| CUST-47 | P2: Operability | Execute | Implementing |
-| CUST-48 | P1: Create | Execute | Implementing |
-| CUST-49 | P1: Create | Execute | Implementing |
-| CUST-50 | P1: Create | Execute | Implementing |
-| CUST-51 | P1: Create | Execute | Implementing |
-| CUST-52 | P1: List | Execute | Implementing |
-| CUST-53 | P1: List | Execute | Implementing |
+| CUST-01 | P1: Create | Execute | Verified |
+| CUST-02 | P1: Create | Execute | Verified |
+| CUST-03 | P1: Create | Execute | Verified |
+| CUST-04 | P1: Create | Execute | Verified |
+| CUST-05 | P1: Create | Execute | Verified |
+| CUST-06 | P1: Create | Execute | Verified |
+| CUST-07 | P1: Create | Execute | Verified |
+| CUST-08 | P1: Create | Execute | Verified |
+| CUST-09 | P1: Create | Execute | Verified |
+| CUST-10 | P1: Create | Execute | Verified |
+| CUST-11 | P1: Create | Execute | Verified |
+| CUST-12 | P1: Create | Execute | Verified |
+| CUST-13 | P1: Create | Execute | Verified |
+| CUST-14 | P1: Retrieve | Execute | Verified |
+| CUST-15 | P1: Retrieve | Execute | Verified |
+| CUST-16 | P1: Retrieve | Execute | Verified |
+| CUST-17 | P1: Update | Execute | Verified |
+| CUST-18 | P1: Update | Execute | Verified |
+| CUST-19 | P1: Update | Execute | Verified |
+| CUST-20 | P1: Update | Execute | Verified |
+| CUST-21 | P1: Update | Execute | Verified |
+| CUST-22 | P1: Update | Execute | Verified |
+| CUST-23 | P1: Update | Execute | Verified |
+| CUST-24 | P1: Update | Execute | Verified |
+| CUST-25 | P1: Delete | Execute | Verified |
+| CUST-26 | P1: Delete | Execute | Verified |
+| CUST-27 | P1: Delete | Execute | Verified |
+| CUST-28 | P1: Delete | Execute | Verified |
+| CUST-29 | P1: List | Execute | Verified |
+| CUST-30 | P1: List | Execute | Verified |
+| CUST-31 | P1: List | Execute | Verified |
+| CUST-32 | P1: List | Execute | Verified |
+| CUST-33 | P1: List | Execute | Verified |
+| CUST-34 | P1: List | Execute | Verified |
+| CUST-35 | P1: Error contract | Execute | Verified |
+| CUST-36 | P1: Error contract | Execute | Verified |
+| CUST-37 | P1: Error contract | Execute | Verified |
+| CUST-38 | P1: Error contract | Execute | Verified |
+| CUST-39 | P1: Error contract | Execute | Verified |
+| CUST-40 | P2: Search | Execute | Verified |
+| CUST-41 | P2: Search | Execute | Verified |
+| CUST-42 | P2: Search | Execute | Verified |
+| CUST-43 | P2: Operability | Execute | Verified |
+| CUST-44 | P2: Operability | Execute | Verified |
+| CUST-45 | P2: Operability | Execute | Verified |
+| CUST-46 | P2: Operability | Execute | Verified |
+| CUST-47 | P2: Operability | Execute | Verified |
+| CUST-48 | P1: Create | Execute | Verified |
+| CUST-49 | P1: Create | Execute | Verified |
+| CUST-50 | P1: Create | Execute | Verified |
+| CUST-51 | P1: Create | Execute | Verified |
+| CUST-52 | P1: List | Execute | Verified |
+| CUST-53 | P1: List | Execute | Verified |
 
 **Coverage:** 53 total, 53 mapped to tasks, 0 unmapped
 

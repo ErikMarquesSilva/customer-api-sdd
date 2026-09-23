@@ -35,3 +35,12 @@
 - **Status**: active
 
 ## Handoff
+
+- **Feature**: customer-management and customer-geo-grouping (`.specs/features/`)
+- **Phase / Task**: Execute complete. Both verifiers passed, and `validate_state.py` passes for both features.
+- **Completed**: customer-management T1-T19, customer-geo-grouping T1-T4
+- **In-progress** (file:line): none
+- **Next step**: the user reviews the `Confirmed? n` assumptions in `customer-management/spec.md`: the `errors` array scope (CUST-36), the email validity rule (CUST-06) and the actuator discovery root (CUST-44). Then push `feat/customer-api` and open a PR, only when the user asks.
+- **Blockers**: none
+- **Uncommitted files**: none
+- **Branch**: `feat/customer-api` (local only, not pushed)
