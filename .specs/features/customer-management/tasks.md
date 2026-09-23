@@ -321,9 +321,11 @@ T7 → T8 → T9 → T10 → T11
 
 **Done when**:
 
-- [ ] DELETE → 204 with empty body; later GET → 404; same email and cpf can be re-created (201); unknown id → 404
-- [ ] Gate check passes: `./mvnw -q -B test`
-- [ ] Test count: ≥ 4 tests pass
+- [x] DELETE → 204 with empty body; later GET → 404; same email and cpf can be re-created (201); unknown id → 404
+- [x] Gate check passes: `./mvnw -q -B test`
+- [x] Test count: ≥ 4 tests pass
+
+**Status**: ✅ Complete
 
 **Tests**: integration
 **Gate**: full

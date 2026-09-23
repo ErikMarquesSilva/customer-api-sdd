@@ -260,8 +260,8 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | CUST-23 | P1: Update | Execute | Implementing |
 | CUST-24 | P1: Update | Execute | Implementing |
 | CUST-25 | P1: Delete | Execute | Implementing |
-| CUST-26 | P1: Delete | Design | Pending |
-| CUST-27 | P1: Delete | Design | Pending |
+| CUST-26 | P1: Delete | Execute | Implementing |
+| CUST-27 | P1: Delete | Execute | Implementing |
 | CUST-28 | P1: Delete | Execute | Implementing |
 | CUST-29 | P1: List | Execute | Implementing |
 | CUST-30 | P1: List | Execute | Implementing |
