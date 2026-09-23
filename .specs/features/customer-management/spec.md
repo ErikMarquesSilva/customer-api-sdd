@@ -235,7 +235,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 
 | Requirement ID | Story | Phase | Status |
 | -------------- | ----- | ----- | ------ |
-| CUST-01 | P1: Create | Design | Pending |
+| CUST-01 | P1: Create | Execute | Implementing |
 | CUST-02 | P1: Create | Design | Pending |
 | CUST-03 | P1: Create | Execute | Implementing |
 | CUST-04 | P1: Create | Execute | Implementing |
@@ -248,21 +248,21 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | CUST-11 | P1: Create | Execute | Implementing |
 | CUST-12 | P1: Create | Design | Pending |
 | CUST-13 | P1: Create | Design | Pending |
-| CUST-14 | P1: Retrieve | Design | Pending |
-| CUST-15 | P1: Retrieve | Design | Pending |
+| CUST-14 | P1: Retrieve | Execute | Implementing |
+| CUST-15 | P1: Retrieve | Execute | Implementing |
 | CUST-16 | P1: Retrieve | Design | Pending |
-| CUST-17 | P1: Update | Design | Pending |
-| CUST-18 | P1: Update | Design | Pending |
-| CUST-19 | P1: Update | Design | Pending |
+| CUST-17 | P1: Update | Execute | Implementing |
+| CUST-18 | P1: Update | Execute | Implementing |
+| CUST-19 | P1: Update | Execute | Implementing |
 | CUST-20 | P1: Update | Design | Pending |
-| CUST-21 | P1: Update | Design | Pending |
-| CUST-22 | P1: Update | Design | Pending |
-| CUST-23 | P1: Update | Design | Pending |
+| CUST-21 | P1: Update | Execute | Implementing |
+| CUST-22 | P1: Update | Execute | Implementing |
+| CUST-23 | P1: Update | Execute | Implementing |
 | CUST-24 | P1: Update | Design | Pending |
-| CUST-25 | P1: Delete | Design | Pending |
+| CUST-25 | P1: Delete | Execute | Implementing |
 | CUST-26 | P1: Delete | Design | Pending |
 | CUST-27 | P1: Delete | Design | Pending |
-| CUST-28 | P1: Delete | Design | Pending |
+| CUST-28 | P1: Delete | Execute | Implementing |
 | CUST-29 | P1: List | Design | Pending |
 | CUST-30 | P1: List | Design | Pending |
 | CUST-31 | P1: List | Design | Pending |
@@ -279,8 +279,8 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | CUST-42 | P2: Search | Design | Pending |
 | CUST-43 | P2: Operability | Design | Pending |
 | CUST-44 | P2: Operability | Execute | Implementing |
-| CUST-45 | P2: Operability | Design | Pending |
-| CUST-46 | P2: Operability | Design | Pending |
+| CUST-45 | P2: Operability | Execute | Implementing |
+| CUST-46 | P2: Operability | Execute | Implementing |
 | CUST-47 | P2: Operability | Execute | Implementing |
 | CUST-48 | P1: Create | Execute | Implementing |
 | CUST-49 | P1: Create | Execute | Implementing |

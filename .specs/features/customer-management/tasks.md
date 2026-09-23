@@ -199,12 +199,14 @@ T7 → T8 → T9 → T10 → T11
 
 **Done when**:
 
-- [ ] create/update throw `DuplicateFieldException("email"|"cpf")` on conflicts; update ignores the customer's own email/cpf
-- [ ] get/update/delete throw `CustomerNotFoundException` for unknown ids; update never saves a new row
-- [ ] update keeps `id`/`createdAt`, sets `updatedAt` from the clock, nulls omitted phone/birthDate
-- [ ] create/update/delete log one INFO line with operation and id and without email, cpf, phone
-- [ ] Gate check passes: quick
-- [ ] Test count: ≥ 15 tests pass
+- [x] create/update throw `DuplicateFieldException("email"|"cpf")` on conflicts; update ignores the customer's own email/cpf
+- [x] get/update/delete throw `CustomerNotFoundException` for unknown ids; update never saves a new row
+- [x] update keeps `id`/`createdAt`, sets `updatedAt` from the clock, nulls omitted phone/birthDate
+- [x] create/update/delete log one INFO line with operation and id and without email, cpf, phone
+- [x] Gate check passes: quick
+- [x] Test count: ≥ 15 tests pass
+
+**Status**: ✅ Complete
 
 **Tests**: unit
 **Gate**: quick
