@@ -37,6 +37,8 @@ The business needs to know where its customers are. Today the only way to answer
 | Active customers | Every stored customer counts | Hard delete means there is no inactive state | y |
 | Pagination | None | At most 27 states; cities are bounded by the municipalities actually used | y |
 | Indexes | None added for this feature | A full-table aggregate with no filter reads every row either way; see design.md | y |
+| Database character locale | The PostgreSQL database uses a UTF-8 `LC_CTYPE` (e.g. `en_US.utf8`, `pt_BR.utf8`), so `lower()` folds non-ASCII letters | Case folding in the database depends on the ctype; with `C` ctype `SÃO` and `São` would not merge. Found by the verifier on 2026-09-22 | y |
+| Accent-only tie-break | Cities equal ignoring case and accents are ordered by plain character order (`Uberlandia` before `Uberlândia`) | GEO-006 alone leaves their order undefined; found by the verifier on 2026-09-22 | y |
 | Requirement ID format | `GEO-001` style | The requested `REQ-GEO-001` has two hyphens, which the skill's spec validator rejects; the ids stay unique and traceable | y |
 
 **Open questions:** none - all resolved or logged above (required before the spec is confirmed).
@@ -65,6 +67,8 @@ The business needs to know where its customers are. Today the only way to answer
 10. WHEN cities with the same name exist in different states THEN the system SHALL count them in separate city entries under each state. `GEO-010`
 11. WHEN a city group contains different spellings by case THEN the system SHALL display the spelling of the earliest-created customer in that group. `GEO-011`
 12. WHEN cities differ by accents (`Uberlândia`, `Uberlandia`) THEN the system SHALL count them in separate city entries. `GEO-012`
+13. WHEN two customers in the same state have cities that differ only by the case of non-ASCII letters (`São Carlos`, `SÃO CARLOS`) THEN the system SHALL count them in one city entry. `GEO-018`
+14. WHEN two city entries of a state are equal ignoring case and accents THEN the system SHALL order them by plain character order, so `Uberlandia` comes before `Uberlândia`. `GEO-019`
 
 **Independent Test**: Create customers in Limeira/SP (1), Campinas/SP (2) and Uberlândia/MG (1); the endpoint returns MG (1: Uberlândia 1) then SP (3: Campinas 2, Limeira 1).
 
@@ -130,12 +134,14 @@ The business needs to know where its customers are. Today the only way to answer
 | GEO-015 | P1: Counts reflect current data | Execute | Implementing |
 | GEO-016 | P1: Efficient aggregation | Execute | Implementing |
 | GEO-017 | P1: Efficient aggregation | Execute | Implementing |
+| GEO-018 | P1: Counts by state and city | Execute | Implementing |
+| GEO-019 | P1: Counts by state and city | Execute | Implementing |
 
-**Coverage:** 17 total, 0 mapped to tasks, 17 unmapped ⚠️ (mapped during Tasks)
+**Coverage:** 19 total, 19 mapped to tasks, 0 unmapped
 
 ---
 
 ## Success Criteria
 
-- [ ] All 17 acceptance criteria have at least one passing automated test asserting the spec-defined outcome.
+- [ ] All 19 acceptance criteria have at least one passing automated test asserting the spec-defined outcome.
 - [ ] The endpoint issues one SQL statement per call and loads no customer entities (GEO-016, GEO-017).

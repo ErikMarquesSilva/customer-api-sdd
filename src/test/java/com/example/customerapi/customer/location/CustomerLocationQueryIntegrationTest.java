@@ -86,6 +86,18 @@ class CustomerLocationQueryIntegrationTest {
 			.containsExactlyInAnyOrder(tuple("MG", "Uberlândia", 2L), tuple("MG", "Uberlandia", 1L));
 	}
 
+	// --- GEO-018: case folding of non-ASCII letters (needs a UTF-8 LC_CTYPE database)
+
+	@Test
+	void casesDifferingInNonAsciiLettersFormOneRow() {
+		save("SÃO CARLOS", "SP", T2);
+		save("São Carlos", "SP", T1);
+
+		assertThat(repository.countByLocation())
+			.extracting(LocationCount::getState, LocationCount::getCity, LocationCount::getTotal)
+			.containsExactly(tuple("SP", "São Carlos", 2L));
+	}
+
 	// --- GEO-010
 
 	@Test

@@ -43,6 +43,14 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 T1 → T2 → T3
 ```
 
+### Phase 2: Verifier follow-ups
+
+Added after the verifier's PASS report: it flagged two spec-precision gaps, now GEO-018 and GEO-019.
+
+```
+T4
+```
+
 ---
 
 ## Task Breakdown
@@ -141,10 +149,42 @@ T1 → T2 → T3
 
 ---
 
+### Phase 2: Verifier follow-ups
+
+#### T4: Pin non-ASCII case folding and the accent tie-break
+
+**What**: Regression test that non-ASCII case variants merge on PostgreSQL (GEO-018), and trace the existing accent tie-break test to GEO-019.
+**Where**: `src/test/java/com/example/customerapi/customer/location/CustomerLocationQueryIntegrationTest.java` (+ comment in `CustomerLocationServiceTest.java`)
+**Depends on**: T3
+**Reuses**: `CustomerLocationQueryIntegrationTest` (T1), `CustomerLocationServiceTest` (T2)
+**Requirement**: GEO-018, GEO-019
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] `São Carlos` + `SÃO CARLOS` (SP) → one row, total 2, earliest spelling shown
+- [x] `Uberlandia` before `Uberlândia` asserted and labelled GEO-019
+- [x] Gate check passes: `./mvnw -B verify`
+- [x] Test count: 235 tests pass (234 + 1)
+
+**Tests**: integration
+**Gate**: build
+
+**Status**: ✅ Complete
+
+**Commit**: `test(customer): pin non-ascii case folding and accent tie-break`
+
+---
+
 ## Phase Execution Map
 
 ```
 Phase 1:  T1 ------→ T2 ------→ T3
+Phase 2:  T4
 ```
 
 ---
@@ -157,5 +197,6 @@ Phase 1:  T1 ------→ T2 ------→ T3
 | GEO-002 to GEO-008 | T2, T3 |
 | GEO-009 to GEO-012 | T1, T3 |
 | GEO-013 to GEO-017 | T3 |
+| GEO-018 to GEO-019 | T4 (GEO-019 also T2) |
 
-All 17 requirements are mapped.
+All 19 requirements are mapped.

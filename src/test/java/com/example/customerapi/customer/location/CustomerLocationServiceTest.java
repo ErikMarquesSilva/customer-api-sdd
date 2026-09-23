@@ -59,7 +59,7 @@ class CustomerLocationServiceTest {
 				.containsExactly("Águas de Lindóia", "Bauru", "campos do Jordão"));
 	}
 
-	// --- GEO-006 with GEO-012: accent-only variants are separate entries in a deterministic order
+	// --- GEO-019 (GEO-006 with GEO-012): accent-only variants are separate entries in plain character order
 
 	@Test
 	void citiesEqualIgnoringAccentsKeepTheSameOrderWhateverTheRowOrder() {
