@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/hexagonal-architecture/design.md`
-**Status**: Done (awaiting re-verification 2)
+**Status**: In fix iteration 3 (last before escalation)
 **Branch**: `refactor/hexagonal` (stacked on `feat/customer-api`)
 
 ---
@@ -58,6 +58,14 @@ Re-verification returned FAIL (`9796beb..87626bf`): M3b, M10, M11b are killed, b
 
 ```
 T10 → T11 → T12
+```
+
+### Phase 4: Verifier fix iteration 3
+
+Re-verification 2 returned FAIL (`9796beb..f2d371c`). N3, N4b and N1b are killed. X5 survives (plausible): a method-level `@Transactional(propagation = SUPPORTS)` on `update` bypasses the class-level rule. Also cosmetic: A1 (algorithm moved into a constructor) and X14/X15 (race arrangement split across two lines).
+
+```
+T13 → T14 → T15
 ```
 
 ---
@@ -409,12 +417,93 @@ T10 → T11 → T12
 
 ---
 
+### Phase 4: Verifier fix iteration 3
+
+#### T13: Behavioural probe of the write transaction
+
+**What**: HTTP tests that record, from inside the persistence call of a real POST and PUT, that a transaction is active and not read-only. This covers every way of losing the use-case transaction (class or method level, any propagation, readOnly) instead of adding one static rule per annotation level.
+**Where**: `src/test/java/com/example/customerapi/customer/TransactionBoundaryIntegrationTest.java`
+**Depends on**: T12
+**Reuses**: `HttpIntegrationTestSupport`, `HexagonalRules`
+**Requirement**: ARCH-11 (CUST-24 guarantee)
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] POST and PUT observe an active, read-write transaction at the persistence call
+- [x] X5 (method-level SUPPORTS on update), N3 and a readOnly update each fail the probe
+- [x] Gate check passes: `./mvnw -q -B test`
+
+**Tests**: integration
+**Gate**: full
+
+**Status**: ✅ Complete. Killed: X5 (method-level SUPPORTS on update), N3 (class-level SUPPORTS), `readOnly` on update, M10 (no `@Transactional`).
+
+**Commit**: `test(customer): probe the write transaction of create and update`
+
+---
+
+#### T14: CPF rule also checks constructor calls
+
+**What**: Use `onlyCallCodeUnitsThat` so the validator can call neither foreign methods nor foreign constructors (allowing `Object` for `super()`). Add a fixture that hides the algorithm in another class's constructor.
+**Where**: `src/test/java/com/example/customerapi/architecture/HexagonalRules.java` (+ fixture, discrimination case)
+**Depends on**: T13
+**Reuses**: `HttpIntegrationTestSupport`, `HexagonalRules`
+**Requirement**: ARCH-03
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [ ] Rule passes on production; reports the constructor-hiding fixture (A1)
+- [ ] Gate check passes: quick
+
+**Tests**: unit
+**Gate**: quick
+
+**Commit**: `test(architecture): stop the cpf validator calling foreign constructors`
+
+---
+
+#### T15: One helper for race-test arrangement
+
+**What**: `HttpIntegrationTestSupport.preCheckMisses(stub)` applies the stub and clears the arrangement's invocations in one call; the four race tests use it.
+**Where**: `src/test/java/com/example/customerapi/HttpIntegrationTestSupport.java` (+ the two race test classes)
+**Depends on**: T14
+**Reuses**: `HttpIntegrationTestSupport`, `HexagonalRules`
+**Requirement**: CUST-12
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [ ] The four race tests use the helper; no separate `clearInvocations` remains
+- [ ] Gate check passes: `./mvnw -B clean verify`
+
+**Tests**: integration
+**Gate**: build
+
+**Commit**: `test(customer): arrange race tests through one helper`
+
+---
+
 ## Phase Execution Map
 
 ```
 Phase 1:  T1 ------→ T2 ------→ T3 ------→ T4 ------→ T5
 Phase 2:  T6 ------→ T7 ------→ T8 ------→ T9
 Phase 3:  T10 ------→ T11 ------→ T12
+Phase 4:  T13 ------→ T14 ------→ T15
 ```
 
 ## Requirement Coverage
