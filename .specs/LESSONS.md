@@ -74,6 +74,12 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: CUST-35 (api/errors)
 - last seen: 2026-09-23T02:03:40Z
 
+### L-011 - Put ArchUnit violation fixtures outside the application's base package; Spring component and entity scanning picks up fixture @Entity/@Component classes and breaks every integration test.
+- signal: `gate_fail` · recurrence: 1 feature(s) · scope: `architecture/tests` · harmful: 0
+- features: hexagonal-architecture
+- evidence: T5 (architecture/tests)
+- last seen: 2026-09-23T04:38:32Z
+
 ## Quarantined (failed when applied - ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.

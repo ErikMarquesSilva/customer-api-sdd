@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/hexagonal-architecture/design.md`
-**Status**: Approved
+**Status**: Done
 **Branch**: `refactor/hexagonal` (stacked on `feat/customer-api`)
 
 ---
@@ -167,7 +167,7 @@ T1 → T2 → T3 → T4 → T5
 #### T5: Enforce the architecture rules
 
 **What**: Add the location rules (ARCH-09, ARCH-10), make every ArchUnit rule strict (no empty-package allowance), and add violation fixtures, showing that each rule fails when broken.
-**Where**: `src/test/java/com/example/customerapi/architecture/HexagonalArchitectureTest.java` (+ fixture classes under `src/test/java/com/example/customerapi/architecture/fixtures/`)
+**Where**: `src/test/java/com/example/customerapi/architecture/HexagonalArchitectureTest.java` (+ fixture classes under `src/test/java/archfixtures/`)
 **Depends on**: T4
 **Reuses**: rules from T1
 **Requirement**: ARCH-01, ARCH-04, ARCH-07, ARCH-08, ARCH-09, ARCH-10
@@ -179,12 +179,14 @@ T1 → T2 → T3 → T4 → T5
 
 **Done when**:
 
-- [ ] Each rule passes on production classes and fails on its fixture
-- [ ] `grep` finds `@Entity` only in `adapter/out/persistence`
-- [ ] Gate check passes: `./mvnw -B clean verify`
+- [x] Each rule passes on production classes and fails on its fixture
+- [x] `grep` finds `@Entity` only in `adapter/out/persistence`
+- [x] Gate check passes: `./mvnw -B clean verify`
 
 **Tests**: unit
 **Gate**: build
+
+**Status**: ✅ Complete (289 tests, clean build). 11 strict rules, 12 discrimination cases. Two rules added beyond the T1 set: inbound adapters must not depend on `application.service` (design: controllers use `port.in` only), and every feature class belongs to domain/application/adapter. Fixtures moved to the top-level `archfixtures` package after the first clean build showed Spring scanning the fixture `@Entity` (`missing table [jpa_entity_in_domain]`).
 
 **Commit**: `test(architecture): enforce hexagonal dependency rules`
 

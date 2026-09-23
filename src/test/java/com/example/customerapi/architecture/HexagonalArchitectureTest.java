@@ -1,91 +1,51 @@
 package com.example.customerapi.architecture;
 
-import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
-import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
-
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
 
 /**
- * Hexagonal dependency rules (AD-005). Adapters depend inward on the application and the domain; the domain depends
- * on nothing outside itself.
+ * Runs the hexagonal rules against the production classes (AD-005). Empty rule subjects fail, so a rule cannot pass
+ * by matching nothing.
  */
 @AnalyzeClasses(packages = "com.example.customerapi", importOptions = ImportOption.DoNotIncludeTests.class)
 class HexagonalArchitectureTest {
 
-	static final String DOMAIN = "..customer.domain..";
-
-	static final String APPLICATION = "..customer.application..";
-
-	static final String PORT_IN = "..customer.application.port.in..";
-
-	static final String PORT_OUT = "..customer.application.port.out..";
-
-	static final String SERVICE = "..customer.application.service..";
-
-	static final String ADAPTER_IN = "..customer.adapter.in..";
-
-	static final String ADAPTER_OUT = "..customer.adapter.out..";
-
-	static final String COMMON_WEB = "..common.web..";
-
-	/** ARCH-01 */
 	@ArchTest
-	static final ArchRule domainIsFrameworkFree = noClasses().that()
-		.resideInAPackage(DOMAIN)
-		.should()
-		.dependOnClassesThat()
-		.resideInAnyPackage("org.springframework..", "jakarta..", "org.hibernate..", "..customer.adapter..",
-				APPLICATION)
-		.allowEmptyShould(true);
+	static final ArchRule domainIsFrameworkFree = HexagonalRules.DOMAIN_IS_FRAMEWORK_FREE;
 
-	/** ARCH-04 */
 	@ArchTest
-	static final ArchRule applicationUsesNoAdapterOrPersistenceTechnology = noClasses().that()
-		.resideInAPackage(APPLICATION)
-		.should()
-		.dependOnClassesThat()
-		.resideInAnyPackage("..customer.adapter..", "jakarta.persistence..", "org.hibernate..",
-				"org.springframework.data.jpa..", "org.springframework.web..")
-		.allowEmptyShould(true);
+	static final ArchRule applicationUsesNoAdapterOrPersistenceTechnology =
+			HexagonalRules.APPLICATION_USES_NO_ADAPTER_OR_PERSISTENCE_TECHNOLOGY;
 
-	/** ARCH-05, ARCH-06: ports are interfaces (the list use case also declares its exception). */
 	@ArchTest
-	static final ArchRule portsAreInterfaces = classes().that()
-		.resideInAnyPackage(PORT_IN, PORT_OUT)
-		.and()
-		.areNotAssignableTo(Throwable.class)
-		.should()
-		.beInterfaces()
-		.allowEmptyShould(true);
+	static final ArchRule portsAreInterfaces = HexagonalRules.PORTS_ARE_INTERFACES;
 
-	/** ARCH-06 */
 	@ArchTest
-	static final ArchRule servicesDependOnPortsNotRepositories = noClasses().that()
-		.resideInAPackage(SERVICE)
-		.should()
-		.dependOnClassesThat()
-		.areAssignableTo(org.springframework.data.repository.Repository.class)
-		.allowEmptyShould(true);
+	static final ArchRule servicesUsePortsNotRepositories = HexagonalRules.SERVICES_USE_PORTS_NOT_REPOSITORIES;
 
-	/** ARCH-07 */
 	@ArchTest
-	static final ArchRule inboundAdaptersDoNotReachOutboundSide = noClasses().that()
-		.resideInAnyPackage(ADAPTER_IN, COMMON_WEB)
-		.should()
-		.dependOnClassesThat()
-		.resideInAnyPackage(ADAPTER_OUT, PORT_OUT)
-		.allowEmptyShould(true);
+	static final ArchRule inboundAdaptersUseOnlyInputPorts = HexagonalRules.INBOUND_ADAPTERS_USE_ONLY_INPUT_PORTS;
 
-	/** ARCH-08 */
 	@ArchTest
-	static final ArchRule outboundAdaptersDoNotReachInboundSide = noClasses().that()
-		.resideInAPackage(ADAPTER_OUT)
-		.should()
-		.dependOnClassesThat()
-		.resideInAnyPackage(ADAPTER_IN, COMMON_WEB)
-		.allowEmptyShould(true);
+	static final ArchRule outboundAdaptersDoNotReachInboundSide =
+			HexagonalRules.OUTBOUND_ADAPTERS_DO_NOT_REACH_INBOUND_SIDE;
+
+	@ArchTest
+	static final ArchRule outputPortsAreImplementedByOutboundAdapters =
+			HexagonalRules.OUTPUT_PORTS_ARE_IMPLEMENTED_BY_OUTBOUND_ADAPTERS;
+
+	@ArchTest
+	static final ArchRule entitiesLiveInPersistenceAdapter = HexagonalRules.ENTITIES_LIVE_IN_PERSISTENCE_ADAPTER;
+
+	@ArchTest
+	static final ArchRule repositoriesLiveInPersistenceAdapter = HexagonalRules.REPOSITORIES_LIVE_IN_PERSISTENCE_ADAPTER;
+
+	@ArchTest
+	static final ArchRule controllersLiveInWebAdapter = HexagonalRules.CONTROLLERS_LIVE_IN_WEB_ADAPTER;
+
+	@ArchTest
+	static final ArchRule featureClassesBelongToALayer = HexagonalRules.FEATURE_CLASSES_BELONG_TO_A_LAYER;
 
 }
