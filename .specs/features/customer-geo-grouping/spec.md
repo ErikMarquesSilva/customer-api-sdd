@@ -115,16 +115,16 @@ The business needs to know where its customers are. Today the only way to answer
 | -------------- | ----- | ----- | ------ |
 | GEO-001 | P1: Counts by state and city | Design | Pending |
 | GEO-002 | P1: Counts by state and city | Design | Pending |
-| GEO-003 | P1: Counts by state and city | Design | Pending |
+| GEO-003 | P1: Counts by state and city | Execute | Implementing |
 | GEO-004 | P1: Counts by state and city | Design | Pending |
 | GEO-005 | P1: Counts by state and city | Design | Pending |
 | GEO-006 | P1: Counts by state and city | Design | Pending |
 | GEO-007 | P1: Counts by state and city | Design | Pending |
 | GEO-008 | P1: Counts by state and city | Design | Pending |
-| GEO-009 | P1: Counts by state and city | Design | Pending |
-| GEO-010 | P1: Counts by state and city | Design | Pending |
-| GEO-011 | P1: Counts by state and city | Design | Pending |
-| GEO-012 | P1: Counts by state and city | Design | Pending |
+| GEO-009 | P1: Counts by state and city | Execute | Implementing |
+| GEO-010 | P1: Counts by state and city | Execute | Implementing |
+| GEO-011 | P1: Counts by state and city | Execute | Implementing |
+| GEO-012 | P1: Counts by state and city | Execute | Implementing |
 | GEO-013 | P1: Counts reflect current data | Design | Pending |
 | GEO-014 | P1: Counts reflect current data | Design | Pending |
 | GEO-015 | P1: Counts reflect current data | Design | Pending |

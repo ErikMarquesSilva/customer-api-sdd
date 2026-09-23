@@ -64,12 +64,14 @@ T1 → T2 → T3
 
 **Done when**:
 
-- [ ] `Campinas` + `campinas` (SP) → one row, total 2, city = spelling of the earliest `created_at`
-- [ ] `Uberlândia` + `Uberlandia` (MG) → two rows
-- [ ] `Santa Rita` in SP and in MG → two rows, one per state
-- [ ] Empty table → empty list
-- [ ] Gate check passes: `./mvnw -q -B test`
-- [ ] Test count: ≥ 4 tests pass
+- [x] `Campinas` + `campinas` (SP) → one row, total 2, city = spelling of the earliest `created_at`
+- [x] `Uberlândia` + `Uberlandia` (MG) → two rows
+- [x] `Santa Rita` in SP and in MG → two rows, one per state
+- [x] Empty table → empty list
+- [x] Gate check passes: `./mvnw -q -B test`
+- [x] Test count: ≥ 4 tests pass
+
+**Status**: ✅ Complete
 
 **Tests**: integration
 **Gate**: full
