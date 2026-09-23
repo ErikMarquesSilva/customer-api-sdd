@@ -278,10 +278,10 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | CUST-41 | P2: Search | Design | Pending |
 | CUST-42 | P2: Search | Design | Pending |
 | CUST-43 | P2: Operability | Design | Pending |
-| CUST-44 | P2: Operability | Design | Pending |
+| CUST-44 | P2: Operability | Execute | Implementing |
 | CUST-45 | P2: Operability | Design | Pending |
 | CUST-46 | P2: Operability | Design | Pending |
-| CUST-47 | P2: Operability | Design | Pending |
+| CUST-47 | P2: Operability | Execute | Implementing |
 | CUST-48 | P1: Create | Design | Pending |
 | CUST-49 | P1: Create | Design | Pending |
 | CUST-50 | P1: Create | Design | Pending |

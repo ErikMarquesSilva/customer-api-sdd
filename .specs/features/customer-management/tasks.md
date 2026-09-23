@@ -80,11 +80,13 @@ T7 → T8 → T9 → T10 → T11
 
 **Done when**:
 
-- [ ] `pom.xml` has `spring-boot-starter-flyway`, `flyway-database-postgresql`, `spring-boot-starter-actuator`, `spring-boot-testcontainers`, `testcontainers-junit-jupiter`, `testcontainers-postgresql`; no `h2`
-- [ ] `application.properties`: datasource from `DB_URL`/`DB_USERNAME`/`DB_PASSWORD` with local defaults, `ddl-auto=validate`, `open-in-view=false`, actuator exposure `health` only
-- [ ] Context test boots against PostgreSQL via `@Import(TestcontainersConfiguration.class)`
-- [ ] Gate check passes: `./mvnw -B verify`
-- [ ] Test count: 1 test passes
+- [x] `pom.xml` has `spring-boot-starter-flyway`, `flyway-database-postgresql`, `spring-boot-starter-actuator`, `spring-boot-testcontainers`, `testcontainers-junit-jupiter`, `testcontainers-postgresql`; no `h2`
+- [x] `application.properties`: datasource from `DB_URL`/`DB_USERNAME`/`DB_PASSWORD` with local defaults, `ddl-auto=validate`, `open-in-view=false`, actuator exposure `health` only
+- [x] Context test boots against PostgreSQL via `@Import(TestcontainersConfiguration.class)`
+- [x] Gate check passes: `./mvnw -B verify`
+- [x] Test count: 1 test passes
+
+**Status**: ✅ Complete
 
 **Tests**: integration
 **Gate**: build
