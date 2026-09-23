@@ -125,12 +125,14 @@ T1 → T2 → T3
 
 **Done when**:
 
-- [ ] Spec's independent test data → exact JSON (MG then SP; Campinas before Limeira); no customer fields present anywhere in the body
-- [ ] No customers → 200 `{"states":[]}`
-- [ ] Delete and move scenarios (GEO-013 to GEO-015) reflected in the next call
-- [ ] One call with 3 states and 5 cities → Hibernate statistics: 1 prepared statement, 0 entity loads
-- [ ] Gate check passes: `./mvnw -B verify`
-- [ ] Test count: ≥ 7 tests pass
+- [x] Spec's independent test data → exact JSON (MG then SP; Campinas before Limeira); no customer fields present anywhere in the body
+- [x] No customers → 200 `{"states":[]}`
+- [x] Delete and move scenarios (GEO-013 to GEO-015) reflected in the next call
+- [x] One call with 3 states and 5 cities → Hibernate statistics: 1 prepared statement, 0 entity loads
+- [x] Gate check passes: `./mvnw -B verify`
+- [x] Test count: ≥ 7 tests pass
+
+**Status**: ✅ Complete
 
 **Tests**: integration
 **Gate**: build

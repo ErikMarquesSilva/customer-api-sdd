@@ -113,7 +113,7 @@ The business needs to know where its customers are. Today the only way to answer
 
 | Requirement ID | Story | Phase | Status |
 | -------------- | ----- | ----- | ------ |
-| GEO-001 | P1: Counts by state and city | Design | Pending |
+| GEO-001 | P1: Counts by state and city | Execute | Implementing |
 | GEO-002 | P1: Counts by state and city | Execute | Implementing |
 | GEO-003 | P1: Counts by state and city | Execute | Implementing |
 | GEO-004 | P1: Counts by state and city | Execute | Implementing |
@@ -125,11 +125,11 @@ The business needs to know where its customers are. Today the only way to answer
 | GEO-010 | P1: Counts by state and city | Execute | Implementing |
 | GEO-011 | P1: Counts by state and city | Execute | Implementing |
 | GEO-012 | P1: Counts by state and city | Execute | Implementing |
-| GEO-013 | P1: Counts reflect current data | Design | Pending |
-| GEO-014 | P1: Counts reflect current data | Design | Pending |
-| GEO-015 | P1: Counts reflect current data | Design | Pending |
-| GEO-016 | P1: Efficient aggregation | Design | Pending |
-| GEO-017 | P1: Efficient aggregation | Design | Pending |
+| GEO-013 | P1: Counts reflect current data | Execute | Implementing |
+| GEO-014 | P1: Counts reflect current data | Execute | Implementing |
+| GEO-015 | P1: Counts reflect current data | Execute | Implementing |
+| GEO-016 | P1: Efficient aggregation | Execute | Implementing |
+| GEO-017 | P1: Efficient aggregation | Execute | Implementing |
 
 **Coverage:** 17 total, 0 mapped to tasks, 17 unmapped ⚠️ (mapped during Tasks)
 
