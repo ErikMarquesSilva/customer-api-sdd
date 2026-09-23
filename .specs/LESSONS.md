@@ -146,6 +146,12 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: Y7 (process)
 - last seen: 2026-09-23T06:54:28Z
 
+### L-023 - Assert the protected invariant itself (e.g. optimistic failure count == 1 for 'the stale write reached the versioned UPDATE'), not one way it could break (transaction count); otherwise each round finds another route to the same weak state.
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests/invariants` · harmful: 0
+- features: hexagonal-architecture
+- evidence: Z7c (tests/invariants)
+- last seen: 2026-09-23T09:53:53Z
+
 ## Quarantined (failed when applied - ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.

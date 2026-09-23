@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/hexagonal-architecture/design.md`
-**Status**: Done (awaiting re-verification 4)
+**Status**: Done (awaiting focused verification 5)
 **Branch**: `refactor/hexagonal` (stacked on `feat/customer-api`)
 
 ---
@@ -73,8 +73,10 @@ T13 → T14 → T15
 Re-verification 3 was FAIL (Y7/Y8: the versioned write could move into its own `REQUIRES_NEW` transaction without any test failing). The fix bound was reached and the issue was escalated. The user chose option (b): one more task, then a 4th verification.
 
 ```
-T16
+T16 → T17
 ```
+
+Round 4 was FAIL. T16 killed Y7 and Y8, but Z7b/Z7c (the adapter discards the entity the service read, via `clear()` or `refresh()`, inside one transaction) reach the same weak state. The verifier's suggestion is to assert the invariant itself: the stale write is rejected by Hibernate's versioned UPDATE (optimistic failure count 1). Limit set by the orchestrator: any new plausible survivor after T17 is escalated, with no further fix round.
 
 ---
 
@@ -539,6 +541,35 @@ T16
 
 ---
 
+#### T17: CUST-24 test asserts the versioned UPDATE rejected the stale write
+
+**What**: In the CUST-24 HTTP test, clear Hibernate statistics before the request and assert `getOptimisticFailureCount() == 1`. This is the invariant itself: the stale write reached the versioned UPDATE and was rejected there.
+**Where**: `src/test/java/com/example/customerapi/customer/CustomerUpdateIntegrationTest.java`
+**Depends on**: T16
+**Reuses**: statistics bean (T19 of customer-management), CUST-24 test
+**Requirement**: ARCH-11 (CUST-24 guarantee)
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] At HEAD the count is 1 and the test passes
+- [x] Y7, Y8, Z7b and Z7c fail the test
+- [x] design.md wording: "not split across transactions"; the probe javadoc names create and update only
+- [x] Gate check passes: `./mvnw -B clean verify`
+
+**Tests**: integration
+**Gate**: build
+
+**Status**: ✅ Complete (302 tests, clean build). With the verifier's saved diffs, Y7, Y8, Z7b and Z7c each fail with `expected: 1L but was: 0L`.
+
+**Commit**: `test(customer): assert the versioned update rejects the stale write`
+
+---
+
 ## Phase Execution Map
 
 ```
@@ -546,7 +577,7 @@ Phase 1:  T1 ------→ T2 ------→ T3 ------→ T4 ------→ T5
 Phase 2:  T6 ------→ T7 ------→ T8 ------→ T9
 Phase 3:  T10 ------→ T11 ------→ T12
 Phase 4:  T13 ------→ T14 ------→ T15
-Phase 5:  T16
+Phase 5:  T16 ------→ T17
 ```
 
 ## Requirement Coverage

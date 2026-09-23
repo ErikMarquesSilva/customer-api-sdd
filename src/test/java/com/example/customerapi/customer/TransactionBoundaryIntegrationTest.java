@@ -23,7 +23,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import com.example.customerapi.HttpIntegrationTestSupport;
 
 /**
- * The write use cases run inside one read-write transaction. CUST-24 relies on it: Hibernate's versioned UPDATE
+ * Create and update run inside one read-write transaction. CUST-24 relies on it: Hibernate's versioned UPDATE
  * detects a concurrent change only against the version read in the same transaction. Two checks: a probe at a
  * persistence call made by the use case catches a lost or read-only transaction (class or method level, any
  * non-starting propagation), and a transaction count catches a split one (e.g. the write in REQUIRES_NEW).

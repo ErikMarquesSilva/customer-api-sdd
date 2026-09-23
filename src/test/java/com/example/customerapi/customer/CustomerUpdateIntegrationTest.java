@@ -18,6 +18,10 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+import jakarta.persistence.EntityManagerFactory;
+
+import org.hibernate.SessionFactory;
+import org.hibernate.stat.Statistics;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -39,6 +43,9 @@ class CustomerUpdateIntegrationTest extends HttpIntegrationTestSupport {
 
 	@Autowired
 	private PlatformTransactionManager transactionManager;
+
+	@Autowired
+	private EntityManagerFactory entityManagerFactory;
 
 	private UUID anaId;
 
@@ -266,8 +273,13 @@ class CustomerUpdateIntegrationTest extends HttpIntegrationTestSupport {
 			return false;
 		}).when(repository).existsByEmailAndIdNot(anyString(), eq(anaId));
 
+		Statistics statistics = entityManagerFactory.unwrap(SessionFactory.class).getStatistics();
+		statistics.clear();
+
 		assertProblem(putCustomer(anaId, newData()), 409, CUSTOMERS + "/" + anaId);
 
+		// The live CUST-24 guard: the stale write reached Hibernate's versioned UPDATE and was rejected there.
+		assertThat(statistics.getOptimisticFailureCount()).isEqualTo(1);
 		String stored = getCustomer(anaId);
 		assertThat((String) JsonPath.read(stored, "$.name")).isEqualTo("First Writer");
 		assertThat((String) JsonPath.read(stored, "$.email")).isEqualTo("ana@example.com");

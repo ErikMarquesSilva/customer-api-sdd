@@ -45,10 +45,10 @@
 ## Handoff
 
 - **Feature**: hexagonal-architecture (`.specs/features/hexagonal-architecture/`)
-- **Phase / Task**: Execute. T1-T16 are complete. T16 was added after the user chose option (b) on 2026-09-23.
-- **Completed**: T1-T16; 302 tests pass on a clean build.
+- **Phase / Task**: Execute. T1-T17 are complete. T16 was added after the user chose option (b) on 2026-09-23. T17 applies round 4's suggestion under the user's delegated Staff authority.
+- **Completed**: T1-T17; 302 tests pass on a clean build.
 - **In-progress** (file:line): none
-- **Next step**: the 4th independent verification. On PASS, push `refactor/hexagonal` and open a PR against `feat/customer-api`.
+- **Next step**: focused verification 5. On PASS, push `refactor/hexagonal` and open a PR against `feat/customer-api`. On any new plausible survivor, escalate to the user with no further fix round.
 - **Blockers**: none
 - **Uncommitted files**: none after this commit
 - **Branch**: `refactor/hexagonal` (local, not pushed)
