@@ -52,11 +52,11 @@ T1 → T2 → T3 → T4 → T5
 
 #### T1: ArchUnit dependency and rule skeleton
 
-**What**: Add `archunit-junit5` 1.4.1 (test scope) and `HexagonalArchitectureTest` with every rule from design.md. Rules allow empty packages for now, so they pass before the packages exist.
+**What**: Add `archunit-junit5` 1.4.1 (test scope) and `HexagonalArchitectureTest` with the layer-dependency rules from design.md (ARCH-01, ARCH-04 to ARCH-08). Rules allow empty packages, so they pass before the packages exist. Location rules (ARCH-09, ARCH-10) would fail on the current code and land in T5.
 **Where**: `pom.xml` (+ `src/test/java/com/example/customerapi/architecture/HexagonalArchitectureTest.java`)
 **Depends on**: None
 **Reuses**: design.md ArchUnit table
-**Requirement**: ARCH-01, ARCH-04, ARCH-07, ARCH-08, ARCH-09, ARCH-10 (rules written; enforced from T5)
+**Requirement**: ARCH-01, ARCH-04, ARCH-05, ARCH-06, ARCH-07, ARCH-08 (rules written; strict from T5)
 
 **Tools**:
 
@@ -65,11 +65,13 @@ T1 → T2 → T3 → T4 → T5
 
 **Done when**:
 
-- [ ] Rules compile and pass on the current code (empty target packages allowed)
-- [ ] Gate check passes: `./mvnw -B clean verify`, 240 + rule tests
+- [x] Rules compile and pass on the current code (empty target packages allowed)
+- [x] Gate check passes: `./mvnw -B clean verify`, 246 tests (240 + 6 rules)
 
 **Tests**: unit
 **Gate**: build
+
+**Status**: ✅ Complete
 
 **Commit**: `build: add archunit and hexagonal architecture rules`
 
@@ -158,7 +160,7 @@ T1 → T2 → T3 → T4 → T5
 
 #### T5: Enforce the architecture rules
 
-**What**: Make every ArchUnit rule strict (no empty-package allowance) and add violation fixtures, showing that each rule fails when broken.
+**What**: Add the location rules (ARCH-09, ARCH-10), make every ArchUnit rule strict (no empty-package allowance), and add violation fixtures, showing that each rule fails when broken.
 **Where**: `src/test/java/com/example/customerapi/architecture/HexagonalArchitectureTest.java` (+ fixture classes under `src/test/java/com/example/customerapi/architecture/fixtures/`)
 **Depends on**: T4
 **Reuses**: rules from T1
