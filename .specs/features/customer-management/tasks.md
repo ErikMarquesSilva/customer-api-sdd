@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/customer-management/design.md`
-**Status**: Approved
+**Status**: Done
 
 ---
 
@@ -73,6 +73,14 @@ The verifier returned FAIL (range `1810ee5..e01ecd8`): one surviving mutant on C
 
 ```
 T15 → T16 → T17 → T18
+```
+
+### Phase 6: Verifier follow-up
+
+Re-verification passed (53/53, 40/40 mutants). Probe P1 showed that the test-only `config/application.properties` hid a production file at the same location.
+
+```
+T19
 ```
 
 ---
@@ -609,6 +617,36 @@ T15 → T16 → T17 → T18
 
 ---
 
+### Phase 6: Verifier follow-up
+
+#### T19: Enable Hibernate statistics without shadowing production config
+
+**What**: Turn on Hibernate statistics for tests through a `HibernatePropertiesCustomizer` bean in `TestcontainersConfiguration` and delete `src/test/resources/config/application.properties`, which shadowed `src/main/resources/config/application.properties`.
+**Where**: `src/test/java/com/example/customerapi/TestcontainersConfiguration.java` (+ delete `src/test/resources/config/application.properties`)
+**Depends on**: T18
+**Reuses**: `TestcontainersConfiguration` (T1), GEO-016/017 statistics test
+**Requirement**: CUST-44 (testability of exposure config), GEO-016, GEO-017
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] GEO-016/017 statistics test still passes (statistics enabled)
+- [x] Probe: `management.endpoints.web.exposure.include=health,info` in `src/main/resources/config/application.properties` now fails `OperabilityIntegrationTest`
+- [x] Gate check passes: `./mvnw -B verify`, 240 tests
+
+**Tests**: integration
+**Gate**: build
+
+**Status**: ✅ Complete
+
+**Commit**: `test: enable hibernate statistics without shadowing app config`
+
+---
+
 ## Phase Execution Map
 
 ```
@@ -619,6 +657,7 @@ Phase 2:  T3 ------→ T4 ------→ T5 ------→ T6
 Phase 3:  T7 ------→ T8 ------→ T9 ------→ T10 ------→ T11
 Phase 4:  T12 ------→ T13 ------→ T14
 Phase 5:  T15 ------→ T16 ------→ T17 ------→ T18
+Phase 6:  T19
 ```
 
 Execution is strictly sequential.
