@@ -1,6 +1,8 @@
 package com.example.customerapi;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -72,6 +74,26 @@ class OperabilityIntegrationTest extends HttpIntegrationTestSupport {
 		mockMvc.perform(delete(CUSTOMERS + "/" + id)).andExpect(status().isNoContent());
 
 		assertSingleInfoLine(output, "Customer deleted id=" + id);
+		assertNoPii(output, PII_CUSTOMER);
+	}
+
+	@Test
+	void emailUniqueConstraintRaceLogsNoPii(CapturedOutput output) throws Exception {
+		createCustomer(PII_CUSTOMER);
+		doReturn(false).when(repository).existsByEmail(anyString());
+
+		postCustomer(with(PII_CUSTOMER, "cpf", "11144477735")).andExpect(status().isConflict());
+
+		assertNoPii(output, PII_CUSTOMER);
+	}
+
+	@Test
+	void cpfUniqueConstraintRaceLogsNoPii(CapturedOutput output) throws Exception {
+		createCustomer(PII_CUSTOMER);
+		doReturn(false).when(repository).existsByCpf(anyString());
+
+		postCustomer(with(PII_CUSTOMER, "email", "other.pii@example.com")).andExpect(status().isConflict());
+
 		assertNoPii(output, PII_CUSTOMER);
 	}
 

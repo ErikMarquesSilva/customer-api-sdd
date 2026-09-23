@@ -447,12 +447,14 @@ T12 → T13 → T14
 
 **Done when**:
 
-- [ ] A create that passes the pre-check and hits `uk_customer_email` / `uk_customer_cpf` returns 409 and the captured output contains neither the email nor the cpf
-- [ ] Gate check passes: `./mvnw -q -B test`
-- [ ] Test count: ≥ previous + new tests pass
+- [x] A create that passes the pre-check and hits `uk_customer_email` / `uk_customer_cpf` returns 409 and the captured output contains neither the email nor the cpf
+- [x] Gate check passes: `./mvnw -q -B test`
+- [x] Test count: 208 tests pass (206 + 2)
 
 **Tests**: integration
 **Gate**: full
+
+**Status**: ✅ Complete
 
 **Commit**: `fix(customer): keep database error detail out of logs`
 
