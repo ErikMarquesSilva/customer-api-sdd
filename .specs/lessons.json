@@ -1,0 +1,189 @@
+{
+  "schema": 1,
+  "promote_threshold": 2,
+  "window_days": 45,
+  "quarantine_threshold": 2,
+  "next_id": 11,
+  "lessons": [
+    {
+      "id": "L-001",
+      "key": "spec_precision_gap::when a grouping or uniqueness key uses database case folding lower upper test a non ascii case pair sao sao and state the required utf 8 lc ctype in the spec because folding depends on the database locale",
+      "text": "When a grouping or uniqueness key uses database case folding (lower/upper), test a non-ASCII case pair (SÃO/São) and state the required UTF-8 LC_CTYPE in the spec, because folding depends on the database locale.",
+      "signal": "spec_precision_gap",
+      "scope": "persistence/sql",
+      "status": "candidate",
+      "features": [
+        "customer-geo-grouping"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "GEO-009 (persistence/sql)"
+      ],
+      "created": "2026-09-23T01:39:56Z",
+      "last_seen": "2026-09-23T01:39:56Z"
+    },
+    {
+      "id": "L-002",
+      "key": "spec_precision_gap::when the spec keeps variants distinct but orders them with a comparison that ignores the difference accent insensitive collator name the tie break in the spec so tests do not enforce an unstated choice",
+      "text": "When the spec keeps variants distinct but orders them with a comparison that ignores the difference (accent-insensitive collator), name the tie-break in the spec so tests do not enforce an unstated choice.",
+      "signal": "spec_precision_gap",
+      "scope": "ordering",
+      "status": "candidate",
+      "features": [
+        "customer-geo-grouping"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "GEO-006 (ordering)"
+      ],
+      "created": "2026-09-23T01:39:56Z",
+      "last_seen": "2026-09-23T01:39:56Z"
+    },
+    {
+      "id": "L-003",
+      "key": "ac_gap::set the pgjdbc property logservererrordetail false when logs must be pii free unique violation detail echoes the key value into hibernate s warn log",
+      "text": "Set the PgJDBC property logServerErrorDetail=false when logs must be PII-free; unique-violation detail echoes the key value into Hibernate's WARN log.",
+      "signal": "ac_gap",
+      "scope": "logging/postgresql",
+      "status": "candidate",
+      "features": [
+        "customer-management"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "CUST-46 (logging/postgresql)"
+      ],
+      "created": "2026-09-23T01:39:56Z",
+      "last_seen": "2026-09-23T01:39:56Z"
+    },
+    {
+      "id": "L-004",
+      "key": "ac_gap::tick application clocks in microseconds when timestamps are stored in postgresql timestamptz or returned values differ from stored ones on linux jdks with nanosecond clocks",
+      "text": "Tick application clocks in microseconds when timestamps are stored in PostgreSQL timestamptz, or returned values differ from stored ones on Linux JDKs with nanosecond clocks.",
+      "signal": "ac_gap",
+      "scope": "time/postgresql",
+      "status": "candidate",
+      "features": [
+        "customer-management"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "CUST-14 (time/postgresql)"
+      ],
+      "created": "2026-09-23T01:39:56Z",
+      "last_seen": "2026-09-23T01:39:56Z"
+    },
+    {
+      "id": "L-005",
+      "key": "surviving_mutant::a test for nothing except x is exposed must assert the whole exposed set e g the discovery listing not probe a few sample names",
+      "text": "A test for 'nothing except X is exposed' must assert the whole exposed set (e.g. the discovery listing), not probe a few sample names.",
+      "signal": "surviving_mutant",
+      "scope": "actuator/exposure",
+      "status": "candidate",
+      "features": [
+        "customer-management"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "M19 (actuator/exposure)"
+      ],
+      "created": "2026-09-23T01:47:12Z",
+      "last_seen": "2026-09-23T01:47:12Z"
+    },
+    {
+      "id": "L-006",
+      "key": "surviving_mutant::give every check digit branch e g remainder 10 0 its own unit case a data generator that hits it by chance is not evidence",
+      "text": "Give every check-digit branch (e.g. remainder 10 -> 0) its own unit case; a data generator that hits it by chance is not evidence.",
+      "signal": "surviving_mutant",
+      "scope": "validation/check-digits",
+      "status": "candidate",
+      "features": [
+        "customer-management"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "M02 (validation/check-digits)"
+      ],
+      "created": "2026-09-23T01:47:13Z",
+      "last_seen": "2026-09-23T01:47:13Z"
+    },
+    {
+      "id": "L-007",
+      "key": "spec_precision_gap::when a spec promises a per field errors array state whether query parameters and unparseable values are included",
+      "text": "When a spec promises a per-field errors array, state whether query parameters and unparseable values are included.",
+      "signal": "spec_precision_gap",
+      "scope": "api/errors",
+      "status": "candidate",
+      "features": [
+        "customer-management"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "CUST-36 (api/errors)"
+      ],
+      "created": "2026-09-23T01:47:13Z",
+      "last_seen": "2026-09-23T01:47:13Z"
+    },
+    {
+      "id": "L-008",
+      "key": "spec_precision_gap::when the author narrows an ac to match current behaviour after verification log it as an unconfirmed assumption for the user never as settled spec",
+      "text": "When the author narrows an AC to match current behaviour after verification, log it as an unconfirmed assumption for the user, never as settled spec.",
+      "signal": "spec_precision_gap",
+      "scope": "process",
+      "status": "candidate",
+      "features": [
+        "customer-management"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "CUST-36 (process)"
+      ],
+      "created": "2026-09-23T02:03:40Z",
+      "last_seen": "2026-09-23T02:03:40Z"
+    },
+    {
+      "id": "L-009",
+      "key": "surviving_mutant::never put test only settings in a production config location config application properties it shadows production config in every test use a test bean or profile and run mvn clean after deleting resources",
+      "text": "Never put test-only settings in a production config location (config/application.properties); it shadows production config in every test. Use a test bean or profile, and run mvn clean after deleting resources.",
+      "signal": "surviving_mutant",
+      "scope": "test-config",
+      "status": "candidate",
+      "features": [
+        "customer-management"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "P1 (test-config)"
+      ],
+      "created": "2026-09-23T02:03:40Z",
+      "last_seen": "2026-09-23T02:03:40Z"
+    },
+    {
+      "id": "L-010",
+      "key": "surviving_mutant::assert every contract field of error responses type title detail instance not only status and content type mutants that drop a field survive status only checks",
+      "text": "Assert every contract field of error responses (type, title, detail, instance), not only status and content type; mutants that drop a field survive status-only checks.",
+      "signal": "surviving_mutant",
+      "scope": "api/errors",
+      "status": "candidate",
+      "features": [
+        "customer-management"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "CUST-35 (api/errors)"
+      ],
+      "created": "2026-09-23T02:03:40Z",
+      "last_seen": "2026-09-23T02:03:40Z"
+    }
+  ]
+}
