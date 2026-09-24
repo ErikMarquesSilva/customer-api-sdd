@@ -20,11 +20,7 @@ public class CustomerLocationController {
 
 	@GetMapping("/api/v1/customers/grouped-by-location")
 	public LocationGroupingResponse groupedByLocation() {
-		return new LocationGroupingResponse(groupByLocation.groupByLocation()
-			.stream()
-			.map(state -> new StateGroup(state.state(), state.totalCustomers(),
-					state.cities().stream().map(city -> new CityGroup(city.city(), city.totalCustomers())).toList()))
-			.toList());
+		return LocationGroupingResponse.from(groupByLocation.groupByLocation());
 	}
 
 }
