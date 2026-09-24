@@ -1,8 +1,11 @@
 package com.example.customerapi;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.not;
+import static org.mockito.Mockito.clearInvocations;
+import static org.mockito.Mockito.doReturn;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -10,8 +13,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
@@ -21,7 +26,9 @@ import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import com.example.customerapi.customer.CustomerRepository;
+import com.example.customerapi.customer.adapter.out.persistence.SpringDataCustomerRepository;
+import com.example.customerapi.customer.application.port.out.CustomerPersistencePort;
+import com.example.customerapi.customer.domain.Customer;
 import com.jayway.jsonpath.JsonPath;
 
 import tools.jackson.databind.json.JsonMapper;
@@ -55,8 +62,37 @@ public abstract class HttpIntegrationTestSupport {
 	@Autowired
 	protected JsonMapper jsonMapper;
 
+	/** Spied so race tests can make a uniqueness pre-check miss (CUST-12, CUST-24). */
 	@MockitoSpyBean
-	protected CustomerRepository repository;
+	protected SpringDataCustomerRepository repository;
+
+	/** Reads stored state the way the application does, through the output port. */
+	@Autowired
+	protected CustomerPersistencePort persistence;
+
+	/**
+	 * Makes a uniqueness pre-check miss, as in a race with a concurrent request, then forgets the arrangement's
+	 * repository calls so {@link #assertWriteReachedTheDatabase()} sees only the request under test. Usage:
+	 * {@code preCheckMisses(r -> r.existsByEmail(anyString()))}.
+	 */
+	protected void preCheckMisses(Consumer<SpringDataCustomerRepository> preCheck) {
+		preCheck.accept(doReturn(false).when(repository));
+		clearInvocations(repository);
+	}
+
+	/**
+	 * Race tests stub a uniqueness pre-check to miss. This proves the request then really tried to write, so its 409
+	 * came from the database constraint and not from a pre-check the stub failed to disable.
+	 */
+	protected void assertWriteReachedTheDatabase() {
+		assertThat(Mockito.mockingDetails(repository).getInvocations())
+			.extracting(invocation -> invocation.getMethod().getName())
+			.contains("saveAndFlush");
+	}
+
+	protected Customer stored(UUID id) {
+		return persistence.findById(id).orElseThrow();
+	}
 
 	@BeforeEach
 	void cleanDatabase() {

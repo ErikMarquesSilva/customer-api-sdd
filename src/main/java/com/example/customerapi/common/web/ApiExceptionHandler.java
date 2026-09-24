@@ -5,25 +5,23 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.example.customerapi.customer.CustomerNotFoundException;
-import com.example.customerapi.customer.DuplicateFieldException;
-import com.example.customerapi.customer.InvalidSortException;
+import com.example.customerapi.customer.domain.CustomerNotFoundException;
+import com.example.customerapi.customer.domain.DuplicateFieldException;
+import com.example.customerapi.customer.application.port.in.InvalidSortException;
+import com.example.customerapi.customer.domain.ConcurrentCustomerUpdateException;
 
 /**
  * The single error contract (AD-003): every error is an RFC 9457 problem; validation and uniqueness failures add an
@@ -38,9 +36,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	private static final URI DEFAULT_TYPE = URI.create("about:blank");
 
 	private static final Logger log = LoggerFactory.getLogger(ApiExceptionHandler.class);
-
-	private static final Map<String, String> UNIQUE_CONSTRAINT_FIELDS = Map.of("uk_customer_email", "email",
-			"uk_customer_cpf", "cpf");
 
 	public record FieldErrorEntry(String field, String message) {
 	}
@@ -71,19 +66,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		return problem(ex, HttpStatus.CONFLICT, ex.getMessage(), errors, request);
 	}
 
-	/** A unique constraint rejected a write that passed the pre-check, e.g. two concurrent creates (CUST-12). */
-	@ExceptionHandler(DataIntegrityViolationException.class)
-	ResponseEntity<Object> handleDataIntegrityViolation(DataIntegrityViolationException ex, WebRequest request) {
-		String field = uniqueField(ex);
-		if (field == null) {
-			return handleUnexpected(ex, request);
-		}
-		return handleDuplicate(new DuplicateFieldException(field), request);
-	}
-
-	/** Another transaction committed a change to the same customer first; its data is kept (CUST-24). */
-	@ExceptionHandler(ObjectOptimisticLockingFailureException.class)
-	ResponseEntity<Object> handleOptimisticLock(ObjectOptimisticLockingFailureException ex, WebRequest request) {
+	/** Another request committed a change to the same customer first; its data is kept (CUST-24). */
+	@ExceptionHandler(ConcurrentCustomerUpdateException.class)
+	ResponseEntity<Object> handleConcurrentUpdate(ConcurrentCustomerUpdateException ex, WebRequest request) {
 		return problem(ex, HttpStatus.CONFLICT, "The customer was changed by another request. Reload it and retry.",
 				null, request);
 	}
@@ -115,15 +100,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 			body.setProperty("errors", errors);
 		}
 		return handleExceptionInternal(ex, body, new HttpHeaders(), status, request);
-	}
-
-	private static String uniqueField(DataIntegrityViolationException ex) {
-		for (Throwable cause = ex; cause != null; cause = cause.getCause()) {
-			if (cause instanceof ConstraintViolationException violation && violation.getConstraintName() != null) {
-				return UNIQUE_CONSTRAINT_FIELDS.get(violation.getConstraintName());
-			}
-		}
-		return null;
 	}
 
 }

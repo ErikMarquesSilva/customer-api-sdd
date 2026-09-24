@@ -32,15 +32,23 @@
 - **Trade-off**: Mapping code between entity and DTOs.
 - **Scope**: All features.
 - **Date**: 2026-09-22
+- **Status**: superseded by AD-005
+
+### AD-005
+- **Decision**: Each feature package is hexagonal: `domain` (no framework imports), `application.port.in` (use-case interfaces), `application.port.out` (persistence interfaces), `application.service` (use cases, which may use Spring stereotypes, `@Transactional` and Spring Data Commons `Page`/`Pageable`/`Sort`), `adapter.in.web` and `adapter.out.persistence`. ArchUnit tests enforce the dependency rules. Controllers still use DTO records only and hold no business rules (kept from AD-004).
+- **Reason**: The user asked for hexagonal architecture with a pragmatic core. It isolates business rules from JPA and the web layer, and ArchUnit makes violations fail the build instead of relying on review.
+- **Trade-off**: More types (ports, a separate JPA entity, mappers). The application layer stays coupled to Spring transactions and Spring Data Commons paging types.
+- **Scope**: All features, all packages under `com.example.customerapi`.
+- **Date**: 2026-09-22
 - **Status**: active
 
 ## Handoff
 
-- **Feature**: customer-management and customer-geo-grouping (`.specs/features/`)
-- **Phase / Task**: Execute complete. Both verifiers passed, and `validate_state.py` passes for both features.
-- **Completed**: customer-management T1-T19, customer-geo-grouping T1-T4
+- **Feature**: hexagonal-architecture. Done: verification round 5 is PASS (13/13 ACs, no plausible surviving mutant), and `validate_state.py` passes for all three features.
+- **Phase / Task**: Execute complete. T1-T17.
+- **Completed**: customer-management (PR #2), customer-geo-grouping (PR #2), hexagonal-architecture (`refactor/hexagonal`)
 - **In-progress** (file:line): none
-- **Next step**: the user reviews the `Confirmed? n` assumptions in `customer-management/spec.md`: the `errors` array scope (CUST-36), the email validity rule (CUST-06) and the actuator discovery root (CUST-44). Then push `feat/customer-api` and open a PR, only when the user asks.
+- **Next step**: review the PR of `refactor/hexagonal` into `feat/customer-api`. The customer-management spec still has three `Confirmed? n` assumptions for the user: CUST-36 `errors` scope, CUST-06 email rule and CUST-44 actuator root.
 - **Blockers**: none
 - **Uncommitted files**: none
-- **Branch**: `feat/customer-api` (local only, not pushed)
+- **Branch**: `refactor/hexagonal`

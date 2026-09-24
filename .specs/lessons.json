@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 11,
+  "next_id": 26,
   "lessons": [
     {
       "id": "L-001",
@@ -184,6 +184,276 @@
       ],
       "created": "2026-09-23T02:03:40Z",
       "last_seen": "2026-09-23T02:03:40Z"
+    },
+    {
+      "id": "L-011",
+      "key": "gate_fail::put archunit violation fixtures outside the application s base package spring component and entity scanning picks up fixture entity component classes and breaks every integration test",
+      "text": "Put ArchUnit violation fixtures outside the application's base package; Spring component and entity scanning picks up fixture @Entity/@Component classes and breaks every integration test.",
+      "signal": "gate_fail",
+      "scope": "architecture/tests",
+      "status": "candidate",
+      "features": [
+        "hexagonal-architecture"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "T5 (architecture/tests)"
+      ],
+      "created": "2026-09-23T04:38:32Z",
+      "last_seen": "2026-09-23T04:38:32Z"
+    },
+    {
+      "id": "L-012",
+      "key": "surviving_mutant::when a refactor moves exception translation from a global handler to each call site add a test for every call site a behaviour that was structurally global becomes per path and can regress silently",
+      "text": "When a refactor moves exception translation from a global handler to each call site, add a test for every call site; a behaviour that was structurally global becomes per-path and can regress silently.",
+      "signal": "surviving_mutant",
+      "scope": "refactoring/errors",
+      "status": "candidate",
+      "features": [
+        "hexagonal-architecture"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "M3b (refactoring/errors)"
+      ],
+      "created": "2026-09-23T05:10:22Z",
+      "last_seen": "2026-09-23T05:10:22Z"
+    },
+    {
+      "id": "L-013",
+      "key": "surviving_mutant::when two defenses guard one requirement explicit version check and transactional versioned update mutate each alone and both together and state in the design which defense is live in production",
+      "text": "When two defenses guard one requirement (explicit version check and transactional versioned UPDATE), mutate each alone and both together, and state in the design which defense is live in production.",
+      "signal": "surviving_mutant",
+      "scope": "concurrency",
+      "status": "candidate",
+      "features": [
+        "hexagonal-architecture"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "M10 (concurrency)"
+      ],
+      "created": "2026-09-23T05:10:22Z",
+      "last_seen": "2026-09-23T05:10:22Z"
+    },
+    {
+      "id": "L-014",
+      "key": "surviving_mutant::requirements like implemented once or delegates to x need a structural rule archunit call or dependency assertion behavioural tests cannot tell a copy from delegation",
+      "text": "Requirements like 'implemented once' or 'delegates to X' need a structural rule (ArchUnit call or dependency assertion); behavioural tests cannot tell a copy from delegation.",
+      "signal": "surviving_mutant",
+      "scope": "architecture/tests",
+      "status": "candidate",
+      "features": [
+        "hexagonal-architecture"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "M11b (architecture/tests)"
+      ],
+      "created": "2026-09-23T05:10:22Z",
+      "last_seen": "2026-09-23T05:10:22Z"
+    },
+    {
+      "id": "L-015",
+      "key": "surviving_mutant::an archunit rule that only checks an annotation s presence or a call s existence can be evaded propagation supports ignored result constrain the attribute or only calls x or pin it with a behaviour test",
+      "text": "An ArchUnit rule that only checks an annotation's presence or a call's existence can be evaded (propagation=SUPPORTS, ignored result); constrain the attribute or 'only calls X', or pin it with a behaviour test.",
+      "signal": "surviving_mutant",
+      "scope": "architecture/tests",
+      "status": "candidate",
+      "features": [
+        "hexagonal-architecture"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "N3 (architecture/tests)"
+      ],
+      "created": "2026-09-23T05:45:06Z",
+      "last_seen": "2026-09-23T05:45:06Z"
+    },
+    {
+      "id": "L-016",
+      "key": "surviving_mutant::when a race test disables a pre check by stubbing a spy assert the downstream effect the write was attempted after clearing arrangement invocations verifying the stubbed call is not enough because the real pre check may still answer",
+      "text": "When a race test disables a pre-check by stubbing a spy, assert the downstream effect (the write was attempted, after clearing arrangement invocations); verifying the stubbed call is not enough because the real pre-check may still answer.",
+      "signal": "surviving_mutant",
+      "scope": "tests/stubs",
+      "status": "candidate",
+      "features": [
+        "hexagonal-architecture"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "N1b (tests/stubs)"
+      ],
+      "created": "2026-09-23T05:45:06Z",
+      "last_seen": "2026-09-23T05:45:06Z"
+    },
+    {
+      "id": "L-017",
+      "key": "surviving_mutant::re verification must attack the new guards themselves with evasion mutants not only replay old survivors replaying alone gives a false pass",
+      "text": "Re-verification must attack the new guards themselves with evasion mutants, not only replay old survivors; replaying alone gives a false PASS.",
+      "signal": "surviving_mutant",
+      "scope": "process",
+      "status": "candidate",
+      "features": [
+        "hexagonal-architecture"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "N4b (process)"
+      ],
+      "created": "2026-09-23T05:45:06Z",
+      "last_seen": "2026-09-23T05:45:06Z"
+    },
+    {
+      "id": "L-018",
+      "key": "surviving_mutant::a class level annotation rule does not bound effective behaviour when spring resolves method level annotations first guard effective attributes transaction security cache with a behavioural probe instead of one static rule per annotation level",
+      "text": "A class-level annotation rule does not bound effective behaviour when Spring resolves method-level annotations first; guard effective attributes (transaction, security, cache) with a behavioural probe instead of one static rule per annotation level.",
+      "signal": "surviving_mutant",
+      "scope": "architecture/tests",
+      "status": "candidate",
+      "features": [
+        "hexagonal-architecture"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "X5 (architecture/tests)"
+      ],
+      "created": "2026-09-23T06:24:56Z",
+      "last_seen": "2026-09-23T06:24:56Z"
+    },
+    {
+      "id": "L-019",
+      "key": "surviving_mutant::use onlycallcodeunitsthat rather than onlycallmethodsthat when a class must compute nothing itself method only rules leave constructor calls open",
+      "text": "Use onlyCallCodeUnitsThat rather than onlyCallMethodsThat when a class must compute nothing itself; method-only rules leave constructor calls open.",
+      "signal": "surviving_mutant",
+      "scope": "architecture/tests",
+      "status": "candidate",
+      "features": [
+        "hexagonal-architecture"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "A1 (architecture/tests)"
+      ],
+      "created": "2026-09-23T06:24:56Z",
+      "last_seen": "2026-09-23T06:24:56Z"
+    },
+    {
+      "id": "L-020",
+      "key": "surviving_mutant::put multi step test arrangements that guard against vacuity stub clearinvocations in one helper separate lines can each be forgotten",
+      "text": "Put multi-step test arrangements that guard against vacuity (stub + clearInvocations) in one helper; separate lines can each be forgotten.",
+      "signal": "surviving_mutant",
+      "scope": "tests/stubs",
+      "status": "candidate",
+      "features": [
+        "hexagonal-architecture"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "X14 (tests/stubs)"
+      ],
+      "created": "2026-09-23T06:24:56Z",
+      "last_seen": "2026-09-23T06:24:56Z"
+    },
+    {
+      "id": "L-021",
+      "key": "surviving_mutant::a runs in a transaction probe must prove the read and the write share the same transaction a check at one call site misses requires new splits including on outbound adapters count completed transactions per request instead",
+      "text": "A 'runs in a transaction' probe must prove the read and the write share the same transaction; a check at one call site misses REQUIRES_NEW splits, including on outbound adapters. Count completed transactions per request instead.",
+      "signal": "surviving_mutant",
+      "scope": "concurrency",
+      "status": "candidate",
+      "features": [
+        "hexagonal-architecture"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "Y8 (concurrency)"
+      ],
+      "created": "2026-09-23T06:54:28Z",
+      "last_seen": "2026-09-23T06:54:28Z"
+    },
+    {
+      "id": "L-022",
+      "key": "surviving_mutant::pair every mutation that is invisible over http with the mutation that removes the other guard and run that guard s removal alone as a control to expose the real consequence e g a lost update",
+      "text": "Pair every mutation that is invisible over HTTP with the mutation that removes the other guard, and run that guard's removal alone as a control, to expose the real consequence (e.g. a lost update).",
+      "signal": "surviving_mutant",
+      "scope": "process",
+      "status": "candidate",
+      "features": [
+        "hexagonal-architecture"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "Y7 (process)"
+      ],
+      "created": "2026-09-23T06:54:28Z",
+      "last_seen": "2026-09-23T06:54:28Z"
+    },
+    {
+      "id": "L-023",
+      "key": "surviving_mutant::assert the protected invariant itself e g optimistic failure count 1 for the stale write reached the versioned update not one way it could break transaction count otherwise each round finds another route to the same weak state",
+      "text": "Assert the protected invariant itself (e.g. optimistic failure count == 1 for 'the stale write reached the versioned UPDATE'), not one way it could break (transaction count); otherwise each round finds another route to the same weak state.",
+      "signal": "surviving_mutant",
+      "scope": "tests/invariants",
+      "status": "candidate",
+      "features": [
+        "hexagonal-architecture"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "Z7c (tests/invariants)"
+      ],
+      "created": "2026-09-23T09:53:53Z",
+      "last_seen": "2026-09-23T09:53:53Z"
+    },
+    {
+      "id": "L-024",
+      "key": "spec_precision_gap::pair a mechanism assertion e g optimistic failure count with an outcome assertion 409 and stored data a retry in a new transaction keeps the count right but breaks the response",
+      "text": "Pair a mechanism assertion (e.g. optimistic failure count) with an outcome assertion (409 and stored data); a retry in a new transaction keeps the count right but breaks the response.",
+      "signal": "spec_precision_gap",
+      "scope": "tests/invariants",
+      "status": "candidate",
+      "features": [
+        "hexagonal-architecture"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "W1 (tests/invariants)"
+      ],
+      "created": "2026-09-23T10:17:12Z",
+      "last_seen": "2026-09-23T10:17:12Z"
+    },
+    {
+      "id": "L-025",
+      "key": "spec_precision_gap::prove a statistics based assertion fails loudly with statistics disabled otherwise it may pass on zero",
+      "text": "Prove a statistics-based assertion fails loudly with statistics disabled; otherwise it may pass on zero.",
+      "signal": "spec_precision_gap",
+      "scope": "tests/statistics",
+      "status": "candidate",
+      "features": [
+        "hexagonal-architecture"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "W7 (tests/statistics)"
+      ],
+      "created": "2026-09-23T10:17:12Z",
+      "last_seen": "2026-09-23T10:17:12Z"
     }
   ]
 }

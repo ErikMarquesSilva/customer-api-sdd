@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -26,6 +25,8 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import com.example.customerapi.HttpIntegrationTestSupport;
 import com.jayway.jsonpath.JsonPath;
+import com.example.customerapi.customer.domain.Customer;
+import com.example.customerapi.customer.domain.CustomerDetails;
 
 class CustomerCreateAndGetIntegrationTest extends HttpIntegrationTestSupport {
 
@@ -50,9 +51,9 @@ class CustomerCreateAndGetIntegrationTest extends HttpIntegrationTestSupport {
 		assertThat(result.getResponse().getHeader("Location")).isEqualTo("/api/v1/customers/" + id);
 		assertThat(updatedAt).isEqualTo(createdAt);
 
-		Customer stored = repository.findById(id).orElseThrow();
-		assertThat(stored).extracting(Customer::getName, Customer::getEmail, Customer::getCpf, Customer::getPhone,
-				Customer::getBirthDate, Customer::getCity, Customer::getState)
+		CustomerDetails stored = stored(id).getDetails();
+		assertThat(stored).extracting(CustomerDetails::name, CustomerDetails::email, CustomerDetails::cpf,
+				CustomerDetails::phone, CustomerDetails::birthDate, CustomerDetails::city, CustomerDetails::state)
 			.containsExactly("Ana Souza", "ana@example.com", "52998224725", "11987654321", LocalDate.of(1990, 5, 20),
 					"São Paulo", "SP");
 	}
@@ -80,8 +81,9 @@ class CustomerCreateAndGetIntegrationTest extends HttpIntegrationTestSupport {
 			.getResponse()
 			.getContentAsString();
 
-		Customer stored = repository.findById(UUID.fromString(JsonPath.read(response, "$.id"))).orElseThrow();
-		assertThat(stored).extracting(Customer::getEmail, Customer::getCpf, Customer::getState, Customer::getCity)
+		CustomerDetails stored = stored(UUID.fromString(JsonPath.read(response, "$.id"))).getDetails();
+		assertThat(stored)
+			.extracting(CustomerDetails::email, CustomerDetails::cpf, CustomerDetails::state, CustomerDetails::city)
 			.containsExactly("ana@example.com", "52998224725", "SP", "São Paulo");
 	}
 
@@ -166,22 +168,24 @@ class CustomerCreateAndGetIntegrationTest extends HttpIntegrationTestSupport {
 	@Test
 	void emailUniqueConstraintViolationPassingThePreCheckReturns409NotServerError() throws Exception {
 		createCustomer(validCustomer());
-		doReturn(false).when(repository).existsByEmail(anyString());
+		preCheckMisses(r -> r.existsByEmail(anyString()));
 
 		postCustomer(with(validCustomer(), "cpf", "11144477735")).andExpect(status().isConflict())
 			.andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
 			.andExpect(jsonPath("$.errors[*].field").value(contains("email")));
+		assertWriteReachedTheDatabase();
 		assertThat(repository.count()).isEqualTo(1);
 	}
 
 	@Test
 	void cpfUniqueConstraintViolationPassingThePreCheckReturns409NotServerError() throws Exception {
 		createCustomer(validCustomer());
-		doReturn(false).when(repository).existsByCpf(anyString());
+		preCheckMisses(r -> r.existsByCpf(anyString()));
 
 		postCustomer(with(validCustomer(), "email", "other@example.com")).andExpect(status().isConflict())
 			.andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
 			.andExpect(jsonPath("$.errors[*].field").value(contains("cpf")));
+		assertWriteReachedTheDatabase();
 		assertThat(repository.count()).isEqualTo(1);
 	}
 
@@ -203,7 +207,7 @@ class CustomerCreateAndGetIntegrationTest extends HttpIntegrationTestSupport {
 			.getContentAsString();
 
 		assertThat(repository.existsById(clientId)).isFalse();
-		Customer stored = repository.findById(UUID.fromString(JsonPath.read(response, "$.id"))).orElseThrow();
+		Customer stored = stored(UUID.fromString(JsonPath.read(response, "$.id")));
 		assertThat(stored.getCreatedAt()).isAfter(Instant.parse(clientInstant));
 	}
 

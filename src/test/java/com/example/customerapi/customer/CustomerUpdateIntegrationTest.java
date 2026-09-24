@@ -18,6 +18,10 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+import jakarta.persistence.EntityManagerFactory;
+
+import org.hibernate.SessionFactory;
+import org.hibernate.stat.Statistics;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -32,11 +36,16 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import com.example.customerapi.HttpIntegrationTestSupport;
 import com.jayway.jsonpath.JsonPath;
+import com.example.customerapi.customer.domain.Customer;
+import com.example.customerapi.customer.domain.CustomerDetails;
 
 class CustomerUpdateIntegrationTest extends HttpIntegrationTestSupport {
 
 	@Autowired
 	private PlatformTransactionManager transactionManager;
+
+	@Autowired
+	private EntityManagerFactory entityManagerFactory;
 
 	private UUID anaId;
 
@@ -120,9 +129,9 @@ class CustomerUpdateIntegrationTest extends HttpIntegrationTestSupport {
 			.andExpect(jsonPath("$.phone").doesNotExist())
 			.andExpect(jsonPath("$.birthDate").doesNotExist());
 
-		Customer stored = repository.findById(anaId).orElseThrow();
-		assertThat(stored.getPhone()).isNull();
-		assertThat(stored.getBirthDate()).isNull();
+		CustomerDetails stored = stored(anaId).getDetails();
+		assertThat(stored.phone()).isNull();
+		assertThat(stored.birthDate()).isNull();
 	}
 
 	// --- CUST-13 applied to PUT
@@ -195,6 +204,34 @@ class CustomerUpdateIntegrationTest extends HttpIntegrationTestSupport {
 		assertAnaUnchanged();
 	}
 
+	// --- CUST-12 on the update path: the database constraint catches what the pre-check missed
+
+	@Test
+	void putWithEmailOfAnotherCustomerPassingThePreCheckReturns409NotServerError() throws Exception {
+		createCustomer(validCustomer("Bruno Reis", 1));
+		preCheckMisses(r -> r.existsByEmailAndIdNot(anyString(), eq(anaId)));
+
+		putCustomer(anaId, with(newData(), "email", "customer1@example.com")).andExpect(status().isConflict())
+			.andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+			.andExpect(jsonPath("$.errors[*].field").value(contains("email")));
+
+		assertWriteReachedTheDatabase();
+		assertAnaUnchanged();
+	}
+
+	@Test
+	void putWithCpfOfAnotherCustomerPassingThePreCheckReturns409NotServerError() throws Exception {
+		createCustomer(validCustomer("Bruno Reis", 1));
+		preCheckMisses(r -> r.existsByCpfAndIdNot(anyString(), eq(anaId)));
+
+		putCustomer(anaId, with(newData(), "cpf", cpf(1))).andExpect(status().isConflict())
+			.andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+			.andExpect(jsonPath("$.errors[*].field").value(contains("cpf")));
+
+		assertWriteReachedTheDatabase();
+		assertAnaUnchanged();
+	}
+
 	@Test
 	void putKeepingOwnEmailAndCpfIsNotAConflict() throws Exception {
 		putCustomer(anaId, with(validCustomer(), "name", "Ana Maria Souza")).andExpect(status().isOk())
@@ -227,18 +264,22 @@ class CustomerUpdateIntegrationTest extends HttpIntegrationTestSupport {
 			TransactionTemplate concurrent = new TransactionTemplate(transactionManager);
 			concurrent.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
 			concurrent.executeWithoutResult(status -> {
-				Customer ana = repository.findById(anaId).orElseThrow();
-				ana.replaceWith(new CustomerRequest("First Writer", "ana@example.com", "52998224725", null, null,
-						"Curitiba", "PR"), Instant.now());
-				repository.saveAndFlush(ana);
+				Customer ana = persistence.findById(anaId).orElseThrow();
+				persistence.update(ana.update(new CustomerDetails("First Writer", "ana@example.com", "52998224725",
+						null, null, "Curitiba", "PR"), Instant.now()));
 			});
 			// Real answer for this data: nobody else uses the new email. The spy wraps a JDK proxy, so it
 			// cannot call through.
 			return false;
 		}).when(repository).existsByEmailAndIdNot(anyString(), eq(anaId));
 
+		Statistics statistics = entityManagerFactory.unwrap(SessionFactory.class).getStatistics();
+		statistics.clear();
+
 		assertProblem(putCustomer(anaId, newData()), 409, CUSTOMERS + "/" + anaId);
 
+		// The live CUST-24 guard: the stale write reached Hibernate's versioned UPDATE and was rejected there.
+		assertThat(statistics.getOptimisticFailureCount()).isEqualTo(1);
 		String stored = getCustomer(anaId);
 		assertThat((String) JsonPath.read(stored, "$.name")).isEqualTo("First Writer");
 		assertThat((String) JsonPath.read(stored, "$.email")).isEqualTo("ana@example.com");
