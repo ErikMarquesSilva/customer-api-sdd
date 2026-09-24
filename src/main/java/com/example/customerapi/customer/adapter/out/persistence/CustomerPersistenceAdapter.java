@@ -45,7 +45,7 @@ class CustomerPersistenceAdapter implements CustomerPersistencePort, LocationCou
 
 	@Override
 	public Customer insert(Customer customer) {
-		return write(() -> repository.saveAndFlush(CustomerJpaEntity.from(customer)).toDomain());
+		return write(customer.getId(), () -> repository.saveAndFlush(CustomerJpaEntity.from(customer)).toDomain());
 	}
 
 	/**
@@ -60,19 +60,17 @@ class CustomerPersistenceAdapter implements CustomerPersistencePort, LocationCou
 			throw new ConcurrentCustomerUpdateException(id);
 		}
 		entity.apply(customer);
-		return write(() -> {
-			try {
-				return repository.saveAndFlush(entity).toDomain();
-			}
-			catch (ObjectOptimisticLockingFailureException ex) {
-				throw new ConcurrentCustomerUpdateException(id);
-			}
-		});
+		return write(id, () -> repository.saveAndFlush(entity).toDomain());
 	}
 
+	/** Flushes inside the adapter so a conflicting concurrent change is translated here, not at commit. */
 	@Override
 	public void delete(UUID id) {
-		repository.deleteById(id);
+		write(id, () -> {
+			repository.deleteById(id);
+			repository.flush();
+			return null;
+		});
 	}
 
 	@Override
@@ -108,10 +106,17 @@ class CustomerPersistenceAdapter implements CustomerPersistencePort, LocationCou
 			.toList();
 	}
 
-	/** A unique constraint rejected a write that passed the pre-check, e.g. two concurrent creates (CUST-12). */
-	private static Customer write(Supplier<Customer> write) {
+	/**
+	 * Runs a flushed write and translates storage failures: a stale version means another request changed the
+	 * customer first (CUST-24); a unique constraint means a write passed the pre-check, e.g. two concurrent creates
+	 * (CUST-12).
+	 */
+	private static <T> T write(UUID id, Supplier<T> write) {
 		try {
 			return write.get();
+		}
+		catch (ObjectOptimisticLockingFailureException ex) {
+			throw new ConcurrentCustomerUpdateException(id);
 		}
 		catch (DataIntegrityViolationException ex) {
 			String field = uniqueField(ex);

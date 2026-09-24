@@ -7,19 +7,25 @@ import java.util.UUID;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.PostLoad;
+import jakarta.persistence.PostPersist;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.persistence.Version;
+
+import org.springframework.data.domain.Persistable;
 
 import com.example.customerapi.customer.domain.Customer;
 import com.example.customerapi.customer.domain.CustomerDetails;
 
 /**
  * Storage shape of a customer. Only the persistence adapter sees it; the rest of the application uses the domain
- * {@link Customer}.
+ * {@link Customer}. The id is assigned by the domain, so {@link Persistable} tells Spring Data whether a row is new;
+ * otherwise every insert would be a merge (a SELECT before the INSERT).
  */
 @Entity
 @Table(name = "customer")
-class CustomerJpaEntity {
+class CustomerJpaEntity implements Persistable<UUID> {
 
 	@Id
 	private UUID id;
@@ -53,11 +59,16 @@ class CustomerJpaEntity {
 	@Version
 	private long version;
 
+	@Transient
+	private boolean newRow;
+
 	protected CustomerJpaEntity() {
 	}
 
+	/** A row for a customer that is not stored yet. */
 	static CustomerJpaEntity from(Customer customer) {
 		CustomerJpaEntity entity = new CustomerJpaEntity();
+		entity.newRow = true;
 		entity.id = customer.getId();
 		entity.createdAt = customer.getCreatedAt();
 		entity.version = customer.getVersion();
@@ -83,8 +94,20 @@ class CustomerJpaEntity {
 				updatedAt, version);
 	}
 
-	UUID getId() {
+	@Override
+	public UUID getId() {
 		return id;
+	}
+
+	@Override
+	public boolean isNew() {
+		return newRow;
+	}
+
+	@PostPersist
+	@PostLoad
+	void markStored() {
+		newRow = false;
 	}
 
 	long getVersion() {

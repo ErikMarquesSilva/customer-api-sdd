@@ -7,11 +7,18 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import jakarta.persistence.EntityManagerFactory;
+
+import org.hibernate.SessionFactory;
+import org.hibernate.stat.Statistics;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import com.example.customerapi.TestcontainersConfiguration;
 import com.example.customerapi.customer.domain.ConcurrentCustomerUpdateException;
@@ -38,6 +45,12 @@ class CustomerPersistenceAdapterIntegrationTest {
 
 	@Autowired
 	private SpringDataCustomerRepository repository;
+
+	@Autowired
+	private PlatformTransactionManager transactionManager;
+
+	@Autowired
+	private EntityManagerFactory entityManagerFactory;
 
 	@BeforeEach
 	void cleanDatabase() {
@@ -111,6 +124,36 @@ class CustomerPersistenceAdapterIntegrationTest {
 
 		assertThatThrownBy(() -> adapter.update(ghost)).isInstanceOf(CustomerNotFoundException.class);
 		assertThat(repository.count()).isZero();
+	}
+
+	// Review finding: a new customer is written with one INSERT, not a SELECT (merge) followed by an INSERT.
+	@Test
+	void insertIssuesOnlyTheInsertStatement() {
+		Statistics statistics = entityManagerFactory.unwrap(SessionFactory.class).getStatistics();
+		statistics.clear();
+
+		adapter.insert(Customer.register(ANA, CREATED));
+
+		assertThat(statistics.getPrepareStatementCount()).isEqualTo(1);
+	}
+
+	// Review finding (CUST-24 applied to DELETE): deleting a customer another request changed after it was read
+	// is a concurrency conflict (409), not an unexpected error surfacing at commit (500).
+	@Test
+	void deleteOfACustomerChangedSinceItWasReadThrowsConcurrentUpdateAndKeepsTheOtherWrite() {
+		Customer ana = adapter.insert(Customer.register(ANA, CREATED));
+		CustomerDetails otherWrite = details("other@example.com", "11144477735");
+		TransactionTemplate request = new TransactionTemplate(transactionManager);
+
+		assertThatThrownBy(() -> request.executeWithoutResult(status -> {
+			adapter.findById(ana.getId()).orElseThrow();
+			TransactionTemplate concurrent = new TransactionTemplate(transactionManager);
+			concurrent.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+			concurrent.executeWithoutResult(inner -> adapter
+				.update(adapter.findById(ana.getId()).orElseThrow().update(otherWrite, LATER)));
+			adapter.delete(ana.getId());
+		})).isInstanceOf(ConcurrentCustomerUpdateException.class);
+		assertThat(adapter.findById(ana.getId()).orElseThrow().getDetails()).isEqualTo(otherWrite);
 	}
 
 	@Test

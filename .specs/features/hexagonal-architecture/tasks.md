@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/hexagonal-architecture/design.md`
-**Status**: Done (verified PASS in round 5)
+**Status**: Done (verified PASS in round 5; code-review fixes T18-T19 applied)
 **Branch**: `refactor/hexagonal` (stacked on `feat/customer-api`)
 
 ---
@@ -74,6 +74,14 @@ Re-verification 3 was FAIL (Y7/Y8: the versioned write could move into its own `
 
 ```
 T16 → T17
+```
+
+### Phase 6: Code-review fixes (PR #3)
+
+A `/code-review` of PR #3 reported 7 findings. Fixed: a concurrent DELETE returned 500 instead of 409 (#1), an extra SELECT on every insert (#2), duplicated exception translation in the adapter (#6), and mapping inside the location controller (#5). Skipped with rationale: test spies on the repository (#3, #4), because moving them to the port means rewriting cleanup and counts in 8 test classes and ArchUnit already forbids inbound code from using the repository; and global statistics (#7), because tests do not run in parallel.
+
+```
+T18 → T19
 ```
 
 Round 4 was FAIL. T16 killed Y7 and Y8, but Z7b/Z7c (the adapter discards the entity the service read, via `clear()` or `refresh()`, inside one transaction) reach the same weak state. The verifier's suggestion is to assert the invariant itself: the stale write is rejected by Hibernate's versioned UPDATE (optimistic failure count 1). Limit set by the orchestrator: any new plausible survivor after T17 is escalated, with no further fix round.
@@ -570,6 +578,63 @@ Round 4 was FAIL. T16 killed Y7 and Y8, but Z7b/Z7c (the adapter discards the en
 
 ---
 
+### Phase 6: Code-review fixes (PR #3)
+
+#### T18: Translate delete conflicts and insert without merge
+
+**What**: One exception translation for every adapter write. `delete` flushes inside it, so a stale version becomes `ConcurrentCustomerUpdateException` (409), not a commit-time 500. `CustomerJpaEntity` implements `Persistable` so a new row is persisted with a single INSERT.
+**Where**: `src/main/java/com/example/customerapi/customer/adapter/out/persistence/CustomerPersistenceAdapter.java` (+ `CustomerJpaEntity.java`, adapter IT)
+**Depends on**: T17
+**Reuses**: `write()` translation, adapter IT
+**Requirement**: ARCH-11 (behaviour of #2 preserved: concurrent DELETE was 409), review findings #1, #2, #6
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] New tests failed first: the delete conflict threw `ObjectOptimisticLockingFailureException`, and the insert ran 2 statements
+- [x] Both pass after the fix
+- [x] Gate check passes: `./mvnw -B clean verify` (304 tests)
+
+**Status**: ✅ Complete
+
+**Tests**: integration
+**Gate**: build
+
+**Commit**: `fix(customer): translate delete conflicts and insert without a select`
+
+---
+
+#### T19: Location DTO factories
+
+**What**: `LocationGroupingResponse.from`, `StateGroup.from`, `CityGroup.from` replace the nested mapping in the controller.
+**Where**: `src/main/java/com/example/customerapi/customer/adapter/in/web/LocationGroupingResponse.java` (+ `StateGroup.java`, `CityGroup.java`, controller)
+**Depends on**: T18
+**Reuses**: existing location HTTP tests (STRICT JSON)
+**Requirement**: review finding #5
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] Location HTTP tests pass unchanged
+- [x] Gate check passes: `./mvnw -B clean verify`
+
+**Status**: ✅ Complete
+
+**Tests**: integration
+**Gate**: build
+
+**Commit**: `refactor(customer): map location results in the response dtos`
+
+---
+
 ## Phase Execution Map
 
 ```
@@ -578,6 +643,7 @@ Phase 2:  T6 ------→ T7 ------→ T8 ------→ T9
 Phase 3:  T10 ------→ T11 ------→ T12
 Phase 4:  T13 ------→ T14 ------→ T15
 Phase 5:  T16 ------→ T17
+Phase 6:  T18 ------→ T19
 ```
 
 ## Requirement Coverage
